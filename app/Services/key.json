@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "involuted-forge-304111",
+  "private_key_id": "8836484943ee4e6abebae4bb2e7decb296bd2cee",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC0huopgTOV06Sk\nrFniTieAU/aXLjQQfTjjMrSm59Oo4peMBd59H0oV98Qs6LwwoEsvg5wh05sjzIle\ncGDHgd8ZNQSVQNnT9gjf+sWUlOxJaeY5He9KMGJfWszWGYbI1SPNgM1mjIUpjlpC\njJ/F2+2WKLXKej0UYSqsbU0YeURTgH2DeKvPHXUeywWnoY7ipzf37k6lvTiO8WRX\nq2YgWU3IKFJ5CwbkmP7ezV2OFt8B0IdLZkELZK7yPkm5G5vViig5Lx36+v+PCuc5\nyQTKybRBcBkpO/JO4mX6XxA41ozV90SjnYYYxuheR5zHhVsBrxQWjCjAy1eGpg+d\n2MTCwbvfAgMBAAECggEAMqVO+EnpAPWZUSGRLe4jIttraMprjNy0ovjMua58MPsw\n7PWQj6XBkRwrizXX5gRyU2gm206UTZzKRRZd8Fq9DkNTf9PryI1TvBKMb7y/9XCi\nSA/f2/5q+rlskfwjViCFpNenyEdP7HKlW9o70LR8mQ3ewmk8zYTdBfa8FEuhIZOH\n9BtJY1bUlO1khV6J+rauiZ7YgIIwefIv3IYLEeiZsByxpZPedghRrEqSVugjeGva\njMw4lvC7UtEE/I+BW0IJ9tHjMlO9FBU9zGbFvefRQtE88OkFri7nAa2shu+EsEau\nyhe4LWl6qbiHwradUFLEOZikfKg2vgln0VCNN0SSkQKBgQDd4O0SBWESy92obvZd\nv1xVaVrrr8ZJCuLnJo6TbQNID0lwLNP794t93S+v0SavU8KBmmHRdRPn7OuT3pv9\nL5IfSCvWVa/S5CqoTYg4CpFsuoG2cJyXbVmFgLdGynnvQSeObNa2GLPzspomSwqW\nRPVT6yNZsQ9hPrP+al9DbFVkMwKBgQDQSgeHNIbyPfVkT9KpHUSvexdaZJB4xe8b\nmufc+hKcFmeBjXCofLvcHTWMhgRJZyo+77f5zgwhVfbKDHMeERsT35w+peStS+mM\nZiH4i5EYkVbQ92spNmextih3W1BI0SpIvEwV9vkHZSbUF2qlAZAcgY6KbXx6hjXE\nFPoKdcg9pQKBgErom2FQK5va9DTfcZHo/1VewnF74KfcYwrDO7OORGNZteOHXvJc\net29hVIIfNUIpEx5QLkkm9nbZRWBPIzYOK8TAKnWOAwtODGmK20wNDTPKufbUSLW\nqjimYjomNdCO4Ln3CO5lnKuUCvMOtr5Q/bqdUkv/uT+Nmds1MoBi3Nl9AoGAHIVm\njn8E03rkdT3w7LNTSmwigIAwwDjqSu9lPH8JuVHgDn9do9SgrL1bLcjUIXD8+e09\nVfl+87mft38I7F8PRCNkc7ennos8ibsaf7wsvB56staOV/BZNp5o4B8i2TW7Aoa2\nLHPLGdYiAPzL35hdMWoUKKRhXS2vgxAURQZnyvkCgYEAoYL+ldSP3RdD8ZcrLrF5\nKt66g/yYMg2bvbz7IM7M/vU3RaCvZhyqjdFlt0lZMpqUUajfO1YaVrJL1KfkbeJr\nYuKRTu3ibrPSmDymLyqU3TraiiQxP16hMRfk4W6IkuHW94iZV0ocDJu1eCmPD4C0\ncDNdNtmkKFYtxXP+H16Eq2U=\n-----END PRIVATE KEY-----\n",
+  "client_email": "dazutest@involuted-forge-304111.iam.gserviceaccount.com",
+  "client_id": "110755118032295384024",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dazutest%40involuted-forge-304111.iam.gserviceaccount.com"
+}
