@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\AvatarType;
 use App\Laravue\Models\Role;
 use App\Laravue\Models\User as LaravueUser;
 use App\Traits\AuditFieldsTrait;
@@ -145,9 +146,18 @@ class User extends LaravueUser
     /**
      * @return Model|HasMany|object|null
      */
-    public function getAvatarAttribute()
+    public function getAvatarAttribute(): ?Avatar
     {
-        $avatar = $this->avatars()->where('expire_date', '>', Carbon::now())->first();
-        return $avatar ? $avatar : null;
+        return $this->avatars->where('expire_date', '>', Carbon::now())
+                ->where('type', AvatarType::PHOTO)->first() ?? null;
+    }
+
+    /**
+     * @return Avatar|null
+     */
+    public function getVideoAvatar(): ?Avatar
+    {
+        return $this->avatars->where('expire_date', '>', Carbon::now())
+                ->where('type', AvatarType::VIDEO_URL)->first() ?? null;
     }
 }

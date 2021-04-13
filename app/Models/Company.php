@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,7 +23,7 @@ class Company extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'avatar', 'avatar_expire_date', 'video_avatar', 'video_avatar_expire_date'
+        'name', 'avatar', 'avatar_expire_date', 'video_avatar', 'video_avatar_expire_date', 'type'
     ];
 
     /**
@@ -33,9 +34,14 @@ class Company extends Model
         return $this->hasMany(User::class);
     }
 
-    public function getFileAttribute(): ?array
+    public function getAvatarAttribute(): ?array
     {
-        $pathname = self::IMAGES_PATH . (!Str::endsWith(self::IMAGES_PATH, '/') ? '/' : '') . $this->attributes['avatar'];
+        if ($this->avatar_expire_date < Carbon::now()) {
+            return null;
+        }
+
+        $pathname = self::IMAGES_PATH . (!Str::endsWith(self::IMAGES_PATH, '/') ? '/' : '')
+            . $this->attributes['avatar'];
 
         return [
             'original_name' => $this->attributes['avatar'],
@@ -43,4 +49,14 @@ class Company extends Model
             'url' => env('APP_URL') . '/storage/' . $pathname,
         ];
     }
+
+    public function getVideoAvatarAttribute(): ?string
+    {
+        if ($this->video_avatar_expire_date < Carbon::now()) {
+            return null;
+        }
+
+        return $this->video_avatar;
+    }
+
 }

@@ -45,7 +45,7 @@ class OfferManager
 
         if ($promoted) {
             $query->whereHas('subscriptions', function ($query) {
-               $query->whereIn('subscriptions.id', [2,3,4]);
+               $query->where('subscriptions.id', '!=', 1);
                $query->where('end_date', '>', Carbon::now());
             });
         }

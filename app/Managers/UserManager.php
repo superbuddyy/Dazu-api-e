@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Managers;
 
 use App\Enums\AvatarType;
+use App\Enums\CompanyType;
 use App\Exceptions\UserExists;
 use App\Laravue\Acl;
 use App\Laravue\Models\Role;
@@ -33,9 +34,10 @@ class UserManager
             'password' => Hash::make($password),
         ]);
 
-        if ($type === Acl::ROLE_COMPANY) {
+        if ($type === CompanyType::AGENCY || $type === CompanyType::DEVELOPER) {
             $company = new Company();
             $company->name = $name;
+            $company->type = $type;
             $company->save();
 
             $user->company_id = $company->id;

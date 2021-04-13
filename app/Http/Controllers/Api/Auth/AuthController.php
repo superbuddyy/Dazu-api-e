@@ -105,10 +105,6 @@ class AuthController extends BaseController
         $user->verification_token = null;
         $user->save();
 
-//        if ($user->role->name === Acl::ROLE_AGENT) {
-//            event(new AgentCreated($user));
-//        }
-
         return response()->success('completed', Response::HTTP_OK);
     }
 

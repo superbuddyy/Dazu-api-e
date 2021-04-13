@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\CompanyType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -24,6 +25,8 @@ class CreateCompaniesTable extends Migration
                 ->nullable();
             $table->timestamp('video_avatar_expire_date')
                 ->nullable();
+            $table->enum('type', CompanyType::getValues())
+                ->default(CompanyType::AGENCY);
 
             $table->softDeletes();
             $table->timestamps();

@@ -159,12 +159,12 @@ class OfferBillingService
     private function calculateAvatarPrice()
     {
         $avatarPrice = Setting::where('name', 'company_avatar.price')->first();
-
-        if ($this->offer->user->company) {
-            $avatar = $this->offer->user->company->avatar ?? false;
-            $avatarExpireDate = $this->offer->user->company->avatar_expire_date;
+        $user = $this->offer->user;
+        if ($user->company) {
+            $avatar = $user->company->avatar ?? false;
+            $avatarExpireDate = $user->company->avatar_expire_date;
             $isAvatarAlreadyPaid = $avatarExpireDate != null && $avatarExpireDate > Carbon::now();
-            if ($this->offer->user->hasRole(ACL::ROLE_COMPANY) && $avatar && !$isAvatarAlreadyPaid) {
+            if ($user->hasRole(ACL::ROLE_COMPANY) && $avatar && !$isAvatarAlreadyPaid) {
                 $this->details['company_avatar'] = [
                     'name' => 'Avatar',
                     'value' => $avatarPrice->value,
@@ -173,7 +173,7 @@ class OfferBillingService
                 $this->billAmount += $avatarPrice->value;
             }
         } else {
-            if (!$this->offer->user->avatar) {
+            if (!$user->avatar) {
                 return;
             }
             $avatarExpireDate = $this->offer->user->avatar->expire_date;
