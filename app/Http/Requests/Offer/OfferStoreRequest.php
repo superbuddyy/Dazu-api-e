@@ -17,7 +17,7 @@ class OfferStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|max:80',
+            'title' => 'required|max:70',
             'description' => 'nullable|max:17000',
             'price' => 'integer',
             'category' => 'required',
