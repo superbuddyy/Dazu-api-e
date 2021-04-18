@@ -18,7 +18,8 @@ class AgentResource extends JsonResource
             'id' => $this->id,
             'name' => $this->profile->name,
             'email' => $this->email,
-            'avatar' => 'https://i.pravatar.cc',
+            'avatar' => $this->avatar,
+            'status' => $this->email_verified_at === null ? 'Nieaktywny' : 'Aktywny',
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }

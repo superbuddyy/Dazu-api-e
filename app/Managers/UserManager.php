@@ -147,7 +147,7 @@ class UserManager
             $user->company->update(['avatar_expire_date' => Carbon::now()->addDays(30)]);
             return $user->company;
         } else {
-            $user->avatar->update(['is_active' => true]);
+            $user->getAvatar()->update(['is_active' => true, 'expire_date' => Carbon::now()->addDays(30)]);
         }
 
         return $user->avatar;

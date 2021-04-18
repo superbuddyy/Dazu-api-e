@@ -91,7 +91,7 @@ class UserController
     public function getMyOffers()
     {
         $user = Auth::user();
-        if ($user->type = 'company' && $user->company) {
+        if ($user->getRoleName() === Acl::ROLE_COMPANY && $user->company) {
             $companyMembers = User::where('company_id', $user->company_id)->pluck('id')->all();
             $offers = Offer::whereIn('user_id', $companyMembers)->paginate(10);
         } else {
@@ -150,6 +150,7 @@ class UserController
                         'qty' => 1,
                     ]
                 ],
+                null,
                 'Avatar'
             );
 

@@ -149,6 +149,7 @@ class User extends LaravueUser
     public function getAvatarAttribute(): ?Avatar
     {
         return $this->avatars->where('expire_date', '>', Carbon::now())
+                ->where('is_active', true)
                 ->where('type', AvatarType::PHOTO)->first() ?? null;
     }
 
@@ -158,6 +159,12 @@ class User extends LaravueUser
     public function getVideoAvatar(): ?Avatar
     {
         return $this->avatars->where('expire_date', '>', Carbon::now())
+                ->where('is_active', true)
                 ->where('type', AvatarType::VIDEO_URL)->first() ?? null;
+    }
+
+    public function getAvatar(string $type = AvatarType::PHOTO): ?Avatar
+    {
+        return $this->avatars->where('type', $type)->first() ?? null;
     }
 }

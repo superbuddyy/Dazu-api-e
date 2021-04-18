@@ -103,7 +103,7 @@ class TransactionManager
 
     public function store(
         array $lineItems,
-        string $offerId,
+        ?string $offerId,
         string $description = '',
         User $user = null,
         bool $visibleForUser = true

@@ -24,6 +24,7 @@ use App\Managers\UserManager;
 use App\Managers\UserProfileManager;
 use App\Models\Offer;
 use App\Models\Subscription;
+use App\Models\User;
 use App\Payments\PayPal\Checkout;
 use App\Services\GoogleAnalytics;
 use App\Services\ImageService;
@@ -101,7 +102,13 @@ class OfferController
 
     public function show(Offer $offer): Response
     {
-        if ($offer->user_id !== Auth::id() && ($offer->status !== OfferStatus::ACTIVE || $offer->isExpired)){
+        $user = Auth::user();
+        if ($user->getRoleName() === Acl::ROLE_COMPANY && $user->company) {
+            $userIds = User::where('company_id', $user->company_id)->pluck('id')->all();
+        } else {
+            $userIds = [$user->id];
+        }
+        if (!in_array($offer->user_id, $userIds) && ($offer->status !== OfferStatus::ACTIVE || $offer->isExpired)){
             return response()->error('', Response::HTTP_NOT_FOUND);
         }
 
