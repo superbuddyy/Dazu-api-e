@@ -54,13 +54,13 @@ class SettingsTableSeeder extends Seeder
         $this->command->getOutput()->progressAdvance();
 
         Setting::create([
-            'name' => 'avatar.price',
+            'name' => 'avatar_photo.price',
             'category' => 'pricing',
             'value' => '500',
         ]);
 
         Setting::create([
-            'name' => 'video_avatar.price',
+            'name' => 'avatar_video_url.price',
             'category' => 'pricing',
             'value' => '500',
         ]);

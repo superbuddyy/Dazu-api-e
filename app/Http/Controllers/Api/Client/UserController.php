@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\Client;
 
+use App\Enums\AvatarType;
 use App\Events\User\AgentCreated;
 use App\Http\Requests\User\AgentStoreRequest;
 use App\Http\Requests\User\UserPhoneRequest;
@@ -127,11 +128,12 @@ class UserController
         /** @var User $user */
         $user = Auth::user();
 
+        $avatarType = $request->get('avatar_type', AvatarType::PHOTO);
+
         DB::beginTransaction();
         try {
             $ref = 'user::' . $user->id . 'avatar';
-            $price = Setting::where('name', 'avatar.price')->firstOrFail()['value'];
-
+            $price = Setting::where('name', "avatar_$avatarType.price")->firstOrFail()['value'];
 
             $result = resolve(Checkout::class)->createOrder($ref, (int)$price);
             if ($result === false || $result->statusCode !== Response::HTTP_CREATED) {
@@ -141,33 +143,36 @@ class UserController
                 );
             }
 
+            $desc = $avatarType === AvatarType::PHOTO ? 'Avatar' : 'Wideo Avatar';
             $transaction = resolve(TransactionManager::class)->store(
                 [
                     [
-                        'description' => 'Avatar',
+                        'description' => $desc,
                         'unit' => 'szt.',
                         'price' => $price,
                         'qty' => 1,
                     ]
                 ],
                 null,
-                'Avatar'
+                $desc
             );
 
-            if ($request->has('avatar') && $request->avatar !== null){
-                $avatar = $request->file('avatar');
-                if ($user->hasRole(Acl::ROLE_COMPANY)) {
-                    $this->companyManager->storeAvatar($avatar, $user->company);
-                } else {
+            if ($request->has('avatar') && $request->avatar !== null) {
+                if ($avatarType === AvatarType::PHOTO){
+                    $avatar = $request->file('avatar');
                     $this->userManager->storeAvatar($user, $avatar);
+                }
+
+                if ($avatarType === AvatarType::VIDEO_URL){
+                    $this->userManager->storeVideoAvatar($user, $request->get('avatar'));
                 }
             }
 
             Redis::set(
                 $result->result->id,
                 json_encode([
-                    'context' => 'avatar',
-                    'user_id' => Auth::id(),
+                    'context' => "avatar_$avatarType",
+                    'user_id' => $user->id,
                     'transaction_id' => $transaction->id
                 ]),
                 'EX',

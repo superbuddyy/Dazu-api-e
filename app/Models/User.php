@@ -49,7 +49,7 @@ class User extends LaravueUser
      * @var array
      */
     protected $fillable = [
-        'email', 'password', 'verification_token', 'company_id'
+        'email', 'password', 'verification_token', 'company_id', 'own_company_id'
     ];
 
     /**
@@ -156,7 +156,7 @@ class User extends LaravueUser
     /**
      * @return Avatar|null
      */
-    public function getVideoAvatar(): ?Avatar
+    public function getVideoAvatarAttribute(): ?Avatar
     {
         return $this->avatars->where('expire_date', '>', Carbon::now())
                 ->where('is_active', true)

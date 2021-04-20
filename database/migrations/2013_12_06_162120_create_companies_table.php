@@ -17,14 +17,6 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('avatar')
-                ->nullable();
-            $table->timestamp('avatar_expire_date')
-                ->nullable();
-            $table->string('video_avatar')
-                ->nullable();
-            $table->timestamp('video_avatar_expire_date')
-                ->nullable();
             $table->enum('type', CompanyType::getValues())
                 ->default(CompanyType::AGENCY);
 

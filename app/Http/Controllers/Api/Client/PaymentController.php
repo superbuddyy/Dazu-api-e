@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\Client;
 
+use App\Enums\AvatarType;
 use App\Enums\TransactionStatus;
 use App\Http\Controllers\Controller;
 use App\Managers\OfferManager;
@@ -88,12 +89,13 @@ class PaymentController extends Controller
                 case 'subscription':
                     $this->subscriptionManager->handlePaymentCallback($cachedInfoArray);
                     break;
-                case 'avatar':
+                case 'avatar_' . AvatarType::PHOTO:
+                case 'avatar_' . AvatarType::VIDEO_URL:
                     $avatar = $this->userManager->handlePaymentCallback($cachedInfoArray);
                     DB::commit();
                     return redirect()->away(
                         env('FRONT_URL')
-                        . '/ustawienia-konta/?payment-status=success&avatar=' . $avatar->file['url']
+                        . '/ustawienia-konta/?payment-status=success&'.$cachedInfoArray['context'].'=' . $avatar->file['url']
                     );
                 default:
                     return response()->error('Invalid context', Response::HTTP_BAD_REQUEST);

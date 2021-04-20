@@ -25,8 +25,8 @@ class ProfilePageResource extends JsonResource
                 'avatar' => $this->avatar['file']['url'] ?? url('/storage/images/avatar.svg'),
                 'created_at' => $this->created_at->format('Y-m-d') ?? null,
                 'company' => [
-                    'avatar' => $this->company->avatar ?? null,
-                    'video_avatar' => $this->company->video_avatar ?? null
+                    'avatar' => $this->company->avatar->file['url'] ?? null,
+                    'video_avatar' => $this->company->video_avatar->file['url'] ?? null
                 ],
                 'address' => [
                     'city' => $this->profile->city ?? null,

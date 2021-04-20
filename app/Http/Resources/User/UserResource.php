@@ -40,6 +40,7 @@ class UserResource extends JsonResource
                 $this->getAllPermissions()->toArray()
             ),
             'avatar' => $this->avatar->file['url'] ?? null,
+            'video_avatar' => $this->videoAvatar->file['url'] ?? null,
         ];
     }
 }

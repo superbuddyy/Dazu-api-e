@@ -24,6 +24,8 @@ class CreateUsersTable extends Migration
             $table->auditable();
             $table->softDeletes();
 
+            $table->unsignedInteger('own_company_id')
+                ->nullable();
             $table->unsignedInteger('company_id')
                 ->nullable();
             $table->foreign('company_id')

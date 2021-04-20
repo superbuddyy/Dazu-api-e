@@ -41,6 +41,7 @@ class UserManager
             $company->save();
 
             $user->company_id = $company->id;
+            $user->own_company_id = $company->id;
 
             $role = Role::findByName(Acl::ROLE_COMPANY);
             $user->syncRoles($role);
@@ -115,6 +116,7 @@ class UserManager
      */
     public function storeVideoAvatar(User $user, string $url, $isActive = false)
     {
+        $this->removeAvatars($user, AvatarType::VIDEO_URL);
         $videoAvatar = Avatar::make([
             'file' => $url,
             'expire_date' => Carbon::now()->addDays(30),
@@ -125,13 +127,16 @@ class UserManager
         return $user->avatars()->save($videoAvatar);
     }
 
-    public function removeAvatars(User $user)
+    public function removeAvatars(User $user, string $avatarType = AvatarType::PHOTO)
     {
-        $avatars = $user->avatars();
-        $imageService = resolve(ImageService::class);
-        foreach ($avatars as $avatar) {
-            $imageService->delete($avatar->file['path_name']);
+        $avatars = $user->avatars()->where('type', $avatarType);
+        if ($avatarType === AvatarType::PHOTO) {
+            $imageService = resolve(ImageService::class);
+            foreach ($avatars as $avatar) {
+                $imageService->delete($avatar->file['path_name']);
+            }
         }
+
         return $avatars->delete();
     }
 
@@ -143,11 +148,13 @@ class UserManager
     {
         $user = User::findOrFail($cachedInfo['user_id']);
 
-        if ($user->hasRole(Acl::ROLE_COMPANY)) {
-            $user->company->update(['avatar_expire_date' => Carbon::now()->addDays(30)]);
-            return $user->company;
-        } else {
-            $user->getAvatar()->update(['is_active' => true, 'expire_date' => Carbon::now()->addDays(30)]);
+        if ($cachedInfo['context'] === 'avatar_' . AvatarType::PHOTO) {
+            $user->getAvatar(AvatarType::PHOTO)->update(['is_active' => true, 'expire_date' => Carbon::now()->addDays(30)]);
+        }
+
+        if ($cachedInfo['context'] === 'avatar_' . AvatarType::VIDEO_URL) {
+            $user->getAvatar(AvatarType::VIDEO_URL)->update(['is_active' => true, 'expire_date' => Carbon::now()->addDays(30)]);
+            return $user->videoAvatar;
         }
 
         return $user->avatar;

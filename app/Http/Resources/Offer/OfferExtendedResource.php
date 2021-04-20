@@ -30,17 +30,21 @@ class OfferExtendedResource extends JsonResource
             $allowNotifications = $favorite ? $favorite->allow_notifications : false;
         }
 
+        $videoAvatar = $this->user->videoAvatar['file']['url'] ?? null;
+        $avatar = $this->user->avatar['file']['url'] ?? null;
+
+        if (!$videoAvatar && !$avatar){
+            $avatar = url('/storage/images/avatar.svg');
+        }
+
         $companyModel = $this->user->company;
         if (isset($companyModel)) {
             $company = [
                 'name' => $companyModel->name,
-                'avatar' => $companyModel->avatar['url'] ?? url('/storage/images/avatar.svg'),
-                'video_avatar' => $companyModel->video_avatar
+                'avatar' => $companyModel->avatar->file['url'] ?? url('/storage/images/avatar.svg'),
+                'video_avatar' => $companyModel->video_avatar->file['url'] ?? null
             ];
         }
-
-        $videoAvatar = $this->user->avatar['file']['url'] ?? null;
-        $avatar = $this->user->avatar['file']['url'] ?? url('/storage/images/avatar.svg');
 
         return array_merge(
             parent::toArray($request),
