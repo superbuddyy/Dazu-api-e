@@ -59,7 +59,8 @@ class Offer extends Model
         'links',
         'refresh_count',
         'visible_from_date',
-        'note'
+        'note',
+        'expire_time'
     ];
 
     protected $dates = ['expire_time', 'created_at', 'updated_at'];

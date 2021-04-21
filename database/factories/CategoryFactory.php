@@ -22,6 +22,6 @@ $factory->define(Category::class, function (Faker $faker): array {
     return [
         'name' => $faker->realText(20),
         'slug' => null,
-        'parent_id' => factory(Category::class)->create()->id,
+        'parent_id' => null,
     ];
 });

@@ -103,9 +103,10 @@ class OfferController
     public function show(Offer $offer): Response
     {
         $user = Auth::user();
-        if ($user->getRoleName() === Acl::ROLE_COMPANY && $user->company) {
+        $userIds = [];
+        if ($user && $user->getRoleName() === Acl::ROLE_COMPANY && $user->company) {
             $userIds = User::where('company_id', $user->company_id)->pluck('id')->all();
-        } else {
+        } else if($user) {
             $userIds = [$user->id];
         }
         if (!in_array($offer->user_id, $userIds) && ($offer->status !== OfferStatus::ACTIVE || $offer->isExpired)){

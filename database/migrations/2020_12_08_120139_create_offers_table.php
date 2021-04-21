@@ -45,8 +45,7 @@ class CreateOffersTable extends Migration
                 ->nullable();
             $table->auditable();
             $table->softDeletes();
-            $table->timestamp('expire_time')
-                ->default(Carbon::now()->addDays(7));
+            $table->timestamp('expire_time')->nullable();
             $table->timestamp('visible_from_date')->nullable();
             $table->unsignedInteger('category_id');
             $table->foreign('category_id')

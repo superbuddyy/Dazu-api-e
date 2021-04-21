@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 /** @var Factory $factory */
 
-use App\Enums\OfferType;
+use App\Enums\OfferStatus;
 use App\Models\Offer;
 use App\Models\User;
 use App\Models\Category;
+use Carbon\Carbon;
 use Faker\Generator as Faker;
 use Illuminate\Database\Eloquent\Factory;
 
@@ -22,27 +23,23 @@ use Illuminate\Database\Eloquent\Factory;
 |
 */
 
-$category = function (?bool $isActive = null): Category {
-    if ($isActive !== null) {
-        return Category::where('is_active', $isActive)->whereIsLeaf()->inRandomOrder()->first() ?:
-            factory(Category::class)->create(['is_active' => $isActive]);
-    }
-
-    return Category::whereIsLeaf()->inRandomOrder()->first() ?: factory(Category::class)->create();
-};
-
-$factory->define(Offer::class, function (Faker $faker) use ($category): array {
+$factory->define(Offer::class, function (Faker $faker): array {
     return [
         'title' => $faker->realText(20),
         'slug' => null,
+        'status' => OfferStatus::ACTIVE,
         'description' => $faker->realText(100),
         'price' => $faker->randomNumber(4),
         'lat' => 0,
         'lon' => 0,
         'location_name' => 'Warszawa, Mazowieckie',
-        'category_id' => $category()->id,
+        'category_id' => factory(Category::class)->create()->id,
         'links' => [],
         'refresh_count' => 0,
+        'expire_time' => Carbon::now()->addDays(30),
+        'raise_at' => null,
+        'note' => null,
+        'visible_from_date' => null,
         'user_id' => factory(User::class)->create()->id,
     ];
 });
