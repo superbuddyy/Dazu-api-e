@@ -146,6 +146,7 @@ class OfferBillingService
 
     private function calculateSubscriptionPrice()
     {
+        //TODO:: Check is already paid
         $subscription = $this->offer->activeSubscription;
         if ($subscription->id !== Subscription::FREE) {
             $this->details['subscription'] = [
@@ -194,12 +195,12 @@ class OfferBillingService
 
     private function calculateVideoAvatarPrice()
     {
-        $videoPrice = Setting::where('name', 'video_avatar.price')->first();
+        $videoPrice = Setting::where('name', 'avatar_video_url.price')->first();
 
         if ($this->offer->user->company) {
-            $videoAvatar = $this->offer->user->company->video_avatar ?? false;
-            $avatarExpireDate = $this->offer->user->company->video_avatar_expire_date;
-            $isVideoAvatarAlreadyPaid = $avatarExpireDate != null && $avatarExpireDate > Carbon::now();
+            $videoAvatar = $this->offer->user->video_avatar ?? false;
+            $avatarExpireDate = $this->offer->user->video_avatar->expire_date;
+            $isVideoAvatarAlreadyPaid = $avatarExpireDate > Carbon::now() && $videoAvatar->is_active;
             if ($this->offer->user->hasRole(ACL::ROLE_COMPANY) && $videoAvatar && !$isVideoAvatarAlreadyPaid) {
                 $this->details['company_video_avatar'] = [
                     'name' => 'Wideo avatar',
