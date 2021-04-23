@@ -132,7 +132,7 @@ class UserManager
         $avatars = $user->avatars()->where('type', $avatarType);
         if ($avatarType === AvatarType::PHOTO) {
             $imageService = resolve(ImageService::class);
-            foreach ($avatars as $avatar) {
+            foreach ($avatars->get() as $avatar) {
                 $imageService->delete($avatar->file['path_name']);
             }
         }

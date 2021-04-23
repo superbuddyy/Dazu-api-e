@@ -202,4 +202,12 @@ class UserController
     {
         return response()->success(new ProfilePageResource($user));
     }
+
+    public function deleteAvatar(Request $request)
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $avatarType = $request->get('avatar_type', AvatarType::PHOTO);
+        return response()->success($this->userManager->removeAvatars($user,$avatarType), Response::HTTP_NO_CONTENT);
+    }
 }

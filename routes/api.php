@@ -47,8 +47,13 @@ Route::namespace('Api')->group(function() {
             Route::patch('user/profile/newsletter', 'UserProfileController@toggleNewsletter')
                 ->name('user.profile.newsletter');
 
+
+            /** User Avatar */
             Route::post('user/avatar', 'UserController@storeAvatar')
                 ->name('user.avatar.store');
+
+            Route::delete('user/avatar', 'UserController@deleteAvatar')
+                ->name('user.avatar.delete');
 
             /** Subscriptions */
             Route::post('subscriptions/{subscription}/{offer}', 'SubscriptionController@buy')
