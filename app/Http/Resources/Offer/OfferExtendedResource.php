@@ -37,14 +37,7 @@ class OfferExtendedResource extends JsonResource
             $avatar = url('/storage/images/avatar.svg');
         }
 
-        $companyModel = $this->user->company;
-        if (isset($companyModel)) {
-            $company = [
-                'name' => $companyModel->name,
-                'avatar' => $companyModel->avatar->file['url'] ?? url('/storage/images/avatar.svg'),
-                'video_avatar' => $companyModel->video_avatar->file['url'] ?? null
-            ];
-        }
+        $company = $this->getCompanyData();
 
         return array_merge(
             parent::toArray($request),
@@ -114,5 +107,27 @@ class OfferExtendedResource extends JsonResource
                 })
             ]
         );
+    }
+
+    private function getCompanyData ()
+    {
+        $companyModel = $this->user->company;
+        if (!isset($companyModel)) {
+            return [];
+        }
+
+        if (!isset($companyModel->avatar->file['url']) && $companyModel->video_avatar->file['url']) {
+            $companyAvatar = null;
+        } elseif (!isset($companyModel->video_avatar->file['url'])) {
+            $companyAvatar = url('/storage/images/avatar.svg');
+        } else {
+            $companyAvatar = $companyModel->avatar->file['url'];
+        }
+
+        return [
+            'name' => $companyModel->name,
+            'avatar' => $companyAvatar,
+            'video_avatar' => $companyModel->video_avatar->file['url'] ?? null
+        ];
     }
 }
