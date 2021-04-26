@@ -117,7 +117,6 @@ class OfferManager
         ];
         if ($visible_from_date !== 'null' && $visible_from_date !== null) {
             $offer['visible_from_date'] = $visible_from_date;
-            $offer['status'] = OfferStatus::ACTIVE;
         }
 
         $offer = Offer::create($offer);
@@ -248,7 +247,11 @@ class OfferManager
                 }
             }
         }
-        $this->changeStatus($offer, OfferStatus::IN_ACTIVE);
+        if ($offer->visible_from_date) {
+            $this->changeStatus($offer, OfferStatus::ACTIVE);
+        } else {
+            $this->changeStatus($offer, OfferStatus::IN_ACTIVE);
+        }
     }
 
     /**
