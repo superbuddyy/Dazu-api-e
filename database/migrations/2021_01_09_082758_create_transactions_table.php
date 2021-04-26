@@ -32,7 +32,8 @@ class CreateTransactionsTable extends Migration
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
-            $table->uuid('offer_id');
+            $table->uuid('offer_id')
+                ->nullable();
             $table->foreign('offer_id')
                 ->references('id')
                 ->on('offers')
