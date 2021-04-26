@@ -16,6 +16,7 @@ use App\Http\Resources\User\ProfilePageResource;
 use App\Laravue\Acl;
 use App\Managers\CompanyManager;
 use App\Managers\NotificationManager;
+use App\Managers\OfferManager;
 use App\Managers\TransactionManager;
 use App\Managers\UserManager;
 use App\Models\Notification;
@@ -91,16 +92,7 @@ class UserController
 
     public function getMyOffers()
     {
-        $user = Auth::user();
-        if ($user->getRoleName() === Acl::ROLE_COMPANY && $user->company) {
-            $companyMembers = User::where('company_id', $user->company_id)->pluck('id')->all();
-            $offers = Offer::whereIn('user_id', $companyMembers)->paginate(10);
-        } else {
-            $offers = $user->offers()
-                ->orderBy('expire_time', 'DESC')
-                ->orderBy('status', 'ASC')
-                ->paginate(10);
-        }
+        $offers = resolve(OfferManager::class)->getMyList();
         return response()->success(OfferCollection::make($offers));
     }
 

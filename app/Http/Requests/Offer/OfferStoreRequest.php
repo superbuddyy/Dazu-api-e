@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Offer;
 
-use App\Enums\OfferType;
+use App\Enums\CompanyType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OfferStoreRequest extends FormRequest
@@ -25,6 +25,7 @@ class OfferStoreRequest extends FormRequest
             'lon' => 'required',
             'location_name' => 'required',
             'main_image.*' => 'file|max:5000',
+            'type' => 'in:' . implode(',', [CompanyType::DEVELOPER, CompanyType::AGENCY, 'private'])
         ];
     }
 }

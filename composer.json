@@ -1,23 +1,8 @@
 {
-    "name": "tuandm/laravue",
+    "name": "dazu/dazu-api",
     "type": "project",
-    "description": "A beautiful dashboard for Laravel built by VueJS",
-    "keywords": [
-        "laravel",
-        "laravue",
-        "vue",
-        "admin",
-        "dashboard"
-    ],
+    "description": "Dazu",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Tuan Duong",
-            "email": "bacduong@gmail.com",
-            "homepage": "https://laravue.dev",
-            "role": "Developer"
-        }
-    ],
     "require": {
         "php": "^7.4",
         "ext-json": "*",
@@ -28,7 +13,7 @@
         "intervention/image": "^2.5",
         "kalnoy/nestedset": "^5.0",
         "laravel/framework": "^7.0",
-        "laravel/sanctum": "^2.1",
+        "laravel/sanctum": "^2.10",
         "laravel/tinker": "^2.0",
         "laraveldaily/laravel-invoices": "2.0",
         "paypal/paypal-checkout-sdk": "1.0.1",

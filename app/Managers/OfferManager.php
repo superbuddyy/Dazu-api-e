@@ -19,6 +19,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Services\ImageService;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -55,6 +56,22 @@ class OfferManager
         }
 
         return $query->paginate(config('dazu.pagination.per_page'));
+    }
+
+    public function getMyList(): LengthAwarePaginator
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        if ($user->getRoleName() === Acl::ROLE_COMPANY && $user->company) {
+            $companyMembers = User::where('company_id', $user->company_id)->pluck('id')->all();
+            $offers = Offer::whereIn('user_id', $companyMembers);
+        } else {
+            $offers = $user->offers();
+        }
+
+        return $offers->orderBy('expire_time', 'DESC')
+            ->orderBy('status', 'ASC')
+            ->paginate(10);
     }
 
     /**
@@ -100,6 +117,7 @@ class OfferManager
         ];
         if ($visible_from_date !== 'null' && $visible_from_date !== null) {
             $offer['visible_from_date'] = $visible_from_date;
+            $offer['status'] = OfferStatus::ACTIVE;
         }
 
         $offer = Offer::create($offer);
@@ -220,23 +238,13 @@ class OfferManager
                 // Avatar
                 if (isset($item['id']) && $item['id'] === 4) {
                     $user = User::findOrFail($cachedInfo['user_id']);
-                    if ($user->hasRole(Acl::ROLE_COMPANY)) {
-                        $company = $offer->user->company;
-                        $company->avatar_expire_date = Carbon::now()->addDays(30);
-                        $company->save();
-                    } else {
-                        $user->avatar->update(['is_active' => true, 'expire_date' => Carbon::now()->addDays(30)]);
-                    }
+                    $user->avatar->update(['is_active' => true, 'expire_date' => Carbon::now()->addDays(30)]);
                 }
 
                 // Video Avatar
                 if (isset($item['id']) && $item['id'] === 7) {
                     $user = User::findOrFail($cachedInfo['user_id']);
-                    if ($user->hasRole(Acl::ROLE_COMPANY)) {
-                        $company = $offer->user->company;
-                        $company->video_avatar_expire_date = Carbon::now()->addDays(30);
-                        $company->save();
-                    }
+                    $user->avatar->update(['is_active' => true, 'expire_date' => Carbon::now()->addDays(30)]);
                 }
             }
         }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\Client;
 
+use App\Enums\CompanyType;
 use App\Enums\OfferStatus;
 use App\Events\Offer\OfferCreated;
 use App\Events\Offer\OfferUpdated;
@@ -164,21 +165,17 @@ class OfferController
                 }
             }
 
-            $companyManager = resolve(CompanyManager::class);
+            $userManager = resolve(UserManager::class);
             if ($request->has('avatar') && $request->avatar !== null){
-                if ($user->hasRole(Acl::ROLE_COMPANY)){
-                    $companyManager->storeAvatar($request->file('avatar'), $user->company);
-                } else {
-                    resolve(UserManager::class)->storeAvatar($user, $request->file('avatar'));
-                }
+                $userManager->storeAvatar($user, $request->file('avatar'));
             }
 
-            if ($request->has('video_avatar') && $request->video_avatar !== null) {
-                if ($user->hasRole(Acl::ROLE_COMPANY)){
-                    $companyManager->storeVideoAvatar($request->get('video_avatar'), $user->company);
-                } else {
-                    resolve(UserManager::class)->storeVideoAvatar($user, $request->get('video_avatar'));
-                }
+            if (
+                in_array($request->type, [CompanyType::DEVELOPER, CompanyType::AGENCY])
+                && $request->has('video_avatar')
+                && $request->video_avatar !== null
+            ) {
+                $userManager->storeVideoAvatar($user, $request->get('video_avatar'));
             }
 
             DB::commit();
@@ -358,11 +355,7 @@ class OfferController
         }
 
         $this->offerManager->refresh($offer);
-
-        $offers = Auth::user()->offers()
-            ->orderBy('expire_time', 'DESC')
-            ->orderBy('status', 'ASC')
-            ->paginate(10);
+        $offers = $this->offerManager->getMyList();
 
         return response()->success(OfferCollection::make($offers), Response::HTTP_OK);
     }

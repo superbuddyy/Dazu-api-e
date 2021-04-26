@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Services\Billings;
 
+use App\Enums\AvatarType;
 use App\Enums\TransactionStatus;
-use App\Laravue\Acl;
 use App\Models\Offer;
 use App\Models\Setting;
 use App\Models\Subscription;
 use App\Models\Transaction;
-use Carbon\Carbon;
 
 class OfferBillingService
 {
@@ -26,6 +25,7 @@ class OfferBillingService
     /** @var array */
     private $transactionsData;
 
+
     public function __construct(Offer $offer)
     {
         $this->offer = $offer;
@@ -40,9 +40,9 @@ class OfferBillingService
         $this->calculateSubscriptionPrice();
         $this->calculateLinksPrice();
         $this->calculatePhotosPrice();
-        $this->calculateVideoAvatarPrice();
         $this->calculateUrgentPrice();
         $this->calculateAvatarPrice();
+        $this->calculateVideoAvatarPrice();
         $this->calculateVisibleFromDate();
 
         return [
@@ -159,37 +159,19 @@ class OfferBillingService
 
     private function calculateAvatarPrice()
     {
-        $avatarPrice = Setting::where('name', 'company_avatar.price')->first();
         $user = $this->offer->user;
-        if ($user->company) {
-            $avatar = $user->company->avatar ?? false;
-            $avatarExpireDate = $user->company->avatar_expire_date;
-            $isAvatarAlreadyPaid = $avatarExpireDate != null && $avatarExpireDate > Carbon::now();
-            if ($user->hasRole(ACL::ROLE_COMPANY) && $avatar && !$isAvatarAlreadyPaid) {
-                $this->details['company_avatar'] = [
-                    'name' => 'Avatar',
-                    'value' => $avatarPrice->value,
-                    'id' => $avatarPrice->id,
-                ];
-                $this->billAmount += $avatarPrice->value;
-            }
-        } else {
-            if (!$user->avatar) {
-                return;
-            }
-            $avatarExpireDate = $this->offer->user->avatar->expire_date;
-            $isAvatarAlreadyPaid = $avatarExpireDate != null
-                && $avatarExpireDate > Carbon::now()
-                && $this->offer->user->avatar->is_active;
-            if (!$this->offer->user->hasRole(ACL::ROLE_COMPANY) && !$isAvatarAlreadyPaid) {
-                $this->details['company_avatar'] = [
-                    'name' => 'Avatar',
-                    'value' => $avatarPrice->value,
-                    'id' => $avatarPrice->id,
-                ];
-                $this->billAmount += $avatarPrice->value;
-            }
+        $avatar = $user->avatars->where('type', AvatarType::PHOTO)->where('in_active', false)->first();
+        if (!$avatar) {
             return;
+        }
+        $avatarPrice = Setting::where('name', 'company_avatar.price')->first();
+        if (!$avatar->is_active) {
+            $this->details['avatar'] = [
+                'name' => 'Avatar',
+                'value' => $avatarPrice->value,
+                'id' => $avatarPrice->id,
+            ];
+            $this->billAmount += $avatarPrice->value;
         }
     }
 
@@ -197,18 +179,21 @@ class OfferBillingService
     {
         $videoPrice = Setting::where('name', 'avatar_video_url.price')->first();
 
-        if ($this->offer->user->company) {
-            $videoAvatar = $this->offer->user->video_avatar ?? false;
-            $avatarExpireDate = $this->offer->user->video_avatar->expire_date;
-            $isVideoAvatarAlreadyPaid = $avatarExpireDate > Carbon::now() && $videoAvatar->is_active;
-            if ($this->offer->user->hasRole(ACL::ROLE_COMPANY) && $videoAvatar && !$isVideoAvatarAlreadyPaid) {
-                $this->details['company_video_avatar'] = [
-                    'name' => 'Wideo avatar',
-                    'value' => $videoPrice->value,
-                    'id' => $videoPrice->id,
-                ];
-                $this->billAmount += $videoPrice->value;
-            }
+        if (!$this->offer->user->company) {
+            return;
+        }
+        $user = $this->offer->user;
+        $avatar = $user->avatars->where('type', AvatarType::VIDEO_URL)->where('in_active', false)->first();
+        if (!$avatar) {
+            return;
+        }
+        if (!$avatar->is_active) {
+            $this->details['avatar'] = [
+                'name' => 'Wideo avatar',
+                'value' => $videoPrice->value,
+                'id' => $videoPrice->id,
+            ];
+            $this->billAmount += $videoPrice->value;
         }
     }
 

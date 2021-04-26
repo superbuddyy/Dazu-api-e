@@ -116,7 +116,7 @@ class OfferExtendedResource extends JsonResource
             return [];
         }
 
-        if (!isset($companyModel->avatar->file['url']) && $companyModel->video_avatar->file['url']) {
+        if (!isset($companyModel->avatar->file['url']) && isset($companyModel->video_avatar->file['url'])) {
             $companyAvatar = null;
         } elseif (!isset($companyModel->video_avatar->file['url'])) {
             $companyAvatar = url('/storage/images/avatar.svg');
