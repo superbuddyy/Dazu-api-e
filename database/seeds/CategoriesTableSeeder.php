@@ -117,18 +117,6 @@ class CategoriesTableSeeder extends Seeder
         ]);
         $this->command->getOutput()->progressAdvance();
 
-        Category::create([
-            'name' => 'Szukam współlokatorki/współlokatora',
-            'children' => [],
-        ]);
-        $this->command->getOutput()->progressAdvance();
-
-        Category::create([
-            'name' => 'Inne',
-            'children' => [],
-        ]);
-        $this->command->getOutput()->progressAdvance();
-
         $this->command->getOutput()->progressFinish();
     }
 }
