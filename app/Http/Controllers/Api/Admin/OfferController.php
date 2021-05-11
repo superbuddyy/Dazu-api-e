@@ -82,14 +82,7 @@ class OfferController extends Controller
 
             if ($request->has('subscription')) {
                 $subscription = Subscription::findOrFail($request->subscription);
-                $offer->subscriptions()->detach();
-                if ($request->get('subscription') !== 1) {
-                    $offer->subscriptions()
-                        ->attach(
-                            $request->subscription,
-                            ['end_date' => Carbon::now()->addHours($subscription->duration)]
-                        );
-                }
+                $this->offerManager->changeSubscription($offer, $subscription);
             }
 
             if ($request->has('images')) {
@@ -121,5 +114,13 @@ class OfferController extends Controller
         } catch (Exception $e) {
             return response()->errorWithLog($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, ['message' => $e]);
         }
+    }
+
+    public function changeSubscription(Request $request): JsonResponse
+    {
+        $offer = Offer::findOrFail($request->offer_id);
+        $subscription = Offer::findOrFail($request->subscription_id);
+        $this->offerManager->changeSubscription($offer, $subscription);
+        return response()->success('', Response::HTTP_NO_CONTENT);
     }
 }

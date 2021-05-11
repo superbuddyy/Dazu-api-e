@@ -6,22 +6,19 @@ namespace App\Managers;
 
 use App\Enums\OfferStatus;
 use App\Enums\AttributeType;
-use App\Enums\OfferType;
 use App\Events\Offer\OfferActivated;
 use App\Laravue\Acl;
 use App\Models\Category;
 use App\Models\Offer;
 use App\Models\Attribute;
-use App\Models\AttributeOption;
 use App\Models\Photo;
-use App\Models\Setting;
+use App\Models\Subscription;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Services\ImageService;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class OfferManager
 {
@@ -204,6 +201,18 @@ class OfferManager
         if ($status === OfferStatus::ACTIVE) {
             event(new OfferActivated($offer));
         }
+
+        return $offer;
+    }
+
+    public function changeSubscription(Offer $offer, Subscription $subscription): Offer
+    {
+        $offer->subscriptions()->detach();
+        $offer->subscriptions()
+            ->attach(
+                $subscription->id,
+                ['end_date' => Carbon::now()->addHours($subscription->duration)]
+            );
 
         return $offer;
     }
