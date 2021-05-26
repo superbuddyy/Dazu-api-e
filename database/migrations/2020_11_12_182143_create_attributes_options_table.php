@@ -16,6 +16,7 @@ class CreateAttributesOptionsTable extends Migration
             $table->string('slug');
             $table->unsignedInteger('attribute_id');
             $table->timestamps();
+            $table->string('offer_types');
             $table->foreign('attribute_id')
                 ->references('id')
                 ->on('attributes')

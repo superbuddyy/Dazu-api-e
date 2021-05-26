@@ -25,6 +25,7 @@ class AttributeResource extends JsonResource
             'type' => $this->type ?? null,
             'unit' => $this->unit ?? null,
             'options' => $this->options ?? null,
+            'offer_types' => $this->offer_types ?? null,
         ];
     }
 }

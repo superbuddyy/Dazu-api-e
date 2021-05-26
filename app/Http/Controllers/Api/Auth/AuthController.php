@@ -42,15 +42,9 @@ class AuthController extends BaseController
      */
     private $userManager;
 
-    /**
-     * @var UserProfileManager
-     */
-    private $userProfileManager;
-
-    public function __construct(UserManager $userManager, UserProfileManager $userProfileManager)
+    public function __construct(UserManager $userManager)
     {
         $this->userManager = $userManager;
-        $this->userProfileManager = $userProfileManager;
     }
 
     /**

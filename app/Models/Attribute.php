@@ -27,6 +27,9 @@ class Attribute extends Model
     /** @var array */
     protected $hidden = ['created_at', 'updated_at', 'value'];
 
+    /** @var string[]  */
+    protected $casts = ['offer_types' => 'array'];
+
     /** @var array */
     protected $appends = ['value', 'result'];
 

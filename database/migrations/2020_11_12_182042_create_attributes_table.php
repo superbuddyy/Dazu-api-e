@@ -22,6 +22,7 @@ class CreateAttributesTable extends Migration
                 ->default(AttributeType::BOOLEAN);
             $table->enum('unit', AttributeUnit::getValues())
                 ->default(AttributeUnit::NONE);
+            $table->string('offer_types');
             $table->timestamps();
         });
     }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Offer;
 
-use App\Http\Resources\Attributes\AttributeValueResource;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -65,7 +64,6 @@ class OfferResource extends JsonResource
                 'refresh_price' => $refreshPrice ?? null,
                 'raise_price' => $raisePrice ?? null,
                 'is_promoted' => $this->activeSubscription->id > 1 ?? false,
-                'subscriptions' => [$sub]
             ]
         );
     }

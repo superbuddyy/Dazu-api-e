@@ -25,6 +25,9 @@ class AttributeOption extends Model
     /** @var array */
     protected $hidden = ['attribute_id', 'created_at', 'updated_at'];
 
+    /** @var string[]  */
+    protected $casts = ['offer_types' => 'array'];
+
     public function attribute(): BelongsTo
     {
         return $this->belongsTo(Attribute::class);

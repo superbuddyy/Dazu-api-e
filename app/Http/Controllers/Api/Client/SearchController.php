@@ -53,7 +53,7 @@ class SearchController
             ];
         })->toArray();
 
-        $roomsAttribute = Attribute::where('slug', 'ilosc-pokojowpomieszczen')->first();
+        $roomsAttribute = Attribute::where('slug', 'ilosc-pokojow')->first();
         $rooms = $roomsAttribute->options->map(function ($option) {
             return [
                 'name' => $option->name,
