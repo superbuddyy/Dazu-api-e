@@ -50,10 +50,14 @@ class OfferExtendedResource extends JsonResource
                 'old_price' => $this->price ?? null,
                 'main_photo' => $this->main_photo ?? null,
                 'status' => $this->status ?? null,
-                'links' => [
-                    'video' => $this->links['video'] ?? '',
-                    'video_2' => $this->links['video_2'] ?? '',
-                    'walk_video' => $this->links['walk_video'] ?? '',
+                'media' => [ // TODO: Remove old links
+                    'videos' => [
+                        $this->links['video'] ?? '',
+                        $this->links['video_2'] ?? ''
+                    ],
+                    'virtual_walks' => [
+                        $this->links['walk_video'] ?? ''
+                    ],
                 ],
                 'location' => [
                     'lat' => $this->lat ?? null,

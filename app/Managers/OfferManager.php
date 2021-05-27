@@ -109,7 +109,11 @@ class OfferManager
             'lat' => $lat,
             'lon' => $lon,
             'location_name' => $locationName,
-            'links' => $links,
+            'links' => [
+                'video' => $links['video'],
+                'video_2' => $links['video_2'],
+                'walk_video' => $links['walk_video'],
+            ],
             'user_id' => $userId,
         ];
         if ($visible_from_date !== 'null' && $visible_from_date !== null) {
