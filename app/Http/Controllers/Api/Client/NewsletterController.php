@@ -46,11 +46,16 @@ class NewsletterController extends Controller
             return response()->error('', Response::HTTP_NOT_FOUND);
         }
 
+        if (($user = User::where('email', $newsletter->email)->first())) {
+            $user->profile->newsletter = true;
+            $user->profile->save();
+        }
+
         $newsletter->update([
             'status' => NewsletterStatus::ACTIVE,
             'token' => null
         ]);
-        dispatch(new SendEmailJob(new NewsletterActivatedMail(new User(), $newsletter->email)));
+        dispatch(new SendEmailJob(new NewsletterActivatedMail(null, $newsletter->email)));
         return response()->success('', Response::HTTP_NO_CONTENT);
     }
 }

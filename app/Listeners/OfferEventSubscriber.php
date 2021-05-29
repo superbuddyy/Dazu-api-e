@@ -32,7 +32,27 @@ class OfferEventSubscriber
      */
     public function onOfferCreated(OfferCreated $event): void
     {
-        // dispatch(new SendEmailJob(new OfferCreatedMail($event->offer, $event->user)));
+//        if ($event->offer->visible_from_date === null) {
+//            dispatch(
+//                new SendEmailJob(
+//                    new OfferCreatedMail(
+//                        $event->offer,
+//                        $event->user,
+//                        OfferCreatedMail::STANDARD
+//                    )
+//                )
+//            );
+//        } else {
+//            dispatch(
+//                new SendEmailJob(
+//                    new OfferCreatedMail(
+//                        $event->offer,
+//                        $event->user,
+//                        OfferCreatedMail::VISIBLE_IN_FUTURE
+//                    )
+//                )
+//            );
+//        }
     }
 
     /**
@@ -54,15 +74,36 @@ class OfferEventSubscriber
 
     public function onOfferActivated(OfferActivated $event)
     {
-        dispatch(new SendEmailJob(new OfferCreatedMail($event->offer, $event->offer->user)));
-        $link = config('dazu.frontend_url') . '/ogloszenia/' . $event->offer->slug;
-        $offerTitle = $event->offer->title;
-        $this->notificationManager->store(
-            "Ogłoszenie $offerTitle - zostało aktywowane",
-            $link,
-            NotificationType::INFO,
-            $event->offer->user->id
-        );
+        if ($event->offer->visible_from_date === null) {
+            dispatch(new SendEmailJob(new OfferCreatedMail($event->offer, $event->offer->user)));
+            $link = config('dazu.frontend_url') . '/ogloszenia/' . $event->offer->slug;
+            $offerTitle = $event->offer->title;
+            $this->notificationManager->store(
+                "Ogłoszenie $offerTitle - zostało aktywowane",
+                $link,
+                NotificationType::INFO,
+                $event->offer->user->id
+            );
+        } else {
+            dispatch(
+                new SendEmailJob(
+                    new OfferCreatedMail(
+                        $event->offer,
+                        $event->offer->user,
+                        OfferCreatedMail::VISIBLE_IN_FUTURE
+                    )
+                )
+            );
+            $link = config('dazu.frontend_url') . '/ogloszenia/' . $event->offer->slug;
+            $offerTitle = $event->offer->title;
+            $this->notificationManager->store(
+                "Ogłoszenie $offerTitle - automatycznie pojawi się na portalu w wyznaczonym terminie.",
+                $link,
+                NotificationType::INFO,
+                $event->offer->user->id
+            );
+        }
+
     }
 
     public function subscribe(Dispatcher $events): void

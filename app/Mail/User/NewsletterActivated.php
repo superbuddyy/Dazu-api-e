@@ -17,10 +17,10 @@ class NewsletterActivated extends BaseMail
 
     /**
      * EmailConfirmation constructor.
-     * @param User $user
+     * @param User|null $user
      * @param string|null $email
      */
-    public function __construct(User $user, string $email = null)
+    public function __construct(User $user = null, string $email = null)
     {
         parent::__construct();
         $this->user = $user;
@@ -29,7 +29,7 @@ class NewsletterActivated extends BaseMail
 
     public function build(): self
     {
-        $email = $this->email ?: $this->user->email;
+        $email = $this->user->email ?? $this->email;
         $this->to($email)
             ->from($this->from['from_address'], $this->from['from_name'])
             ->subject(trans('mail.newsletter_activated'));

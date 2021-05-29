@@ -10,6 +10,8 @@ return [
     'remind_password' => 'Ustaw swoje nowe hasło',
     'remind_password_content' => 'Kliknij w link poniżej, aby ustawić nowe hasło',
     'remind_password_btn' => 'Ustaw hasło',
+    'offer_created_visible_in_future' => 'Twoje ogłoszenie będzie aktywne w wyznaczonym terminie.',
+    'offer_created_visible_in_future_content' => 'Dzień dobry, Informujemy, że Twoje ogłoszenie automatycznie pojawi się na portalu w wyznaczonym terminie.',
     'offer_created' => 'Twoje ogłoszenie już jest na portalu Dazu',
     'offer_created_content' => 'Dzień dobry, <br> Informujemy że Twoje ogłoszenie właśnie pojawiło się na portalu Dazu. Aby je zobaczyć wciśnij link poniżej',
     'offer_created_footer' => 'Jeśli chcesz przyciągnąć więcej poszukujących i szybciej sfinalizować ofertę skorzystaj z pakietu promocyjnego.',

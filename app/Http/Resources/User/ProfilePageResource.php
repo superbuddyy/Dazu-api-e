@@ -18,16 +18,22 @@ class ProfilePageResource extends JsonResource
      */
     public function toArray($request)
     {
+        $videoAvatar = $this->user->videoAvatar['file']['url'] ?? null;
+        $avatar = $this->user->avatar['file']['url'] ?? null;
+
+        if (!$videoAvatar && !$avatar){
+            $avatar = url('/storage/images/avatar.svg');
+        }
+
         return [
             'user' => [
                 'id' => $this->id,
                 'name' => $this->profile->name ?? null,
-                'avatar' => $this->avatar['file']['url'] ?? url('/storage/images/avatar.svg'),
+                'type' => $this->getRoleName() ?? null,
+                'avatar' => $avatar,
+                'video_avatar' => $videoAvatar,
                 'created_at' => $this->created_at->format('Y-m-d') ?? null,
-                'company' => [
-                    'avatar' => $this->company->avatar->file['url'] ?? null,
-                    'video_avatar' => $this->company->video_avatar->file['url'] ?? null
-                ],
+                'company' => $this->getCompanyData(),
                 'address' => [
                     'city' => $this->profile->city ?? null,
                     'street' => $this->profile->street ?? null,
@@ -39,6 +45,28 @@ class ProfilePageResource extends JsonResource
             'offers' => $this->offers->where('status', OfferStatus::ACTIVE)->map(function ($offer) {
                 return new OfferResource($offer);
             })
+        ];
+    }
+
+    private function getCompanyData ()
+    {
+        $companyModel = $this->company;
+        if (!isset($companyModel)) {
+            return [];
+        }
+
+        if (!isset($companyModel->avatar->file['url']) && isset($companyModel->video_avatar->file['url'])) {
+            $companyAvatar = null;
+        } elseif (isset($companyModel->avatar->file['url'])) {
+            $companyAvatar = $companyModel->avatar->file['url'];
+        } else {
+            $companyAvatar = url('/svg/avatar.svg');
+        }
+
+        return [
+            'name' => $companyModel->name,
+            'avatar' => $companyAvatar,
+            'video_avatar' => $companyModel->video_avatar->file['url'] ?? null
         ];
     }
 }
