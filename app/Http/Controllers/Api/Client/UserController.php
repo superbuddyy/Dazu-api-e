@@ -13,7 +13,9 @@ use App\Http\Resources\Offer\OfferCollection;
 use App\Http\Resources\User\AgentCollection;
 use App\Http\Resources\User\AgentResource;
 use App\Http\Resources\User\ProfilePageResource;
+use App\Jobs\SendEmailJob;
 use App\Laravue\Acl;
+use App\Mail\User\UserDeleted;
 use App\Managers\CompanyManager;
 use App\Managers\NotificationManager;
 use App\Managers\OfferManager;
@@ -110,8 +112,10 @@ class UserController
 
     public function delete()
     {
+        $email = Auth::user()->email;
         $this->userManager->destroy();
         Auth::user()->offers()->delete();
+        dispatch(new SendEmailJob(new UserDeleted($email)));
         return response()->success('', Response::HTTP_NO_CONTENT);
     }
 
