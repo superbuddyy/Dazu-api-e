@@ -31,7 +31,7 @@ class ImageService
             'other/';
 
         Storage::put(
-            'public/' . $pathModel . "/$filename",
+            'public/' . $pathModel . "$filename",
             (string)$image->stream($file->getClientOriginalExtension(), 50),
         );
 
