@@ -120,6 +120,10 @@ Route::namespace('Api')->group(function() {
                 ->name('favorite-filters.store');
         });
 
+        /** Faq */
+        Route::get('faq', 'FaqController@index')
+            ->name('faq.index');
+
         /** User profile */
         Route::get('profile/{user}', 'UserController@showProfile')
             ->name('user.showProfile');
