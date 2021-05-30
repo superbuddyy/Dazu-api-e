@@ -35,7 +35,7 @@ class UserEventSubscriber
         $event->user->verification_token = Str::uuid()->toString();
         $event->user->save();
 
-        dispatch(new SendEmailJob(new SetPassword($event->user)));
+        dispatch(new SendEmailJob(new SetPassword($event->user, SetPassword::AGENT)));
     }
 
     public function onNewsletterActivated(NewsletterActivated $event)
