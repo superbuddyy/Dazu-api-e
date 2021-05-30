@@ -23,12 +23,17 @@ class ImageService
 
     public function store(File $file, string $model): string
     {
-        $filename = $this->makeFilename($file->guessExtension());
+        $image = $this->manager->make($file->getPathname());
+
+        $filename = $this->makeFilename($file->getClientOriginalExtension());
         $pathModel = $model !== null && defined($model . '::IMAGES_PATH') ?
             constant($model . '::IMAGES_PATH') . '/' :
             'other/';
 
-        Storage::putFileAs('public/' . $pathModel, $file, $filename);
+        Storage::put(
+            'public/' . $pathModel . "/$filename",
+            (string)$image->stream($file->getClientOriginalExtension(), 50),
+        );
 
         return $filename;
     }
