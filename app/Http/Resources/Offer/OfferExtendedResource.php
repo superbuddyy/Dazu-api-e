@@ -16,6 +16,17 @@ use Illuminate\Support\Facades\Auth;
 class OfferExtendedResource extends JsonResource
 {
     /**
+     * @var mixed|null
+     */
+    private $offerToken;
+
+    public function __construct($resource, ?string $offerToken = null)
+    {
+        parent::__construct($resource);
+        $this->offerToken = $offerToken;
+    }
+
+    /**
      * Transform the resource into an array.
      *
      * @param Request|FormRequest $request
@@ -108,7 +119,8 @@ class OfferExtendedResource extends JsonResource
                         'url' => $img->file['url'],
                         'path_name' => $img->file['path_name'],
                     ];
-                })
+                }),
+                'offer_token' => $this->offerToken
             ]
         );
     }

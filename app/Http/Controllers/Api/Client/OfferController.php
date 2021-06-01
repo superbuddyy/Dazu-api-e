@@ -13,6 +13,7 @@ use App\Events\User\UserCreated;
 use App\Exceptions\UserExists;
 use App\Http\Requests\Offer\OfferStoreRequest;
 use App\Http\Requests\Offer\ReportOfferRequest;
+use App\Http\Requests\Offer\ShowOfferRequest;
 use App\Http\Resources\Offer\OfferCollection;
 use App\Http\Resources\Offer\OfferExtendedResource;
 use App\Jobs\SendEmailJob;
@@ -33,9 +34,11 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class OfferController
@@ -43,30 +46,25 @@ class OfferController
     /**
      * @var OfferManager
      */
-    private $offerManager;
+    private OfferManager $offerManager;
 
     /**
      * @var UserManager
      */
-    private $userManager;
-
-    /**
-     * @var ImageService
-     */
-    private $imageService;
+    private UserManager $userManager;
 
     /**
      * @var TransactionManager
      */
-    private $transactionManager;
+    private TransactionManager $transactionManager;
 
     /**
      * @var Checkout
      */
-    private $paypalCheckout;
+    private Checkout $paypalCheckout;
 
     /** @var UserProfileManager */
-    private $userProfileManager;
+    private UserProfileManager $userProfileManager;
 
     /**
      * OfferManager constructor.
@@ -103,17 +101,6 @@ class OfferController
 
     public function show(Offer $offer): Response
     {
-        $user = Auth::user();
-        $userIds = [];
-        if ($user && $user->getRoleName() === Acl::ROLE_COMPANY && $user->company) {
-            $userIds = User::where('company_id', $user->company_id)->pluck('id')->all();
-        } else if($user) {
-            $userIds = [$user->id];
-        }
-        if (!in_array($offer->user_id, $userIds) && ($offer->status !== OfferStatus::ACTIVE || $offer->isExpired)){
-            return response()->error('', Response::HTTP_NOT_FOUND);
-        }
-
         return response()->success(new OfferExtendedResource($offer));
     }
 
@@ -142,10 +129,16 @@ class OfferController
                 $request->get('lat'),
                 $request->get('lon'),
                 $request->get('location_name'),
-                $request->get('links'),
+                $request->get('links', []),
                 $request->get('visible_from_date'),
                 $user->id
             );
+
+            $offerToken = null;
+            if ($request->get('preview')) {
+                $offerToken = (string)Str::uuid();
+                Cache::put('offer-token:' . $offer->id, $offerToken, Carbon::now()->addHour());
+            }
 
             if ($request->has('subscription')) {
                 $subscription = Subscription::findOrFail($request->subscription);
@@ -183,7 +176,7 @@ class OfferController
             if (($bill = $offer->calculateBill()['billAmount']) !== 0) {
                 $this->offerManager->changeStatus($offer, OfferStatus::PENDING);
 
-                if (!Auth::user()) {
+                if (!Auth::user() && !$request->has('preview')) {
                     event(new UserCreated($user));
                     event(new PaidOfferCreated($offer));
                 }
@@ -199,8 +192,7 @@ class OfferController
                 event(new UserCreated($user));
                 event(new OfferCreated($offer, $user));
             }
-
-            return response()->success(new OfferExtendedResource($offer), Response::HTTP_CREATED);
+            return response()->success(new OfferExtendedResource($offer, $offerToken), Response::HTTP_CREATED);
         } catch (UserExists $e) {
             DB::rollBack();
             return response()->errorWithLog(['error' => 'email_already_exist'], Response::HTTP_BAD_REQUEST, ['message' => $e]);
@@ -233,7 +225,7 @@ class OfferController
                 $request->get('lat'),
                 $request->get('lon'),
                 $request->get('location_name'),
-                $request->get('links'),
+                $request->get('links', []),
                 $request->get('visible_from_date', null)
             );
 
@@ -263,15 +255,23 @@ class OfferController
         }
 
         DB::commit();
+        $isPreview = $request->get('preview') === true;
         if (($bill = $offer->calculateBill()['billAmount']) !== 0) {
             $this->offerManager->changeStatus($offer, OfferStatus::PENDING);
+
+            if ($isPreview) {
+                event(new PaidOfferCreated($offer));
+                Auth::logout();
+            }
 
             return response()->success(
                 ['bill_amount' => $bill, 'offer_slug' => $offer->slug]
             );
         }
         event(new OfferUpdated($offer));
-
+        if ($isPreview) {
+            Auth::logout();
+        }
         return response()->success(new OfferExtendedResource($offer), Response::HTTP_OK);
     }
 

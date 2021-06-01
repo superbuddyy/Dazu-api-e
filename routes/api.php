@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\CanSeeOffer;
+use App\Http\Middleware\Censor;
 use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -89,9 +91,6 @@ Route::namespace('Api')->group(function() {
                 ->middleware('permission:' . Acl::PERMISSION_DELETE_AGENT);
 
             /** Offers */
-            Route::post('offers/{offer}', 'OfferController@update')
-                ->name('offers.update')
-                ->middleware('censor');
             Route::patch('offers/activate', 'OfferController@activate')
                 ->name('offers.activate');
             Route::patch('offers/deactivate', 'OfferController@deactivate')
@@ -165,10 +164,15 @@ Route::namespace('Api')->group(function() {
             ->name('subscriptions.index');
 
         /** Offers */
+        Route::post('offers/{offer}', 'OfferController@update')
+            ->name('offers.update')
+            ->middleware([Censor::class, CanSeeOffer::class]);
+
         Route::get('offers', 'OfferController@index')
             ->name('offers.index');
 
         Route::get('offers/{offer}', 'OfferController@show')
+            ->middleware(CanSeeOffer::class)
             ->name('offers.show');
 
         Route::get('offers/{offer}/similar', 'OfferController@getSmimilar')
@@ -214,6 +218,14 @@ Route::namespace('Api')->group(function() {
             Route::get('/user', function (Request $request) {
                 return new UserResource($request->user());
             });
+
+            // FAQ
+            Route::post('faq', 'FaqController@updateOrCreate')
+                ->name('faq.updateOrCreate');
+            Route::get('faq/{id}', 'FaqController@show')
+                ->name('faq.show');
+            Route::delete('faq/{id}', 'FaqController@delete')
+                ->name('faq.delete');
 
             // Api resource routes
             Route::apiResource('roles', 'RoleController')

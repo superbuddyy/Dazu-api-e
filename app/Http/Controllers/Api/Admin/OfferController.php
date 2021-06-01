@@ -66,7 +66,7 @@ class OfferController extends Controller
                 $request->get('lat'),
                 $request->get('lon'),
                 $request->get('location_name'),
-                $request->get('links'),
+                $request->get('links', []),
                 $request->get('visible_from_date', null),
                 $request->get('status')
             );

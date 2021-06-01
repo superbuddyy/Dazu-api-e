@@ -25,7 +25,7 @@ class OfferStoreRequest extends FormRequest
             'lon' => 'required',
             'location_name' => 'required',
             'main_image.*' => 'file|max:5000',
-            'type' => 'in:' . implode(',', [CompanyType::DEVELOPER, CompanyType::AGENCY, 'private'])
+            'type' => 'in:' . implode(',', [CompanyType::DEVELOPER, CompanyType::AGENCY, 'user'])
         ];
     }
 }
