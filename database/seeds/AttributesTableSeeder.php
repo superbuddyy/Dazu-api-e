@@ -622,5 +622,13 @@ class AttributesTableSeeder extends Seeder
             'unit' => AttributeUnit::NONE,
             'offer_types' => [OfferType::RENT]
         ]);
+
+        Attribute::create([
+            'name' => 'Zł/noc',
+            'description' => 'zl-noc',
+            'type' => AttributeType::CHOICE,
+            'unit' => AttributeUnit::NONE,
+            'offer_types' => [OfferType::RENT]
+        ]);
     }
 }
