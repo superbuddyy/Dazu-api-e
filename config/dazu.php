@@ -18,5 +18,9 @@ return [
     'recaptcha' => [
         'secret' => env('CAPTCHA_SECRET', '6LdeEN4UAAAAAFiL15UVm-Kg023wTRgPJBdXVFey'),
     ],
-    'frontend_url' => env('FRONT_URL')
+    'frontend_url' => env('FRONT_URL'),
+    'email' => [
+        'from_address' => env('MAIL_FROM_ADDRESS'),
+        'from_name' => env('MAIL_FROM_NAME'),
+    ],
 ];

@@ -19,8 +19,8 @@ class BaseMail extends Mailable
     public function __construct()
     {
         $this->from = [
-            'from_address' => env('MAIL_FROM_ADDRESS'),
-            'from_name' => env('MAIL_FROM_NAME'),
+            'from_address' => config('dazu.emails.from_address'),
+            'from_name' => env('dazu.emails.from_name'),
         ];
     }
 }
