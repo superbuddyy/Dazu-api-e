@@ -20,7 +20,7 @@ class BaseMail extends Mailable
     {
         $this->from = [
             'from_address' => config('dazu.email.from_address'),
-            'from_name' => env('dazu.email.from_name'),
+            'from_name' => config('dazu.email.from_name'),
         ];
     }
 }
