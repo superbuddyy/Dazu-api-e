@@ -48,7 +48,7 @@ class Avatar extends Model
         return [
             'original_name' => $this->attributes['file'],
             'path_name' => $pathname,
-            'url' => env('APP_URL') . '/storage/' . $pathname,
+            'url' => config('app.url') . '/storage/' . $pathname,
         ];
     }
 }

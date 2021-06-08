@@ -56,6 +56,6 @@ class Post extends Model
      */
     public function getMainPhotoUrlAttribute(): string
     {
-        return env('APP_URL') . '/storage/' . self::IMAGES_PATH . '/' . $this->main_photo;
+        return config('app.url') . '/storage/' . self::IMAGES_PATH . '/' . $this->main_photo;
     }
 }

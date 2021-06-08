@@ -43,7 +43,7 @@ class ContactForm extends BaseMail
 
     public function build(): self
     {
-        $this->to(env('ADMIN_EMAIL'))
+        $this->to(config('dazu.admin.email'))
             ->replyTo($this->email)
             ->from($this->from['from_address'], $this->from['from_name'])
             ->subject(trans('mail.contact_form'));
