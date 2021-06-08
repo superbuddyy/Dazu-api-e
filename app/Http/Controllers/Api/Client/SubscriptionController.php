@@ -91,7 +91,7 @@ class SubscriptionController
                 ]
             );
             return response()->error(
-                ['url' => env('FRONT_URL') . '?payment-status=fail'],
+                ['url' => config('dazu.frontend_url') . '?payment-status=fail'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }

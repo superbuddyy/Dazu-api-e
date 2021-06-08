@@ -458,7 +458,7 @@ class OfferController
                     'error_msg' => $e->getMessage(),
                 ]
             );
-            return response()->success(env('FRONT_URL') . '?payment-status=fail');
+            return response()->success(config('dazu.frontend_url') . '?payment-status=fail');
         }
     }
 

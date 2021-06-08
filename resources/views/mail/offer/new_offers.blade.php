@@ -3,7 +3,7 @@
     @foreach($offers as $offer)
         <div style="">
             <img src="{{ $offer->main_photo->file->url ?? null}}" alt="">
-            @component('mail::button', ['url' => env('FRONT_URL').'/ogloszenia/'.$offer['slug']])
+            @component('mail::button', ['url' => config('dazu.frontend_url').'/ogloszenia/'.$offer['slug']])
                 @lang('mail.new_offers_button')
             @endcomponent
         </div>

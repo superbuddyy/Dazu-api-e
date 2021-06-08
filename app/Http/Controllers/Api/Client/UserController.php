@@ -185,7 +185,7 @@ class UserController
                     'error_msg' => $e->getMessage(),
                 ]
             );
-            return redirect()->away(env('FRONT_URL') . '?payment-status=fail');
+            return redirect()->away(config('dazu.frontend_url') . '?payment-status=fail');
         }
     }
 

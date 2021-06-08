@@ -94,7 +94,7 @@ class PaymentController extends Controller
                     $avatar = $this->userManager->handlePaymentCallback($cachedInfoArray);
                     DB::commit();
                     return redirect()->away(
-                        env('FRONT_URL')
+                        config('dazu.frontend_url')
                         . '/ustawienia-konta/?payment-status=success&'.$cachedInfoArray['context'].'=' . $avatar->file['url']
                     );
                 default:
@@ -102,7 +102,7 @@ class PaymentController extends Controller
             }
 
             DB::commit();
-            return redirect()->away(env('FRONT_URL') . '?payment-status=success');
+            return redirect()->away(config('dazu.frontend_url') . '?payment-status=success');
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(
@@ -113,7 +113,7 @@ class PaymentController extends Controller
                     'error_msg' => $e,
                 ]
             );
-            return redirect()->away(env('FRONT_URL') . '?payment-status=fail');
+            return redirect()->away(config('dazu.frontend_url') . '?payment-status=fail');
         }
     }
 }
