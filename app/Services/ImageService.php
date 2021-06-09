@@ -25,14 +25,14 @@ class ImageService
     {
         $image = $this->manager->make($file->getPathname());
 
-        $filename = $this->makeFilename($file->getExtension());
+        $filename = $this->makeFilename($file->guessExtension());
         $pathModel = $model !== null && defined($model . '::IMAGES_PATH') ?
             constant($model . '::IMAGES_PATH') . '/' :
             'other/';
 
         Storage::put(
             'public/' . $pathModel . "$filename",
-            (string)$image->stream($file->getExtension(), 50),
+            (string)$image->stream($file->guessExtension(), 50),
         );
 
         return $filename;
