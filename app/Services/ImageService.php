@@ -32,7 +32,7 @@ class ImageService
 
         Storage::put(
             'public/' . $pathModel . "$filename",
-            (string)$image->stream($file->guessExtension(), 50),
+            (string)$image->stream($file->guessExtension(), 30),
         );
 
         return $filename;

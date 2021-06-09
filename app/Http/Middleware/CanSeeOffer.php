@@ -46,7 +46,7 @@ class CanSeeOffer
 
     public function verifyOfferToken(Offer $offer): bool
     {
-        if (Cache::get('offer-token:'. $offer->id) === $_COOKIE['offer-token']) {
+        if (isset($_COOKIE['offer-token']) && Cache::get('offer-token:'. $offer->id) === $_COOKIE['offer-token']) {
             Auth::login($offer->user);
             return true;
         }
