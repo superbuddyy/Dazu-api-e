@@ -33,7 +33,7 @@ $factory->define(Offer::class, function (Faker $faker): array {
         'lat' => 0,
         'lon' => 0,
         'location_name' => 'Warszawa, Mazowieckie',
-        'category_id' => factory(Category::class)->create()->id,
+        'category_id' => Category::inRandomOrder()->first()->id,
         'links' => [],
         'refresh_count' => 0,
         'expire_time' => Carbon::now()->addDays(30),

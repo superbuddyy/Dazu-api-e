@@ -119,6 +119,10 @@ Route::namespace('Api')->group(function() {
                 ->name('favorite-filters.store');
         });
 
+        /** Popup */
+        Route::get('/popup/{popup}', 'PopupController@show')
+            ->name('popup.show');
+
         /** Faq */
         Route::get('faq', 'FaqController@index')
             ->name('faq.index');
@@ -218,6 +222,11 @@ Route::namespace('Api')->group(function() {
             Route::get('/user', function (Request $request) {
                 return new UserResource($request->user());
             });
+
+
+            // POPUP
+            Route::post('popup', 'PopupController@store')
+                ->name('popup.store');
 
             // FAQ
             Route::post('faq', 'FaqController@updateOrCreate')
