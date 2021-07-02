@@ -8,8 +8,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Popup\PopupResource;
 use App\Managers\PopupManager;
 use App\Models\Popup;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Psy\Util\Json;
 
 class PopupController extends Controller
 {
@@ -20,30 +22,34 @@ class PopupController extends Controller
         $this->popupManager = $popupManager;
     }
 
-    public function show(Popup $popup)
+    public function show(Popup $popup): JsonResponse
     {
         return response()->success(new PopupResource($popup));
     }
 
-    public function store(Request $request)
-    {
-        $popup = $this->popupManager->store($request->all());
-
-        if ($request->has('image')) {
-            $this->popupManager->storeImage($request->file('image'), $popup);
-        }
-
-        return response()->success($popup, Response::HTTP_CREATED);
-    }
-
-    public function update(Request $request, Popup $popup)
+    public function update(Request $request, Popup $popup): JsonResponse
     {
         $this->popupManager->update($request->all(), $popup);
 
+
         if ($request->has('image')) {
+            $this->popupManager->removeImage($popup);
+
             $this->popupManager->storeImage($request->file('image'), $popup);
         }
 
-        return response()->success($popup, Response::HTTP_CREATED);
+        return response()->success($popup, Response::HTTP_OK);
+    }
+
+    public function activate(Popup $popup): JsonResponse
+    {
+        $popup->is_active = true;
+        return response()->success($popup->save());
+    }
+
+    public function deactivate(Popup $popup): JsonResponse
+    {
+        $popup->is_active = false;
+        return response()->success($popup->save());
     }
 }

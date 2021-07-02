@@ -9,6 +9,11 @@ use App\Services\ImageService;
 
 class PopupManager
 {
+    public function getList()
+    {
+        return Popup::get();
+    }
+
     public function store(array $popupData)
     {
         return Popup::create([

@@ -9,7 +9,9 @@ class Popup extends Model
 {
     public const IMAGES_PATH = 'popups';
 
-    protected $fillable = ['title', 'content', 'image', 'show_again_after'];
+    protected $fillable = ['title', 'content', 'image', 'show_again_after', 'is_active'];
+
+    protected $casts = ['is_active' => 'boolean'];
 
     public function getFileAttribute(): ?array
     {

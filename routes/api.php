@@ -5,8 +5,6 @@ use App\Http\Middleware\Censor;
 use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use \App\Laravue\Faker;
-use \App\Laravue\JsonResponse;
 use \App\Laravue\Acl;
 
 /*
@@ -120,7 +118,9 @@ Route::namespace('Api')->group(function() {
         });
 
         /** Popup */
-        Route::get('/popup/{popup}', 'PopupController@show')
+        Route::get('/popups', 'PopupController@index')
+            ->name('popup.index');
+        Route::get('/popups/{popup}', 'PopupController@show')
             ->name('popup.show');
 
         /** Faq */
@@ -225,8 +225,12 @@ Route::namespace('Api')->group(function() {
 
 
             // POPUP
-            Route::post('popup', 'PopupController@store')
+            Route::post('popups/{popup}', 'PopupController@update')
                 ->name('popup.store');
+            Route::patch('popups/{popup}/activate', 'PopupController@activate')
+                ->name('popup.activate');
+            Route::patch('popups/{popup}/deactivate', 'PopupController@deactivate')
+                ->name('popup.deactivate');
 
             // FAQ
             Route::post('faq', 'FaqController@updateOrCreate')

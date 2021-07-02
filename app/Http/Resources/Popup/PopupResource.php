@@ -21,10 +21,12 @@ class PopupResource extends JsonResource
     public function toArray($request): array
     {
         return [
+            'id' => $this->id ?? null,
             'title' => $this->title ?? null,
             'content' => $this->content ?? null,
             'image' => $this->file ?? null,
             'showAgainAfter' => $this->show_again_after ?? null,
+            'is_active' => $this->is_active ?? null,
         ];
     }
 }

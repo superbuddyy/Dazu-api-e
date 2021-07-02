@@ -17,6 +17,7 @@ class CreatePopupsTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('content');
+            $table->boolean('is_active')->default(true);
             $table->string('image')->nullable();
             $table->integer('show_again_after')->default(1); // 1 Day
             $table->timestamps();

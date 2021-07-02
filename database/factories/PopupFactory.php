@@ -30,5 +30,6 @@ $factory->define(Popup::class, function (Faker $faker): array {
         'content' => $faker->realText(100),
         'image' => $imageService->store($file, Popup::class),
         'show_again_after' => 1,
+        'is_active' => true,
     ];
 });
