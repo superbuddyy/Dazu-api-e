@@ -110,6 +110,7 @@ class OfferExtendedResource extends JsonResource
                     'type' => $this->user->getRoleName() ?? null,
                     'avatar' => $avatar,
                     'video_avatar' => $videoAvatar,
+                    'email' => $this->user->email
                 ],
                 'company' => $company ?? null,
                 'photos' => $this->photos->map(function ($img) {
