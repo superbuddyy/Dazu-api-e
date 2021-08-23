@@ -163,6 +163,7 @@ class UserManager
     public function destroy(User $user = null)
     {
         $user = $user ?: Auth::user();
+        $user->offers()->delete();
         return $user->delete();
     }
 }
