@@ -112,7 +112,7 @@ class OfferExtendedResource extends JsonResource
                     'video_avatar' => $videoAvatar,
                     'email' => $this->user->email
                 ],
-                'company' => $company ?? null,
+                'company' => $company,
                 'photos' => $this->photos->map(function ($img) {
                     return [
                         'id' => $img->id,
@@ -128,8 +128,8 @@ class OfferExtendedResource extends JsonResource
 
     private function getCompanyData ()
     {
-        $companyModel = $this->user->company;
-        if (!isset($companyModel)) {
+        $companyModel = $this->user->company ?? null;
+        if ($companyModel) {
             return [];
         }
 
