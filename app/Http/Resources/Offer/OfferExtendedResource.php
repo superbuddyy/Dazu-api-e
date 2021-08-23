@@ -129,7 +129,7 @@ class OfferExtendedResource extends JsonResource
     private function getCompanyData ()
     {
         $companyModel = $this->user->company ?? null;
-        if ($companyModel) {
+        if (!$companyModel) {
             return [];
         }
 
