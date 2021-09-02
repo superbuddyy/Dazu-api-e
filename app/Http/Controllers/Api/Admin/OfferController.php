@@ -43,7 +43,13 @@ class OfferController extends Controller
 
     public function index(Request $request)
     {
-        $offers = $this->searchService->search($request->except(['page']), false, 'created_at', 'DESC');
+        $offers = $this->searchService->search(
+            $request->except(['page', 'order_by','order']),
+            false,
+            $request->get('order_by') ?? 'price',
+            $request->get('order') ?? 'DESC'
+        );
+
         return response()->success(new OfferCollection($offers, true));
     }
 
