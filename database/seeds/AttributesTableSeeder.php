@@ -116,7 +116,7 @@ class AttributesTableSeeder extends Seeder
         $floor = Attribute::create([
             'name' => 'Piętro',
             'description' => 'Piętro na którym znajduje się nieruchomość',
-            'type' => AttributeType::CHOICE,
+            'type' => AttributeType::MULTI_CHOICE,
             'unit' => AttributeUnit::NONE,
             'offer_types' => $allOffers
         ]);
@@ -149,7 +149,7 @@ class AttributesTableSeeder extends Seeder
         $amountOfFloors = Attribute::create([
             'name' => 'Ilość pięter',
             'description' => 'Ilość pięter w budynku',
-            'type' => AttributeType::CHOICE,
+            'type' => AttributeType::MULTI_CHOICE,
             'unit' => AttributeUnit::NONE,
             'offer_types' => $allOffers
         ]);
@@ -175,7 +175,7 @@ class AttributesTableSeeder extends Seeder
         $amountOfRooms = Attribute::create([
             'name' => 'Ilość pokojów',
             'description' => 'Ilość pokojów/pomieszczeń',
-            'type' => AttributeType::CHOICE,
+            'type' => AttributeType::MULTI_CHOICE,
             'unit' => AttributeUnit::NONE,
             'offer_types' => $allOffers
         ]);
@@ -201,7 +201,7 @@ class AttributesTableSeeder extends Seeder
         $state = Attribute::create([
             'name' => 'Stan',
             'description' => 'Stan nieruchomości',
-            'type' => AttributeType::CHOICE,
+            'type' => AttributeType::MULTI_CHOICE,
             'unit' => AttributeUnit::NONE,
             'offer_types' => $allOffers
         ]);
@@ -552,7 +552,7 @@ class AttributesTableSeeder extends Seeder
         $year = Attribute::create([
             'name' => 'Rok budowy',
             'description' => 'Blisko nieruchomości znajduje się',
-            'type' => AttributeType::CHOICE,
+            'type' => AttributeType::MULTI_CHOICE,
             'unit' => AttributeUnit::NONE,
             'offer_types' => $allOffers
         ]);
@@ -618,7 +618,7 @@ class AttributesTableSeeder extends Seeder
         $market = Attribute::create([
             'name' => 'Rynek',
             'description' => 'Rynek',
-            'type' => AttributeType::CHOICE,
+            'type' => AttributeType::MULTI_CHOICE,
             'unit' => AttributeUnit::NONE,
             'offer_types' => $allOffers
         ]);
@@ -656,7 +656,7 @@ class AttributesTableSeeder extends Seeder
         Attribute::create([
             'name' => 'Zł/h',
             'description' => 'zl-h',
-            'type' => AttributeType::CHOICE,
+            'type' => AttributeType::MULTI_CHOICE,
             'unit' => AttributeUnit::NONE,
             'offer_types' => [OfferType::RENT]
         ]);
@@ -664,7 +664,7 @@ class AttributesTableSeeder extends Seeder
         Attribute::create([
             'name' => 'Zł/noc',
             'description' => 'zl-noc',
-            'type' => AttributeType::CHOICE,
+            'type' => AttributeType::MULTI_CHOICE,
             'unit' => AttributeUnit::NONE,
             'offer_types' => [OfferType::RENT]
         ]);
