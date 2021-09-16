@@ -31,7 +31,13 @@ class SearchController
 
     public function index(SearchRequest $request)
     {
-        $offers = $this->searchService->search($request->except(['page']));
+        $offers = $this->searchService->search(
+            $request->except(['page', 'order_by','order']),
+            true,
+            $request->get('order_by') ?? 'price',
+            $request->get('order') ?? 'DESC'
+        );
+
         return response()->success(new OfferCollection($offers));
     }
 
