@@ -23,6 +23,19 @@ class CreateSubscriptionsTable extends Migration
             $table->integer('refresh_price');
             $table->integer('number_of_raises');
             $table->integer('raise_price');
+
+            $config = [
+                'is_bargain' => true,
+                'is_urgent' => true,
+                'free_refreshes' => 1,
+                'bump_prices' => [
+                    1 => '2.99',
+                    3 => '3.99',
+                    10 => '9.99'
+                ]
+            ];
+
+            $table->longText('config')->default('');
             $table->timestamps();
         });
     }

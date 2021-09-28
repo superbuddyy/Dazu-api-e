@@ -22,7 +22,7 @@ class SubscriptionController
 
     public function index(): Response
     {
-        return response()->success(Subscription::whereIn('id', [2, 3, 4])->get());
+        return response()->success(Subscription::whereIn('id', [1, 2, 3, 4])->get());
     }
 
     public function show(subscription $subscription): Response

@@ -123,7 +123,7 @@ class Offer extends Model
             'offer_subscriptions',
             'offer_id',
             'subscription_id'
-        )->withPivot('end_date');
+        )->withPivot('end_date', 'urgent', 'bargain', 'raises');
     }
 
     /**
@@ -148,7 +148,9 @@ class Offer extends Model
      */
     public function getActiveSubscriptionAttribute(): ?Subscription
     {
-        $subscription = $this->subscriptions->where('pivot.end_date', '>', Carbon::now())->first();
+        $subscription = $this->subscriptions->where('pivot.end_date', '>', Carbon::now())
+            ->first();
+
 
         if ($subscription === null) {
             return Subscription::where('id', 1)->first();

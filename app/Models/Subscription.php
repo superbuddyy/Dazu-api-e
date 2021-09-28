@@ -30,8 +30,18 @@ class Subscription extends Model
         'number_of_refreshes',
         'refresh_price',
         'number_of_raises',
-        'raise_price'
+        'raise_price',
+        'raise_price_three',
+        'raise_price_ten',
+        'bargain_price',
+        'urgent_price',
+        'config',
+        'featured_on_homepage',
+        'featured_on_search_results_and_categories'
     ];
+
+    /** @var string[]  */
+    protected $casts = ['config' => 'json', 'featured_on_homepage' => 'boolean', 'featured_on_search_results_and_categories' => 'boolean'];
 
     /**
      * The products that own the attribute.
@@ -43,7 +53,7 @@ class Subscription extends Model
             'offer_subscriptions',
             'subscription_id',
             'offer_id'
-        )->withPivot('end_date');
+        )->withPivot('end_date', 'urgent', 'bargain', 'raises');
     }
 
     /**
