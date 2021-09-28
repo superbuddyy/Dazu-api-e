@@ -147,6 +147,7 @@ class OfferBillingService
     private function calculateSubscriptionPrice()
     {
         //TODO:: Check is already paid
+        /** @var Subscription $subscription */
         $subscription = $this->offer->activeSubscription;
         if ($subscription->id !== Subscription::FREE) {
             $this->details['subscription'] = [
@@ -154,6 +155,26 @@ class OfferBillingService
                 'value' => $subscription->price,
             ];
             $this->billAmount += $subscription->price;
+        }
+
+
+        $pivotData = $this->offer->subscriptions()->get(['urgent'])[0]['pivot'];
+
+        if ($pivotData['urgent'] === 1) {
+            $this->billAmount += $subscription->urgent_price;
+            $this->details['pilne'] = [
+                'name' => 'Pilne',
+                'value' => $subscription->urgent_price,
+            ];
+        }
+
+        if ($pivotData['bargain'] === 1) {
+            $this->billAmount += $subscription->bargain_price;
+            $this->details['okazja'] = [
+                'name' => 'Okazja',
+                'value' => $subscription->bargain_price,
+                'id' => $subscription->id,
+            ];
         }
     }
 

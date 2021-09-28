@@ -25,10 +25,15 @@ class CreateOffersTable extends Migration
             $table->string('title');
             $table->string('slug')
                 ->unique();
-            $table->text('description');
             $table->bigInteger('price');
-            $table->bigInteger('old_price')
-                ->default(0);
+            $table->bigInteger('raise_price')->default(0);
+            $table->bigInteger('raise_price_three')->default(0);
+            $table->bigInteger('raise_price_ten')->default(0);
+            $table->bigInteger('urgent_price')->default(0);
+            $table->bigInteger('bargain_price')->default(0);
+            $table->boolean('featured_on_search_results_and_categories');
+            $table->boolean('featured_on_homepage');
+
             $table->enum('status', OfferStatus::getValues())
                 ->default(OfferStatus::IN_ACTIVE);
             $table->string('lat');
