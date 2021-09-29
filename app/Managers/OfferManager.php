@@ -8,6 +8,7 @@ use App\Enums\OfferStatus;
 use App\Enums\AttributeType;
 use App\Events\Offer\OfferActivated;
 use App\Laravue\Acl;
+use App\Laravue\JsonResponse;
 use App\Models\Category;
 use App\Models\Offer;
 use App\Models\Attribute;
@@ -96,7 +97,12 @@ class OfferManager
         string $locationName,
         array $links = [],
         ?string $visible_from_date = null,
-        string $userId = null
+        string $userId = null,
+        ?bool $hasRaiseOne = false,
+        ?bool $hasRaiseThree = false,
+        ?bool $hasRaiseTen = false,
+        ?bool $isUrgent = false,
+        ?bool $isBargain = false
     ): Offer
     {
         $userId = $userId ?: Auth::id();
@@ -111,6 +117,11 @@ class OfferManager
             'location_name' => $locationName,
             'links' => $links,
             'user_id' => $userId,
+            'has_raise_one' => $hasRaiseOne,
+            'has_raise_three' => $hasRaiseThree,
+            'has_raise_ten' => $hasRaiseTen,
+            'is_urgent' => $isUrgent,
+            'is_bargain' => $isBargain,
         ];
         if ($visible_from_date !== 'null' && $visible_from_date !== null) {
             $offer['visible_from_date'] = $visible_from_date;

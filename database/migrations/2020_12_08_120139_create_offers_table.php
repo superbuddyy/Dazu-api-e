@@ -31,8 +31,6 @@ class CreateOffersTable extends Migration
             $table->bigInteger('raise_price_ten')->default(0);
             $table->bigInteger('urgent_price')->default(0);
             $table->bigInteger('bargain_price')->default(0);
-            $table->boolean('featured_on_search_results_and_categories');
-            $table->boolean('featured_on_homepage');
 
             $table->enum('status', OfferStatus::getValues())
                 ->default(OfferStatus::IN_ACTIVE);
@@ -63,6 +61,12 @@ class CreateOffersTable extends Migration
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
+
+            $table->boolean('has_raise_one')->nullable()->default(null);
+            $table->boolean('has_raise_three')->nullable()->default(null);
+            $table->boolean('has_raise_ten')->nullable()->default(null);
+            $table->boolean('is_urgent')->nullable()->default(null);
+            $table->boolean('is_bargain')->nullable()->default(null);
         });
     }
 

@@ -53,7 +53,7 @@ class Subscription extends Model
             'offer_subscriptions',
             'subscription_id',
             'offer_id'
-        )->withPivot('end_date', 'urgent', 'bargain', 'raises');
+        )->withPivot('end_date');
     }
 
     /**

@@ -60,13 +60,18 @@ class Offer extends Model
         'refresh_count',
         'visible_from_date',
         'note',
-        'expire_time'
+        'expire_time',
+        'has_raise_one',
+        'has_raise_three',
+        'has_raise_ten',
+        'is_bargain',
+        'is_urgent'
     ];
 
     protected $dates = ['expire_time', 'created_at', 'updated_at'];
 
     /** @var string[]  */
-    protected $casts = ['links' => 'json'];
+    protected $casts = ['links' => 'json', 'is_bargain' => 'boolean', 'is_urgent' => 'boolean', 'has_raise_one', 'has_raise_three', 'has_raise_ten'];
 
     public static function boot(): void
     {
@@ -123,7 +128,7 @@ class Offer extends Model
             'offer_subscriptions',
             'offer_id',
             'subscription_id'
-        )->withPivot('end_date', 'urgent', 'bargain', 'raises');
+        )->withPivot('end_date');
     }
 
     /**
