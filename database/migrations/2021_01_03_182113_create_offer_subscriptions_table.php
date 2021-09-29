@@ -12,8 +12,6 @@ class CreateOfferSubscriptionsTable extends Migration
     {
         Schema::create('offer_subscriptions', function (Blueprint $table): void {
             $table->increments('id');
-            $table->boolean('urgent');
-            $table->boolean('bargain');
             $table->integer('raises');
             $table->timestamp('end_date');
 

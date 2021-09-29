@@ -131,7 +131,12 @@ class OfferController
                 $request->get('location_name'),
                 $request->get('links', []),
                 $request->get('visible_from_date'),
-                $user->id
+                $user->id,
+                (bool) $request->get('has_raise_one'),
+                (bool) $request->get('has_raise_three'),
+                (bool) $request->get('has_raise_ten'),
+                (bool) $request->get('is_urgent'),
+                (bool) $request->get('is_bargain')
             );
 
             $offerToken = null;

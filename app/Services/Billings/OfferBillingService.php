@@ -157,26 +157,42 @@ class OfferBillingService
             $this->billAmount += $subscription->price;
         }
 
+        $this->calculateExtras($subscription);
+    }
 
-        $pivotData = $this->offer->subscriptions()->get(['urgent'])[0]['pivot'];
-
-        if ($pivotData['urgent'] === 1) {
-            $this->billAmount += $subscription->urgent_price;
-            $this->details['pilne'] = [
+    private function calculateExtras(Subscription $subscription) {
+        $extras = [
+            'pilne' => [
                 'name' => 'Pilne',
                 'value' => $subscription->urgent_price,
-            ];
-        }
-
-        if ($pivotData['bargain'] === 1) {
-            $this->billAmount += $subscription->bargain_price;
-            $this->details['okazja'] = [
+            ],
+            'okazja' => [
                 'name' => 'Okazja',
                 'value' => $subscription->bargain_price,
-                'id' => $subscription->id,
+            ],
+            'podbicie_1' => [
+                'name' => 'Podibicie',
+                'value' => $subscription->raise_price,
+            ],
+            'podbicie_3' => [
+                'name' => 'Podibicie x3',
+                'value' => $subscription->raise_price_three,
+            ],
+            'podbicie_10' => [
+                'name' => 'Podibicie x10',
+                'value' => $subscription->raise_price_ten,
+            ],
+        ];
+
+        foreach($extras as $key => $extras_data) {
+            $this->details[$key] = [
+                'name' => $extras_data['name'],
+                'value' => $extras_data['value'],
             ];
+            $this->billAmount += $extras_data['value'];
         }
     }
+
 
     private function calculateAvatarPrice()
     {

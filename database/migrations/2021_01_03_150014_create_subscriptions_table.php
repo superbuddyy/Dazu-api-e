@@ -23,17 +23,12 @@ class CreateSubscriptionsTable extends Migration
             $table->integer('refresh_price');
             $table->integer('number_of_raises');
             $table->integer('raise_price');
-
-            $config = [
-                'is_bargain' => true,
-                'is_urgent' => true,
-                'free_refreshes' => 1,
-                'bump_prices' => [
-                    1 => '2.99',
-                    3 => '3.99',
-                    10 => '9.99'
-                ]
-            ];
+            $table->boolean('raise_three');
+            $table->boolean('raise_ten');
+            $table->integer('urgent_price');
+            $table->integer('bargain_price');
+            $table->boolean('featured_on_homepage');
+            $table->boolean('featured_on_search_results_and_categories');
 
             $table->longText('config')->default('');
             $table->timestamps();
