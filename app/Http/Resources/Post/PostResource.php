@@ -32,8 +32,8 @@ class PostResource extends JsonResource
                 'created_at' => $this->created_at->format('Y-m-d H:II') ?? null,
                 'updated_at' => $this->updated_at->format('Y-m-d H:II') ?? null,
                 'user' => [
-                    'id' => $this->user->id,
-                    'email' => $this->user->email,
+                    'id' => $this->user->id ?? null,
+                    'email' => $this->user->email ?? null,
                 ],
             ]
         );
