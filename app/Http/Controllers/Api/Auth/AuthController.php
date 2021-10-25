@@ -94,7 +94,11 @@ class AuthController extends BaseController
 
     public function completeRegistration(Request $request): JsonResponse
     {
-        $user = User::where('verification_token', $request->token)->firstOrFail();
+        $token = $request->token;
+        if (is_array($request->token)){
+            $token = $request->token['token'];
+        }
+        $user = User::where('verification_token', $token)->firstOrFail();
         $user->email_verified_at = Carbon::now();
         $user->verification_token = null;
         $user->save();
