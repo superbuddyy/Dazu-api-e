@@ -33,9 +33,13 @@ class PopupController extends Controller
 
 
         if ($request->has('image')) {
-            $this->popupManager->removeImage($popup);
+            try{
+                $this->popupManager->removeImage($popup);    
+                $this->popupManager->storeImage($request->file('image'), $popup);
+            } catch (\Exception $ex) {
 
-            $this->popupManager->storeImage($request->file('image'), $popup);
+            }
+            
         }
 
         return response()->success($popup, Response::HTTP_OK);
