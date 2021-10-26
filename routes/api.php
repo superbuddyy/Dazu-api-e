@@ -226,7 +226,7 @@ Route::namespace('Api')->group(function() {
 
             // POPUP
             Route::post('popups/{popup}', 'PopupController@update')
-                ->name('popup.store');
+                ->name('popup.update');
             Route::patch('popups/{popup}/activate', 'PopupController@activate')
                 ->name('popup.activate');
             Route::patch('popups/{popup}/deactivate', 'PopupController@deactivate')
