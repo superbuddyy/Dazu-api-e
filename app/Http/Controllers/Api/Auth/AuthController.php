@@ -15,6 +15,7 @@ use App\Laravue\Models\Role;
 use App\Mail\Auth\RemindPassword;
 use App\Mail\User\NewsletterActivated as NewsletterActivatedMail;
 use App\Managers\UserManager;
+use App\Mail\Auth\EmailConfirmation;
 use App\Managers\UserProfileManager;
 use App\Models\Company;
 use App\Models\User;
@@ -29,7 +30,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-
+use Illuminate\Contracts\Events\Dispatcher;
 /**
  * Class AuthController
  *
@@ -105,7 +106,22 @@ class AuthController extends BaseController
 
         return response()->success('completed', Response::HTTP_OK);
     }
-
+    public function resendEmail(Request $request): JsonResponse
+    {
+        $user = User::where('email', $request->get('email'))->first();
+        if ($user) {
+            if ($user->email_verified_at == null){
+                $user->verification_token = Str::uuid()->toString();
+                $user->save();
+                dispatch(new SendEmailJob(new EmailConfirmation($user)));
+                return response()->success('Mail sent', Response::HTTP_OK);    
+            } else {
+                return response()->success('Already activated', Response::HTTP_OK);    
+            }    
+        } else {
+            return response()->error('Invalid email');
+        }
+    }
     public function setPassword(SetPasswordRequest $request): JsonResponse
     {
         $user = User::where('verification_token', $request->get('token'))->firstOrFail();

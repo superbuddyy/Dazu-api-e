@@ -115,7 +115,14 @@ class OfferController extends Controller
     public function changeStatus(Request $request, Offer $offer): JsonResponse
     {
         try {
-            $this->offerManager->changeStatus($offer, $request->get('status'), $request->get('note'));
+            if ($request->has('subscription')) {
+                $subscription = Subscription::findOrFail($request->get('subscription'));
+                $this->offerManager->changeSubscription($offer, $subscription);
+            }
+            if ($request->has('status')){
+                $this->offerManager->changeStatus($offer, $request->get('status'), $request->get('note'));
+            }
+            
             return response()->success('', Response::HTTP_NO_CONTENT);
         } catch (Exception $e) {
             return response()->errorWithLog($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, ['message' => $e]);
