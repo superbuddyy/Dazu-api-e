@@ -33,6 +33,10 @@ class SubscriptionManager
             'refresh_price' => $data['refresh_price'] * 100,
             'number_of_raises' => $data['number_of_raises'],
             'raise_price' => $data['raise_price'] * 100,
+            'raise_price_three' => $data['raise_price_three'] * 100,
+            'raise_price_ten' => $data['raise_price_ten'] * 100,
+            'urgent_price' => $data['urgent_price'] * 100,
+            'bargain_price' => $data['bargain_price'] * 100,
             'featured_on_search_results_and_categories' => $data['featured_on_search_results_and_categories'],
             'featured_on_homepage' => $data['featured_on_homepage'],
         ]);
