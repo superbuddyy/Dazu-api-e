@@ -34,9 +34,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Arr;
 
 class UserController
 {
+    const ITEM_PER_PAGE = 10;
     /** @var UserManager */
     protected $userManager;
 
@@ -92,10 +94,39 @@ class UserController
         return response()->success('', Response::HTTP_NO_CONTENT);
     }
 
-    public function getMyOffers()
+    public function getMyOffers(Request $request)
     {
-        $offers = resolve(OfferManager::class)->getMyList();
-        return response()->success(OfferCollection::make($offers));
+        // $offers = resolve(OfferManager::class)->getMyList();
+        // return response()->success(OfferCollection::make($offers));
+
+        $searchParams = $request->all();
+        $offerQuery = Offer::query();
+        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
+        $keyword = Arr::get($searchParams, 'keyword', '');
+        $sort = Arr::get($searchParams, 'sort', '');
+        if (!empty($keyword)) {
+            $offerQuery->Where('title', 'LIKE', "%$keyword%");
+            $offerQuery->orWhere('description', 'LIKE', "%$keyword%");
+        }
+        $user = Auth::user();
+        if ($user->getRoleName() === Acl::ROLE_COMPANY && $user->company) {
+            $companyMembers = User::where('company_id', $user->company_id)->pluck('id')->all();
+            $offerQuery->where('user_id', $companyMembers);
+        } else {
+            $offerQuery->where('user_id',Auth::id());
+        }
+        
+        if (!empty($sort)) {
+            if ($sort == 'active' || $sort == 'in_active') {
+                $offerQuery->where('status',$sort);
+                $sort = 'desc';
+            }
+        } else {
+            $sort = 'desc';
+        }
+        $offerQuery->orderBy('expire_time',$sort)->orderBy('status','asc');
+        // echo $offerQuery->toSql();
+        return response()->success(new OfferCollection($offerQuery->paginate($limit)));
     }
 
     public function getMyNotifications()
