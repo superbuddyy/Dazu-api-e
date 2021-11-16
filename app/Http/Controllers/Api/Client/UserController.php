@@ -105,8 +105,18 @@ class UserController
         $keyword = Arr::get($searchParams, 'keyword', '');
         $sort = Arr::get($searchParams, 'sort', '');
         if (!empty($keyword)) {
-            $offerQuery->Where('title', 'LIKE', "%$keyword%");
-            $offerQuery->orWhere('description', 'LIKE', "%$keyword%");
+            $orThose = [
+                ['title','LIKE',"%$keyword%"],
+                ['description','LIKE',"%$keyword%"],
+                ['location_name','LIKE',"%$keyword%"]
+            ];
+            // $offerQuery->Where('title', 'LIKE', "%$keyword%");
+            // $offerQuery->orWhere('description', 'LIKE', "%$keyword%");
+            // $offerQuery->orWhere('location_name', 'LIKE', "%$keyword%");
+            // $offerQuery->orWhere($orThose);
+            $offerQuery->orWhere(function($query)  use ($keyword) {
+                $query->Where('title', 'LIKE', "%$keyword%")->orWhere('description', 'LIKE', "%$keyword%")->orWhere('location_name', 'LIKE', "%$keyword%");
+            });
         }
         $user = Auth::user();
         if ($user->getRoleName() === Acl::ROLE_COMPANY && $user->company) {
@@ -117,9 +127,9 @@ class UserController
         }
         
         if (!empty($sort)) {
-            if ($sort == 'active' || $sort == 'in_active') {
+            if ($sort != 'asc' && $sort != 'desc') {
                 $offerQuery->where('status',$sort);
-                $sort = 'desc';
+                $sort = 'desc';    
             }
         } else {
             $sort = 'desc';
