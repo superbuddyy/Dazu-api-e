@@ -121,7 +121,7 @@ class UserController
         $user = Auth::user();
         if ($user->getRoleName() === Acl::ROLE_COMPANY && $user->company) {
             $companyMembers = User::where('company_id', $user->company_id)->pluck('id')->all();
-            $offerQuery->where('user_id', $companyMembers);
+            $offerQuery->whereIn('user_id', $companyMembers);
         } else {
             $offerQuery->where('user_id',Auth::id());
         }

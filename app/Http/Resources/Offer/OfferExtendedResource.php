@@ -98,6 +98,7 @@ class OfferExtendedResource extends JsonResource
                 'is_available_now' => $attributes->filter(function ($attribute) {
                     return $attribute->id === 13 && $attribute->pivot->value === 'true';
                 })->isNotEmpty(),
+                'is_promoted' => $this->activeSubscription->id > 1 ?? false,
                 'attributes' => $attributes->map(function ($attribute) {
                         return new AttributeValueResource($attribute);
                     }) ?? null,

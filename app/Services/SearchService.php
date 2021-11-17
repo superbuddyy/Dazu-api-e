@@ -113,7 +113,7 @@ class SearchService
 
     public function getAttributes()
     {
-        return Cache::rememberForever('attributes-filters', function () {
+        // return Cache::rememberForever('attributes-filters', function () {
             return Attribute::orderBy('type', 'desc')->get()->map(function ($attr) {
                 if ($attr->type === AttributeType::CHOICE || $attr->type === AttributeType::MULTI_CHOICE) {
                     return [
@@ -137,7 +137,7 @@ class SearchService
                     'options' => [],
                 ];
             });
-        });
+        // });
     }
 
     protected function buildQuery(array $params, Builder $query): Builder

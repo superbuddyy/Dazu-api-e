@@ -24,6 +24,8 @@ Route::namespace('Api')->group(function() {
         Route::post('auth/register', 'AuthController@register')->name('auth.register');
         Route::post('auth/complete-registration', 'AuthController@completeRegistration')
             ->name('auth.complete-registration');
+        Route::post('auth/resend-email', 'AuthController@resendEmail')
+            ->name('auth.resend-email');
         Route::patch('auth/change-password', 'AuthController@changePassword')
             ->name('auth.change-password');
         Route::post('auth/set-password', 'AuthController@setPassword')
@@ -211,6 +213,10 @@ Route::namespace('Api')->group(function() {
             ->name('search.index');
         Route::get('search/filters', 'SearchController@getFilters')
             ->name('search.filters');
+
+        /** Settings */ 
+        Route::get('settings', 'SettingController@index')
+            ->name('settings.index');
     });
 
     /** Admin */
