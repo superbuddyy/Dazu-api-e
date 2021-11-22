@@ -39,9 +39,12 @@ Route::namespace('Api')->group(function() {
 
     Route::namespace('Client')->group(function() {
         Route::group(['middleware' => 'auth:sanctum'], function () {
-            Route::get('user/profile', 'UserProfileController@show')
-                ->name('user.profile')
-                ->middleware('permission:' . Acl::PERMISSION_VIEW_OWN_PROFILE);
+            Route::get('recent-search', 'RecentSearchController@index')
+                ->name('user.recentsearch');
+            Route::post('recent-search', 'RecentSearchController@store')
+                ->name('user.recentsearch');
+            Route::delete('recent-search', 'RecentSearchController@delete')
+                ->name('user.recentsearch');
             Route::put('user/profile', 'UserProfileController@update')
                 ->name('user.profile.update')
                 ->middleware('permission:' . Acl::PERMISSION_UPDATE_OWN_PROFILE);
