@@ -43,7 +43,22 @@ class OfferExtendedResource extends JsonResource
 
         $videoAvatar = $this->user->videoAvatar['file']['url'] ?? null;
         $avatar = $this->user->avatar['file']['url'] ?? null;
-
+        $photos = array();
+        $project_plan_photos = array();
+        foreach ($this->photos as $img) {
+            $obj = [
+                    'id' => $img->id,
+                    'position' => $img->position,
+                    'url' => $img->file['url'],
+                    'path_name' => $img->file['path_name'],
+                ];
+            if ($img->img_type == 'photo') {
+                $photos[] = $obj;
+            }
+            if ($img->img_type == 'project_plan') {
+                $project_plan_photos[] = $obj;
+            }
+        }
         if (!$videoAvatar && !$avatar){
             $avatar = url('/storage/images/avatar.svg');
         }
@@ -114,14 +129,8 @@ class OfferExtendedResource extends JsonResource
                     'email' => $this->user->email
                 ],
                 'company' => $company,
-                'photos' => $this->photos->map(function ($img) {
-                    return [
-                        'id' => $img->id,
-                        'position' => $img->position,
-                        'url' => $img->file['url'],
-                        'path_name' => $img->file['path_name'],
-                    ];
-                }),
+                'photos' => $photos,
+                'project_plan_photos' => $project_plan_photos,
                 'offer_token' => $this->offerToken
             ]
         );

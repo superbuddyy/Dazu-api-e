@@ -46,6 +46,7 @@ class OfferResource extends JsonResource
                 'old_price' => $this->price ?? null,
                 'main_photo' => $this->main_photo ?? null,
                 'photos' => $this->photos ?? null,
+                'project_plan_photos' => $this->photos ?? null,
                 'status' => $this->status ?? null,
                 'links' => $this->links ?? null,
                 'is_favorite' => $isFavorite ?? false,

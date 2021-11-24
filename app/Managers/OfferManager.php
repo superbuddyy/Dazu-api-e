@@ -134,12 +134,13 @@ class OfferManager
         return $offer;
     }
 
-    public function storeImage($file, Offer $model, $position = 1)
+    public function storeImage($file, Offer $model, $position = 1, $type = 'photo')
     {
         $imageService = resolve(ImageService::class);
         $photo = Photo::make([
             'file' => $imageService->store($file, Photo::class),
             'description' => '',
+            'img_type' => $type,
             'position' => $position
         ]);
 

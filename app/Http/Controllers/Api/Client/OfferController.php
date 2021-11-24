@@ -158,11 +158,17 @@ class OfferController
             if ($request->has('images')) {
                 $position = 1;
                 foreach ($request->file('images') as $file) {
-                    $this->offerManager->storeImage($file, $offer, $position);
+                    $this->offerManager->storeImage($file, $offer, $position,'photo');
                     $position++;
                 }
             }
-
+            if ($request->has('projectPlans')) {
+                $position = 1;
+                foreach ($request->file('projectPlans') as $file) {
+                    $this->offerManager->storeImage($file, $offer, $position,'project_plan');
+                    $position++;
+                }
+            }
             $userManager = resolve(UserManager::class);
             if ($request->has('avatar') && $request->avatar !== null){
                 $userManager->storeAvatar($user, $request->file('avatar'));
