@@ -256,15 +256,29 @@ class OfferController
         if ($request->has('images')) {
             $photos = $offer->photos;
             foreach ($photos as $photo) {
-                $this->offerManager->removeImage($photo->id, $photo->file['path_name']);
+                if ($photo->img_type == 'photo') {
+                    $this->offerManager->removeImage($photo->id, $photo->file['path_name']);    
+                }
             }
             $position = 1;
             foreach ($request->file('images') as $file) {
-                $this->offerManager->storeImage($file, $offer, $position);
+                $this->offerManager->storeImage($file, $offer, $position,'photo');
                 $position++;
             }
         }
-
+        if ($request->has('projectPlans')) {
+            $photos = $offer->photos;
+            foreach ($photos as $photo) {
+                if ($photo->img_type == 'project_plan') {
+                    $this->offerManager->removeImage($photo->id, $photo->file['path_name']);    
+                }
+            }
+            $position = 1;
+            foreach ($request->file('projectPlans') as $file) {
+                $this->offerManager->storeImage($file, $offer, $position,'project_plan');
+                $position++;
+            }
+        }
         DB::commit();
         $isPreview = $request->get('preview') === true;
         if (($bill = $offer->calculateBill()['billAmount']) !== 0) {
