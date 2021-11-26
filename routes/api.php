@@ -48,6 +48,8 @@ Route::namespace('Api')->group(function() {
             Route::put('user/profile', 'UserProfileController@update')
                 ->name('user.profile.update')
                 ->middleware('permission:' . Acl::PERMISSION_UPDATE_OWN_PROFILE);
+            Route::put('user/default-avatar', 'UserProfileController@updateDefaultAvatar')
+                ->name('user.profile.update.default_avatar');    
             Route::delete('user', 'UserController@delete')->name('user.delete');
             Route::patch('user/profile/newsletter', 'UserProfileController@toggleNewsletter')
                 ->name('user.profile.newsletter');

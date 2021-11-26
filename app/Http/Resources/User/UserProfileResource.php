@@ -23,6 +23,7 @@ class UserProfileResource extends JsonResource
             'name' => $this->name ?? null,
             'phone' => $this->phone ?? null,
             'city' => $this->city ?? null,
+            'default_avatar' => $this->default_avatar ?? null,
             'street' => $this->street ?? null,
             'zip_code' => $this->zip_code ?? null,
             'country' => $this->country ?? null,

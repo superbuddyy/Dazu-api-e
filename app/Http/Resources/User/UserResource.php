@@ -41,6 +41,7 @@ class UserResource extends JsonResource
             ),
             'avatar' => $this->avatar->file['url'] ?? null,
             'video_avatar' => $this->videoAvatar->file['url'] ?? null,
+            'default_avatar' => $this->profile->default_avatar ?? null,
         ];
     }
 }

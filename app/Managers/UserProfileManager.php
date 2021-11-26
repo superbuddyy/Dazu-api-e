@@ -48,7 +48,14 @@ class UserProfileManager
 
         return $profile;
     }
+    public function updateAvatar(string $default_avatar): UserProfile
+    {
+        $profile = Auth::user()->profile;
+        $profile->default_avatar = $default_avatar;
+        $profile->save();
 
+        return $profile;
+    }
     /**
      * @param User|null $user
      * @return bool

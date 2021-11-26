@@ -45,7 +45,12 @@ class UserProfileController
 
         return response()->success(new UserProfileResource($profile));
     }
+    public function updateDefaultAvatar(Request $request)
+    {
+        $profile = $this->userProfileManager->updateAvatar($request->get('default_avatar'));
 
+        return response()->success(new UserProfileResource($profile));
+    }
     public function toggleNewsletter()
     {
         /** @var User $user */
