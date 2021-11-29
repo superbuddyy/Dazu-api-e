@@ -43,6 +43,7 @@ class OfferExtendedResource extends JsonResource
 
         $videoAvatar = $this->user->videoAvatar['file']['url'] ?? null;
         $avatar = $this->user->avatar['file']['url'] ?? null;
+        $default_avatar = $this->user->profile->default_avatar ?? null;
         $photos = array();
         $project_plan_photos = array();
         foreach ($this->photos as $img) {
@@ -61,6 +62,7 @@ class OfferExtendedResource extends JsonResource
         }
         if (!$videoAvatar && !$avatar){
             $avatar = url('/storage/images/avatar.svg');
+            $default_avatar = 'photo';
         }
 
         $company = $this->getCompanyData();
@@ -126,7 +128,8 @@ class OfferExtendedResource extends JsonResource
                     'type' => $this->user->getRoleName() ?? null,
                     'avatar' => $avatar,
                     'video_avatar' => $videoAvatar,
-                    'email' => $this->user->email
+                    'email' => $this->user->email,
+                    'default_avatar' => $default_avatar,
                 ],
                 'company' => $company,
                 'photos' => $photos,
@@ -140,19 +143,21 @@ class OfferExtendedResource extends JsonResource
     {
         $companyModel = $this->user->company ?? null;
         if (!$companyModel) {
-            return [];
+            return null;
         }
-
+        $default_avatar = $this->user->profile->default_avatar ?? null;
         if (!isset($companyModel->avatar->file['url']) && isset($companyModel->video_avatar->file['url'])) {
             $companyAvatar = null;
         } elseif (isset($companyModel->avatar->file['url'])) {
             $companyAvatar = $companyModel->avatar->file['url'];
         } else {
             $companyAvatar = url('/svg/avatar.svg');
+            $default_avatar = 'photo';
         }
 
         return [
             'name' => $companyModel->name,
+            'default_avatar' => $default_avatar,
             'avatar' => $companyAvatar,
             'video_avatar' => $companyModel->video_avatar->file['url'] ?? null
         ];

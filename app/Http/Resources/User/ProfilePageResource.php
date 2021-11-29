@@ -20,9 +20,10 @@ class ProfilePageResource extends JsonResource
     {
         $videoAvatar = $this->user->videoAvatar['file']['url'] ?? null;
         $avatar = $this->user->avatar['file']['url'] ?? null;
-
+        $default_avatar = $this->profile->default_avatar ?? null;
         if (!$videoAvatar && !$avatar){
             $avatar = url('/storage/images/avatar.svg');
+            $default_avatar = 'photo';
         }
 
         return [
@@ -32,6 +33,7 @@ class ProfilePageResource extends JsonResource
                 'type' => $this->getRoleName() ?? null,
                 'avatar' => $avatar,
                 'video_avatar' => $videoAvatar,
+                'default_avatar' => $default_avatar,
                 'created_at' => $this->created_at->format('Y-m-d') ?? null,
                 'company' => $this->getCompanyData(),
                 'address' => [
@@ -52,20 +54,22 @@ class ProfilePageResource extends JsonResource
     {
         $companyModel = $this->company;
         if (!isset($companyModel)) {
-            return [];
+            return null;
         }
-
+        $default_avatar = $this->profile->default_avatar ?? null;
         if (!isset($companyModel->avatar->file['url']) && isset($companyModel->video_avatar->file['url'])) {
             $companyAvatar = null;
         } elseif (isset($companyModel->avatar->file['url'])) {
             $companyAvatar = $companyModel->avatar->file['url'];
         } else {
             $companyAvatar = url('/svg/avatar.svg');
+            $default_avatar = 'photo';
         }
 
         return [
             'name' => $companyModel->name,
             'avatar' => $companyAvatar,
+            'default_avatar' => $default_avatar,
             'video_avatar' => $companyModel->video_avatar->file['url'] ?? null
         ];
     }
