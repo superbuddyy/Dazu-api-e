@@ -18,9 +18,15 @@ class ProfilePageResource extends JsonResource
      */
     public function toArray($request)
     {
-        $videoAvatar = $this->user->videoAvatar['file']['url'] ?? null;
-        $avatar = $this->user->avatar['file']['url'] ?? null;
+        $videoAvatar = $this->videoAvatar['file']['url'] ?? null;
+        $avatar = $this->avatar['file']['url'] ?? null;
         $default_avatar = $this->profile->default_avatar ?? null;
+        if ($avatar && !$videoAvatar) {
+            $default_avatar = 'photo';
+        }
+        if ($videoAvatar && !$avatar) {
+            $default_avatar = 'video';
+        }
         if (!$videoAvatar && !$avatar){
             $avatar = url('/storage/images/avatar.svg');
             $default_avatar = 'photo';
@@ -34,6 +40,8 @@ class ProfilePageResource extends JsonResource
                 'avatar' => $avatar,
                 'video_avatar' => $videoAvatar,
                 'default_avatar' => $default_avatar,
+                'avatar_expire_time' => $this->avatar['expire_date'] ?? null,
+                'video_avatar_expire_time' => $this->videoAvatar['expire_date'] ?? null,
                 'created_at' => $this->created_at->format('Y-m-d') ?? null,
                 'company' => $this->getCompanyData(),
                 'address' => [
@@ -65,12 +73,23 @@ class ProfilePageResource extends JsonResource
             $companyAvatar = url('/svg/avatar.svg');
             $default_avatar = 'photo';
         }
-
+        $companyVideoAvatar = $companyModel->video_avatar->file['url'] ?? null;
+        if ($companyAvatar && !$companyVideoAvatar) {
+            $default_avatar = 'photo';   
+        }
+        if (!$companyAvatar && $companyVideoAvatar) {
+            $default_avatar = 'video';   
+        }
+        if (!$companyAvatar && !$companyVideoAvatar) {
+            $default_avatar = 'photo';
+        }
         return [
             'name' => $companyModel->name,
             'avatar' => $companyAvatar,
             'default_avatar' => $default_avatar,
-            'video_avatar' => $companyModel->video_avatar->file['url'] ?? null
+            'video_avatar' => $companyVideoAvatar,
+            'avatar_expire_time' => $companyModel->avatar['expire_date'] ?? null,
+            'video_avatar_expire_time' => $companyModel->videoAvatar['expire_date'] ?? null
         ];
     }
 }

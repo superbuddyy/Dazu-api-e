@@ -13,6 +13,7 @@ use App\Http\Resources\Offer\OfferCollection;
 use App\Http\Resources\User\AgentCollection;
 use App\Http\Resources\User\AgentResource;
 use App\Http\Resources\User\ProfilePageResource;
+use App\Http\Resources\User\UserResource;
 use App\Jobs\SendEmailJob;
 use App\Laravue\Acl;
 use App\Mail\User\UserDeleted;
@@ -239,7 +240,10 @@ class UserController
     {
         return response()->success(new ProfilePageResource($user));
     }
-
+    public function showMyProfile(User $user)
+    {
+        return response()->success(new UserResource($user));
+    }
     public function deleteAvatar(Request $request)
     {
         /** @var User $user */

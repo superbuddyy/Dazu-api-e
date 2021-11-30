@@ -60,6 +60,12 @@ class OfferExtendedResource extends JsonResource
                 $project_plan_photos[] = $obj;
             }
         }
+        if ($avatar && !$videoAvatar) {
+            $default_avatar = 'photo';
+        }
+        if ($videoAvatar && !$avatar) {
+            $default_avatar = 'video';
+        }
         if (!$videoAvatar && !$avatar){
             $avatar = url('/storage/images/avatar.svg');
             $default_avatar = 'photo';
@@ -130,6 +136,8 @@ class OfferExtendedResource extends JsonResource
                     'video_avatar' => $videoAvatar,
                     'email' => $this->user->email,
                     'default_avatar' => $default_avatar,
+                    'avatar_expire_time' => $this->user->avatar['expire_date'] ?? null,
+                    'video_avatar_expire_time' => $this->user->videoAvatar['expire_date'] ?? null
                 ],
                 'company' => $company,
                 'photos' => $photos,
@@ -154,12 +162,23 @@ class OfferExtendedResource extends JsonResource
             $companyAvatar = url('/svg/avatar.svg');
             $default_avatar = 'photo';
         }
-
+        $companyVideoAvatar = $companyModel->video_avatar->file['url'] ?? null;
+        if ($companyAvatar && !$companyVideoAvatar) {
+            $default_avatar = 'photo';   
+        }
+        if (!$companyAvatar && $companyVideoAvatar) {
+            $default_avatar = 'video';   
+        }
+        if (!$companyAvatar && !$companyVideoAvatar) {
+            $default_avatar = 'photo';
+        }
         return [
             'name' => $companyModel->name,
             'default_avatar' => $default_avatar,
             'avatar' => $companyAvatar,
-            'video_avatar' => $companyModel->video_avatar->file['url'] ?? null
+            'video_avatar' => $companyVideoAvatar,
+            'avatar_expire_time' => $companyModel->avatar['expire_date'] ?? null,
+            'video_avatar_expire_time' => $companyModel->videoAvatar['expire_date'] ?? null
         ];
     }
 }

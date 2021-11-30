@@ -14,6 +14,19 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+        $videoAvatar = $this->videoAvatar->file['url'] ?? null;
+        $avatar = $this->avatar->file['url'] ?? null;
+        $default_avatar = $this->profile->default_avatar ?? null;
+        if ($avatar && !$videoAvatar) {
+            $default_avatar = 'photo';
+        }
+        if ($videoAvatar && !$avatar) {
+            $default_avatar = 'video';
+        }
+        if (!$videoAvatar && !$avatar){
+            $avatar = url('/storage/images/avatar.svg');
+            $default_avatar = 'photo';
+        }
         return [
             'id' => $this->id,
             'name' => $this->profile->name ?? null,
@@ -39,9 +52,11 @@ class UserResource extends JsonResource
                 },
                 $this->getAllPermissions()->toArray()
             ),
-            'avatar' => $this->avatar->file['url'] ?? null,
-            'video_avatar' => $this->videoAvatar->file['url'] ?? null,
-            'default_avatar' => $this->profile->default_avatar ?? null,
+            'avatar' => $avatar,
+            'video_avatar' => $videoAvatar,
+            'default_avatar' => $default_avatar,
+            'avatar_expire_time' => $this->avatar['expire_date'] ?? null,
+            'video_avatar_expire_time' => $this->videoAvatar['expire_date'] ?? null,
         ];
     }
 }

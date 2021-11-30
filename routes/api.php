@@ -137,7 +137,9 @@ Route::namespace('Api')->group(function() {
         /** User profile */
         Route::get('profile/{user}', 'UserController@showProfile')
             ->name('user.showProfile');
-
+        /** User profile */
+        Route::get('my-profile/{user}', 'UserController@showMyProfile')
+            ->name('user.showMyProfile');
         /** Contact */
         Route::post('user/{user}/phone', 'UserController@getPhone')
             ->name('user.getPhone');
