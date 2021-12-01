@@ -40,6 +40,6 @@ return [
     'new_invoice' => 'Faktura za opłacenie ogłoszenia',
     'new_invoice_content' => 'Przesyłamy fakturę za ogłoszenie ',
     'user_deleted' => 'Potwierdzenie usunięcia konta',
-    'user_deleted_content' => 'Dazu - Potwierdzenie usunięcia konta<br>Twoje konto zostało usunięte wraz z Twoimi danymi. <br> Portal Dazu dziękuje za współpracę i wspólnie spędzony czas.',
+    'user_deleted_content' => 'Dazu - Potwierdzenie usunięcia konta<br>Twoje konto zostanie usunięte wraz z Twoimi danymi w ciągu 60 dni. <br> Portal Dazu dziękuje za współpracę i wspólnie spędzony czas.',
     'agent_created' => 'Dazu - zaproszenie do stworzenia konta'
 ];
