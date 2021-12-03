@@ -72,7 +72,14 @@ class OfferExtendedResource extends JsonResource
         }
 
         $company = $this->getCompanyData();
-
+        $role = null;
+        try {
+            if ($this->user) {
+                $role = $this->user->getRoleName() ?? null;
+            }
+        } catch (Exception $e) {
+            $role = null;   
+        }
         return array_merge(
             parent::toArray($request),
             [
@@ -131,10 +138,10 @@ class OfferExtendedResource extends JsonResource
                 'user' => [
                     'id' => $this->user->id ?? null,
                     'name' => $this->user->profile->name ?? null,
-                    'type' => $this->user->getRoleName() ?? null,
+                    'type' => $role,
                     'avatar' => $avatar,
                     'video_avatar' => $videoAvatar,
-                    'email' => $this->user->email,
+                    'email' => $this->user->email ?? null`,
                     'default_avatar' => $default_avatar,
                     'avatar_expire_time' => $this->user->avatar['expire_date'] ?? null,
                     'video_avatar_expire_time' => $this->user->videoAvatar['expire_date'] ?? null

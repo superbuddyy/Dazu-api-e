@@ -346,6 +346,15 @@ Route::namespace('Api')->group(function() {
             Route::post('admin/newsletter', 'NewsletterMailController@store')
                 ->middleware('permission:' . Acl::PERMISSION_ADD_NEWSLETTER)
                 ->name('newsletter.store');
+
+            /** Announcement Newsletter */
+            Route::get('admin/announcement-newsletter', 'AnnouncementNewsletterMailController@index')
+                ->middleware('permission:' . Acl::PERMISSION_NEWSLETTER_LIST)
+                ->name('announcement-newsletter.index');
+
+            Route::post('admin/announcement-newsletter', 'AnnouncementNewsletterMailController@store')
+                ->middleware('permission:' . Acl::PERMISSION_ADD_NEWSLETTER)
+                ->name('announcement-newsletter.store');    
         });
     });
 });
