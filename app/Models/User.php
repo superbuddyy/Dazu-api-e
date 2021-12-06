@@ -139,7 +139,9 @@ class User extends LaravueUser
         foreach ($this->roles as $role) {
             $roleName = Role::where('id', $role->pivot->role_id)->first();
         }
-
+        if ($roleName == ''){
+            return null;
+        }
         return $roleName->name ?? null;
     }
 
