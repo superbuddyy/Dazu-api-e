@@ -31,7 +31,15 @@ class ProfilePageResource extends JsonResource
             $avatar = url('/storage/images/avatar.svg');
             $default_avatar = 'photo';
         }
-
+        $is_favorite_user = false;
+        try {
+            if ($this->id) {
+                $exist = $this->getFavoriteUser($this->id);
+                $is_favorite_user = $exist ? true : false;
+            }
+        } catch (Exception $e) {
+            $is_favorite_user = false;
+        }
         return [
             'user' => [
                 'id' => $this->id,
@@ -50,6 +58,7 @@ class ProfilePageResource extends JsonResource
                     'zip_code' => $this->profile->zip_code ?? null,
                     'country' => $this->profile->country ?? null,
                 ],
+                'is_favorite_user' => $is_favorite_user,
                 'offers_count' => $this->offers->where('status', OfferStatus::ACTIVE)->count()
             ],
             'offers' => $this->offers->where('status', OfferStatus::ACTIVE)->map(function ($offer) {

@@ -73,12 +73,21 @@ class OfferExtendedResource extends JsonResource
 
         $company = $this->getCompanyData();
         $role = null;
+        $is_favorite_user = false;
         try {
             if ($this->user) {
                 $role = $this->user->getRoleName() ?? null;
             }
         } catch (Exception $e) {
-            $role = null;   
+            $role = null;
+        }
+        try {
+            if ($this->user && $this->user->id) {
+                $exist = $this->user->getFavoriteUser($this->user->id);
+                $is_favorite_user = $exist ? true : false;
+            }
+        } catch (Exception $e) {
+            $is_favorite_user = false;
         }
         return array_merge(
             parent::toArray($request),
@@ -141,10 +150,11 @@ class OfferExtendedResource extends JsonResource
                     'type' => $role,
                     'avatar' => $avatar,
                     'video_avatar' => $videoAvatar,
-                    'email' => $this->user->email ?? null`,
+                    'email' => $this->user->email ?? null,
                     'default_avatar' => $default_avatar,
                     'avatar_expire_time' => $this->user->avatar['expire_date'] ?? null,
-                    'video_avatar_expire_time' => $this->user->videoAvatar['expire_date'] ?? null
+                    'video_avatar_expire_time' => $this->user->videoAvatar['expire_date'] ?? null,
+                    'is_favorite_user' => $is_favorite_user,
                 ],
                 'company' => $company,
                 'photos' => $photos,

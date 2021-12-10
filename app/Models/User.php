@@ -169,4 +169,13 @@ class User extends LaravueUser
     {
         return $this->avatars->where('type', $type)->first() ?? null;
     }
+
+    public function getFavoriteUser(string $userId): ?FavoriteUsers
+    {
+        $id = Auth::id() ?? null;
+        if ($id == null) {
+            return null;
+        }
+        return FavoriteUsers::where(['user_id' => $id, 'fav_user_id' => $userId])->first();
+    }
 }

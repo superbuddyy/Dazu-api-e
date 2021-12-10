@@ -42,10 +42,8 @@ class RecentSearchController extends Controller
     {
         // print_r($search);
         // echo $search->display_name;
-        echo $request->display_name;
         $result = $this->recentSearchManager->store($request->display_name,$request->lat,$request->lon);
         $count = $this->recentSearchManager->getCount();
-        echo $count;
         if ($count > 5) {
             $tmpCount = $count - 5;
             $this->recentSearchManager->delete(true,$tmpCount);

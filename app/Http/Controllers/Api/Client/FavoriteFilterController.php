@@ -39,16 +39,24 @@ class FavoriteFilterController
 
         $result = $this->favoriteFilterManager->store(
             $filters,
-            $request->period,
+            $request->period ?? 0,
             $request->notification
         );
 
         return response()->success($result, Response::HTTP_CREATED);
     }
-
-    public function destroy(FavoriteFilter $filter): Response
+    public function update(Request $request): Response
     {
-        if (!$this->favoriteFilterManager->delete($filter)) {
+        $result = $this->favoriteFilterManager->updateNotifications(
+            $request->id ?? 0,
+            $request->status
+        );
+
+        return response()->noContent();
+    }
+    public function destroy(Request $request, FavoriteFilter $filter): Response
+    {
+        if (!$this->favoriteFilterManager->delete($request->favorite_id)) {
             return response()->error('fail_to_delete', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 

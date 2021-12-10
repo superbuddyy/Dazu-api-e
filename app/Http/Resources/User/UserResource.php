@@ -27,6 +27,23 @@ class UserResource extends JsonResource
             $avatar = url('/storage/images/avatar.svg');
             $default_avatar = 'photo';
         }
+        $is_favorite_user = false;
+        $role = null;
+        try {
+            if ($this->id) {
+                $role = $this->getRoleName() ?? null;
+            }
+        } catch (Exception $e) {
+            $role = null;
+        }
+        try {
+            if ($this->id) {
+                $exist = $this->getFavoriteUser($this->id);
+                $is_favorite_user = $exist ? true : false;
+            }
+        } catch (Exception $e) {
+            $is_favorite_user = false;
+        }
         return [
             'id' => $this->id,
             'name' => $this->profile->name ?? null,
@@ -46,6 +63,7 @@ class UserResource extends JsonResource
                 },
                 $this->roles->toArray()
             ),
+            'type' => $role,
             'permissions' => array_map(
                 function ($permission) {
                     return $permission['name'];
@@ -57,6 +75,7 @@ class UserResource extends JsonResource
             'default_avatar' => $default_avatar,
             'avatar_expire_time' => $this->avatar['expire_date'] ?? null,
             'video_avatar_expire_time' => $this->videoAvatar['expire_date'] ?? null,
+            'is_favorite_user' => $is_favorite_user,
         ];
     }
 }

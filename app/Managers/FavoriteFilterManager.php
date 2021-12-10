@@ -40,9 +40,11 @@ class FavoriteFilterManager
         return $filter;
     }
 
-    public function updateNotifications(): bool
+    public function updateNotifications(int $id,bool $status)
     {
-        //
+        return FavoriteFilter::where('id', $id)->update(['notification' => $status]);
+
+        // return $filter->save();
     }
 
     /**
@@ -50,9 +52,10 @@ class FavoriteFilterManager
      * @return mixed
      * @throws \Exception
      */
-    public function delete(FavoriteFilter $filter)
+    public function delete($id)
     {
-        return $filter->delete();
+        $obj = FavoriteFilter::where('id',$id);
+        return $obj->delete();
     }
 
     public function sendNotification(FavoriteFilter $filter)

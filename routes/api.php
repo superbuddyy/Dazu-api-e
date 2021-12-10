@@ -117,11 +117,24 @@ Route::namespace('Api')->group(function() {
             Route::delete('favorites/{offer}', 'FavoriteController@destroy')
                 ->name('favorites.destroy');
 
+            /** Favorites */
+            Route::get('favorite-users', 'FavoriteUserController@index')
+                ->name('favorites-users.index');
+            Route::post('favorite-users/{user}', 'FavoriteUserController@store')
+                ->name('favorite-users.store');
+            Route::delete('favorite-users/{user}', 'FavoriteUserController@destroy')
+                ->name('favorite-users.destroy');
+                    
+
             /** Favorite Filters */
             Route::get('favorite-filters', 'FavoriteFilterController@index')
                 ->name('favorite-filters.index');
             Route::post('favorite-filters', 'FavoriteFilterController@store')
                 ->name('favorite-filters.store');
+            Route::put('favorite-filters', 'FavoriteFilterController@update')
+                ->name('favorite-filters.update');
+            Route::delete('favorite-filters/{favorite_id}', 'FavoriteFilterController@destroy')
+                ->name('favorite-filters.destroy');
         });
 
         /** Popup */
