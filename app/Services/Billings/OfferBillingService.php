@@ -161,36 +161,78 @@ class OfferBillingService
     }
 
     private function calculateExtras(Subscription $subscription) {
-        $extras = [
-            'pilne' => [
+        $extras = [];
+        if ($this->offer->is_urgent) {
+            $extras['pilne'] = [
                 'name' => 'Pilne',
                 'value' => $subscription->urgent_price,
-            ],
-            'okazja' => [
+            ];
+        }
+        if ($this->offer->is_bargain) {
+            $extras['okazja'] = [
                 'name' => 'Okazja',
                 'value' => $subscription->bargain_price,
-            ],
-            'podbicie_1' => [
+            ];
+        }
+        if ($this->offer->has_raise_one) {
+            $extras['podbicie_1'] = [
                 'name' => 'Podibicie',
                 'value' => $subscription->raise_price,
-            ],
-            'podbicie_3' => [
+            ];
+        }
+        if ($this->offer->has_raise_three) {
+            $extras['podbicie_3'] = [
                 'name' => 'Podibicie x3',
                 'value' => $subscription->raise_price_three,
-            ],
-            'podbicie_10' => [
+            ];
+        }
+        if ($this->offer->has_raise_ten) {
+            $extras['podbicie_10'] = [
                 'name' => 'Podibicie x10',
                 'value' => $subscription->raise_price_ten,
-            ],
-        ];
-
-        foreach($extras as $key => $extras_data) {
-            $this->details[$key] = [
-                'name' => $extras_data['name'],
-                'value' => $extras_data['value'],
             ];
-            $this->billAmount += $extras_data['value'];
         }
+        if (count($extras) > 0) {
+            foreach($extras as $key => $extras_data) {
+                $this->details[$key] = [
+                    'name' => $extras_data['name'],
+                    'value' => $extras_data['value'],
+                ];
+                $this->billAmount += $extras_data['value'];
+            }    
+        }
+        // $extras = [
+        //     'pilne' => [
+        //         'name' => 'Pilne',
+        //         'value' => $subscription->urgent_price,
+        //     ],
+        //     'okazja' => [
+        //         'name' => 'Okazja',
+        //         'value' => $subscription->bargain_price,
+        //     ],
+        //     'podbicie_1' => [
+        //         'name' => 'Podibicie',
+        //         'value' => $subscription->raise_price,
+        //     ],
+        //     'podbicie_3' => [
+        //         'name' => 'Podibicie x3',
+        //         'value' => $subscription->raise_price_three,
+        //     ],
+        //     'podbicie_10' => [
+        //         'name' => 'Podibicie x10',
+        //         'value' => $subscription->raise_price_ten,
+        //     ],
+        // ];
+        // if (count($extras) > 0) {
+        //     foreach($extras as $key => $extras_data) {
+        //         echo $extras_data;
+        //         $this->details[$key] = [
+        //             'name' => $extras_data['name'],
+        //             'value' => $extras_data['value'],
+        //         ];
+        //         $this->billAmount += $extras_data['value'];
+        //     }    
+        // }
     }
 
 

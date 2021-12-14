@@ -132,11 +132,11 @@ class OfferController
                 $request->get('links', []),
                 $request->get('visible_from_date'),
                 $user->id,
-                (bool) $request->get('has_raise_one'),
-                (bool) $request->get('has_raise_three'),
-                (bool) $request->get('has_raise_ten'),
-                (bool) $request->get('is_urgent'),
-                (bool) $request->get('is_bargain')
+                $request->get('has_raise_one') == 'true' ? true : false,
+                $request->get('has_raise_three') == 'true' ? true : false,
+                $request->get('has_raise_ten') == 'true' ? true : false,
+                $request->get('is_urgent') == 'true' ? true : false,
+                $request->get('is_bargain') == 'true' ? true : false,
             );
 
             $offerToken = null;
