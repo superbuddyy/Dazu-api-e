@@ -108,7 +108,8 @@ class OfferManager
         $userId = $userId ?: Auth::id();
         $offer = [
             'title' => $name,
-            'description' => strip_tags($description),
+            // 'description' => strip_tags($description),
+            'description' => $description,
             'price' => $price,
             'status' => OfferStatus::IN_ACTIVE, // Default
             'category_id' => Category::where('slug', $categorySlug)->firstOrFail()->id,
