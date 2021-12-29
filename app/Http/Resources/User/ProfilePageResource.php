@@ -18,6 +18,11 @@ class ProfilePageResource extends JsonResource
      */
     public function toArray($request)
     {
+        $offerData = $this->offers->where('status', OfferStatus::ACTIVE);
+        $ofData = [];
+        foreach ($offerData as $offer) {
+            $ofData[] = new OfferResource($offer);
+        }
         $videoAvatar = $this->videoAvatar['file']['url'] ?? null;
         $avatar = $this->avatar['file']['url'] ?? null;
         $default_avatar = $this->profile->default_avatar ?? null;
@@ -61,9 +66,7 @@ class ProfilePageResource extends JsonResource
                 'is_favorite_user' => $is_favorite_user,
                 'offers_count' => $this->offers->where('status', OfferStatus::ACTIVE)->count()
             ],
-            'offers' => $this->offers->where('status', OfferStatus::ACTIVE)->map(function ($offer) {
-                return new OfferResource($offer);
-            })
+            'offers' => $ofData
         ];
     }
 
