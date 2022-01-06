@@ -532,8 +532,18 @@ class OfferController
         ]);
     }
 
-    public function raise(Offer $offer): Response
+    public function raise(Request $request, Offer $offer): Response
     {
+        if ($request->get('reduce_raise')) {
+            $this->offerManager->reduceRaise($offer);
+            $this->offerManager->raise($offer);
+            $offers = Auth::user()->offers()
+                ->orderBy('expire_time', 'DESC')
+                ->orderBy('status', 'ASC')
+                ->paginate(10);
+
+            return response()->success(OfferCollection::make($offers), Response::HTTP_OK);
+        }
         $offerSubscription = $offer->activeSubscription;
         if ($offer->raise_count >= $offerSubscription->number_of_raises) {
             $ref = 'offer::' . $offer->id . 'user::' . Auth::id();

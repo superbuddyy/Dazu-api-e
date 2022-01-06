@@ -204,8 +204,23 @@ class OfferManager
         return Offer::whereIn('id', $offersIds)->update(['status' => $status]);
     }
 
-    public function changeStatus(Offer $offer, string $status, string $note = null): Offer
+    public function changeStatus(Offer $offer, string $status, string $note = null, bool $fromPayment = false): Offer
     {
+        if ($fromPayment) {
+            $total_raise = 0;
+            if ($offer->has_raise_one) {
+                $total_raise = $total_raise + 1;
+            }
+            if ($offer->has_raise_three) {
+                $total_raise = $total_raise + 3;
+            }
+            if ($offer->has_raise_ten) {
+                $total_raise = $total_raise + 10;
+            }
+            if ($status === OfferStatus::ACTIVE || $status === OfferStatus::IN_ACTIVE) {
+                $offer->total_raises = $total_raise;
+            }
+        }
         if ($note) {
             $offer->note = $note;
         }
@@ -270,9 +285,9 @@ class OfferManager
             }
         }
         if ($offer->visible_from_date) {
-            $this->changeStatus($offer, OfferStatus::ACTIVE);
+            $this->changeStatus($offer, OfferStatus::ACTIVE, null, true);
         } else {
-            $this->changeStatus($offer, OfferStatus::IN_ACTIVE);
+            $this->changeStatus($offer, OfferStatus::IN_ACTIVE,null, true);
         }
     }
 
@@ -310,6 +325,16 @@ class OfferManager
      * @param Offer $offer
      * @return bool
      */
+
+    public function reduceRaise(Offer $offer): bool {
+        $raises = $offer->total_raises - 1;
+        if ($raises < 0) {
+            $raises = 0;
+        }
+        $offer->total_raises = $raises;
+        return $offer->save();   
+    }
+
     public function raise(Offer $offer): bool
     {
         $offer->raise_at = Carbon::now();
