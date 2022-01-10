@@ -149,10 +149,18 @@ class SearchService
                         ->orWhere('location_name', 'like', "%$paramValue%");
                     break;
                 case 'category':
-                    $category = Category::where('slug', $paramValue)->firstOrFail();
+                    $ar_category = explode(",", $paramValue);
+                    $category = Category::whereIn('slug', $ar_category)->get();
+                    // $query->whereHas('category', function ($query) use ($category) {
+                    //     return $query->where('_lft', '>=', $category[0]->_lft)
+                    //         ->where('_rgt', '<=', $category[0]->_rgt);
+                    // });
                     $query->whereHas('category', function ($query) use ($category) {
-                        return $query->where('_lft', '>=', $category->_lft)
-                            ->where('_rgt', '<=', $category->_rgt);
+                        $ids = [];
+                        foreach ($category as $key => $value) {
+                            $ids[] = $value->id;
+                        }
+                        return $query->whereIn('id', $ids);
                     });
                     break;
                 case 'price':
