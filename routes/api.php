@@ -166,7 +166,8 @@ Route::namespace('Api')->group(function() {
 
         Route::post('contact/contact-form', 'ContactController@sendContactForm')
             ->name('contact.contactForm');
-
+        Route::post('contact/confirm-contact', 'ContactController@confirmContact')
+            ->name('contact.contactForm');
         /** Newsletter */
         Route::post('newsletter', 'NewsletterController@store')
             ->name('newsletter.store');
