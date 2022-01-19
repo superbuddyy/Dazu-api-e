@@ -12,13 +12,16 @@ class ContactConfirmation extends BaseMail
     /** @var string */
     public $user;
     public $email;
+    public $url;
     public function __construct(
         string $email,
-        ContactEmails $user
+        ContactEmails $user,
+        string $url
     ) {
         parent::__construct();
         $this->email = $email;
         $this->user = $user;
+        $this->url = $url;
     }
 
     public function build(): self

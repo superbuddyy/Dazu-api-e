@@ -34,6 +34,7 @@ class ContactController extends Controller
                     )
                 )
             );
+            return response()->success('', Response::HTTP_NO_CONTENT);
         } else {
             $json_ary = [
                 'email' => $request->email,
@@ -44,9 +45,10 @@ class ContactController extends Controller
             ];
             $json_data = json_encode($json_ary);
             $data = $this->createRecord($json_data,'offer');
-            $this->sendConfirmMail($request->email,$data);
+            $url = '/ogloszenia/'.$offer->slug;
+            $this->sendConfirmMail($request->email,$data,$url);
+            return response()->success('verify_email');
         }
-        return response()->success('', Response::HTTP_NO_CONTENT);
     }
 
     public function sendProfileEmail(ContactRequest $request, User $user): Response
@@ -62,6 +64,7 @@ class ContactController extends Controller
                     )
                 )
             );    
+            return response()->success('', Response::HTTP_NO_CONTENT);
         } else {
             $json_ary = [
                 'email' => $request->email,
@@ -71,10 +74,10 @@ class ContactController extends Controller
             ];
             $json_data = json_encode($json_ary);
             $data = $this->createRecord($json_data,'profile');
-            print_r($data);
+            $url = '/';
+            $this->sendConfirmMail($request->email,$data,$url);
+            return response()->success('verify_email');
         }
-        
-        return response()->success('', Response::HTTP_NO_CONTENT);
     }
 
     public function sendContactForm(ContactRequest $request): Response
@@ -90,6 +93,7 @@ class ContactController extends Controller
                     )
                 )
             );
+            return response()->success('', Response::HTTP_NO_CONTENT);
         } else {
             $json_ary = [
                 'email' => $request->email,
@@ -99,10 +103,11 @@ class ContactController extends Controller
             ];
             $json_data = json_encode($json_ary);
             $data = $this->createRecord($json_data,'contact');
-            print_r($data);
+            $url = '/';
+            $this->sendConfirmMail($request->email,$data,$url);
+            return response()->success('verify_email');
         }
         
-        return response()->success('', Response::HTTP_NO_CONTENT);
     }
     public function createRecord($json_data,$type)
     {
@@ -120,13 +125,14 @@ class ContactController extends Controller
         ]);
         return $data;
     }
-    public function sendConfirmMail($email,$data)
+    public function sendConfirmMail($email,$data,$url)
     {
         dispatch(
             new SendEmailJob(
                 new ContactConfirmation(
                     $email,
-                    $data
+                    $data,
+                    $url
                 )
             )
         );

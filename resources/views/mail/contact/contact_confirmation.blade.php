@@ -5,9 +5,9 @@
     @slot('support_website')
         {{ 'change me' }}
     @endslot
-    @lang('mail.registration_content')<br>
-    @component('mail::button', ['url' => config('dazu.frontend_url').'/?token='.$user['verification_token']])
-        @lang('mail.confirm_registration')
+    @lang('mail.contact_confirmation_content')<br>
+    @component('mail::button', ['url' => config('dazu.frontend_url').$url.'?token='.$user['verification_token']])
+        @lang('mail.contact_confirm_registration')
     @endcomponent
     @lang('mail.end_summary')<br>
 @endcomponent

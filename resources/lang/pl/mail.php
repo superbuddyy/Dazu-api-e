@@ -2,8 +2,10 @@
 return [
     'registration' => 'Dokończ proces rejestracji',
     'registration_content' => 'Dzień dobry, <br> witamy na portalu Dazu. <br>Uprzejmie prosimy o wciśniecie linku poniżej aby zakończyć rejestrację:',
+    'contact_confirmation_content' => 'Dzień dobry, <br><br> Uprzejmie prosimy o wciśniecie linku poniżej aby wysłać swoją wiadomość:',
     'end_summary' => 'Dazu jest Twoim partnerem do sukcesu. Jeśli potrzebujesz pomocy z kontaktuj się z nami. Serdecznie zapraszamy.',
     'confirm_registration' => 'Potwierdź',
+    'contact_confirm_registration' => 'Kliknij tutaj',
     'set_password' => 'Ustaw swoje hasło',
     'set_password_content' => 'Kliknij w link poniżej, aby ustawić hasło',
     'set_password_btn' => 'Ustaw hasło',
