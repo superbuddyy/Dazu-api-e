@@ -6,7 +6,7 @@
         {{ 'change me' }}
     @endslot
     @lang('mail.contact_confirmation_content')<br>
-    @component('mail::button', ['url' => config('dazu.frontend_url').$url.'?token='.$user['verification_token']])
+    @component('mail::button', ['url' => config('dazu.frontend_url').$url_nav.'?token='.$user['verification_token']])
         @lang('mail.contact_confirm_registration')
     @endcomponent
     @lang('mail.end_summary')<br>
