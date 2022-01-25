@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Managers;
 
+use App\Enums\AvatarType;
+use App\Enums\CompanyType;
 use App\Enums\OfferStatus;
 use App\Enums\AttributeType;
 use App\Events\Offer\OfferActivated;
@@ -13,8 +15,8 @@ use App\Models\Category;
 use App\Models\Offer;
 use App\Models\PreviewOffer;
 use App\Models\Attribute;
-use App\Models\Photo;
-use App\Models\PreviewPhoto;
+use App\Models\PreviewPhoto as Photo;
+use App\Models\PreviewAvatar as Avatar;
 use App\Models\Subscription;
 use App\Models\Transaction;
 use App\Models\User;
@@ -22,8 +24,9 @@ use App\Services\ImageService;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
-class OfferManager
+class PreviewOfferManager
 {
     /**
      * @param string|null $status
@@ -33,7 +36,7 @@ class OfferManager
      */
     public function getList(?string $status = OfferStatus::ACTIVE, bool $randomOrder = false, bool $promoted = false)
     {
-        $query = Offer::where('expire_time', '>', Carbon::now())
+        $query = PreviewOffer::where('expire_time', '>', Carbon::now())
             ->where(function ($query) {
                 $query->where('visible_from_date', '<', Carbon::now())
                     ->orWhere('visible_from_date', null);
@@ -64,7 +67,7 @@ class OfferManager
         $user = Auth::user();
         if ($user->getRoleName() === Acl::ROLE_COMPANY && $user->company) {
             $companyMembers = User::where('company_id', $user->company_id)->pluck('id')->all();
-            $offers = Offer::whereIn('user_id', $companyMembers);
+            $offers = PreviewOffer::whereIn('user_id', $companyMembers);
         } else {
             $offers = $user->offers();
         }
@@ -105,7 +108,7 @@ class OfferManager
         ?bool $hasRaiseTen = false,
         ?bool $isUrgent = false,
         ?bool $isBargain = false
-    ): Offer
+    ): PreviewOffer
     {
         $userId = $userId ?: Auth::id();
         $offer = [
@@ -130,14 +133,14 @@ class OfferManager
             $offer['visible_from_date'] = $visible_from_date;
         }
 
-        $offer = Offer::create($offer);
+        $offer = PreviewOffer::create($offer);
 
         $this->storeAttributes($offer, $attributes);
 
         return $offer;
     }
 
-    public function storeImage($file, Offer $model, $position = 1, $type = 'photo')
+    public function storeImage($file, PreviewOffer $model, $position = 1, $type = 'photo')
     {
         $imageService = resolve(ImageService::class);
         $photo = Photo::make([
@@ -151,7 +154,16 @@ class OfferManager
 
         return $photo ? $photo : null;
     }
+    public function removeAvatar(int $photoId, string $filePath)
+    {
+        $photo = Photo::find($photoId);
+        if ($photo) {
+            $photo->delete();
+        }
 
+        $imageService = resolve(ImageService::class);
+        return $imageService->delete($filePath);
+    }
     public function removeImage(int $photoId, string $filePath)
     {
         $photo = Photo::find($photoId);
@@ -162,25 +174,54 @@ class OfferManager
         $imageService = resolve(ImageService::class);
         return $imageService->delete($filePath);
     }
+    public function storeAvatar(PreviewOffer $user, $file, $isActive = false)
+    {
+        $this->removeAvatars($user);
+        $imageService = resolve(ImageService::class);
+        $photo = Avatar::make([
+            'file' => $imageService->store($file, Avatar::class),
+            'expire_date' => Carbon::now()->addDays(30),
+            'is_active' => $isActive,
+            'type' => AvatarType::PHOTO
+        ]);
 
-    public function migrateImages(PreviewOffer $p_offer, Offer $model) {
-        $photos = PreviewPhoto::where('preview_offer_id',$p_offer->id)->get();
-        foreach ($photos as $photo) {
-
-            $ph = Photo::make([
-                'file' => $photo->file['original_name'],
-                'description' => '',
-                'img_type' => $photo->img_type,
-                'position' => $photo->position
-            ]);
-            $t = $model->photos()->save($ph);
-            // $photo->delete();
-        }
-        return true;
+        return $user->avatars()->save($photo);
     }
 
+    public function storeVideoAvatar(PreviewOffer $user, string $url, $isActive = false)
+    {
+        $this->removeAvatars($user, AvatarType::VIDEO_URL);
+        $videoAvatar = Avatar::make([
+            'file' => $url,
+            'expire_date' => Carbon::now()->addDays(30),
+            'is_active' => $isActive,
+            'type' => AvatarType::VIDEO_URL
+        ]);
+
+        return $user->avatars()->save($videoAvatar);
+    }
+
+    public function removeAvatars(PreviewOffer $user, string $avatarType = AvatarType::PHOTO)
+    {
+        $avatars = $user->avatars()->where('type', $avatarType);
+        if ($avatarType === AvatarType::PHOTO) {
+            $imageService = resolve(ImageService::class);
+            foreach ($avatars->get() as $avatar) {
+                $imageService->delete($avatar->file['path_name']);
+            }
+        }
+
+        return $avatars->delete();
+    }
+    public function deletePreviewData($p_offer) {
+        DB::table('attribute_value')->where('preview_offer_id',$p_offer->id)->delete();
+        DB::table('preview_photos')->where('preview_offer_id',$p_offer->id)->delete();
+        DB::table('preview_avatars')->where('preview_offer_id',$p_offer->id)->delete();
+        DB::table('preview_offers')->where('id',$p_offer->id)->delete();
+        return true;
+    }
     public function update(
-        Offer $offer,
+        PreviewOffer $offer,
         string $name,
         string $description,
         int $price,
@@ -192,7 +233,7 @@ class OfferManager
         array $links = [],
         string $visible_from_date = null,
         string $status = OfferStatus::IN_ACTIVE
-    ): ?Offer
+    ): ?PreviewOffer
     {
         $update = $offer->update([
             'title' => strip_tags($name,'<b><p><i><ul><li><ol>'),
@@ -219,7 +260,7 @@ class OfferManager
 
     public function changeStatusMultiple(array $offersIds, string $status): int
     {
-        return Offer::whereIn('id', $offersIds)->update(['status' => $status]);
+        return PreviewOffer::whereIn('id', $offersIds)->update(['status' => $status]);
     }
 
     public function changeStatus(Offer $offer, string $status, string $note = null, bool $fromPayment = false): Offer
@@ -269,7 +310,7 @@ class OfferManager
      */
     public function getSimilar(Offer $offer)
     {
-        $query = Offer::where('expire_time', '>', Carbon::now())
+        $query = PreviewOffer::where('expire_time', '>', Carbon::now())
             ->where('status', OfferStatus::ACTIVE)
             ->whereHas('category', function($query) use ($offer) {
                 return $query->where('_lft', '>=', $offer->category->_lft)
@@ -285,7 +326,7 @@ class OfferManager
      */
     public function handlePaymentCallback(array $cachedInfo): void
     {
-        $offer = Offer::findOrFail($cachedInfo['offer_id']);
+        $offer = PreviewOffer::findOrFail($cachedInfo['offer_id']);
         if ($cachedInfo['transaction_id']) {
             $transaction = Transaction::findOrFail($cachedInfo['transaction_id']);
             foreach ($transaction->line_items as $item) {
@@ -314,7 +355,7 @@ class OfferManager
      */
     public function handleRefreshPaymentCallback(array $cachedInfo)
     {
-        $offer = Offer::findOrFail($cachedInfo['offer_id']);
+        $offer = PreviewOffer::findOrFail($cachedInfo['offer_id']);
         $this->refresh($offer);
     }
 
@@ -323,7 +364,7 @@ class OfferManager
      */
     public function handleRaisePaymentCallback(array $cachedInfo)
     {
-        $offer = Offer::findOrFail($cachedInfo['offer_id']);
+        $offer = PreviewOffer::findOrFail($cachedInfo['offer_id']);
         $this->raise($offer);
     }
 
@@ -365,7 +406,7 @@ class OfferManager
      * @param array $attributes
      * @return Offer
      */
-    protected function storeAttributes(Offer $offer, array $attributes): Offer
+    protected function storeAttributes(PreviewOffer $offer, array $attributes): PreviewOffer
     {
         $attributesKeys = array_keys($attributes);
         $attributesModels = Attribute::whereIn('id', $attributesKeys)->get();

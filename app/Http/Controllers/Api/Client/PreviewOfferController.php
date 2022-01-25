@@ -14,13 +14,12 @@ use App\Exceptions\UserExists;
 use App\Http\Requests\Offer\OfferStoreRequest;
 use App\Http\Requests\Offer\ReportOfferRequest;
 use App\Http\Requests\Offer\ShowOfferRequest;
-use App\Http\Resources\Offer\OfferCollection;
-use App\Http\Resources\Offer\OfferExtendedResource;
+use App\Http\Resources\PreviewOffer\PreviewOfferCollection;
+use App\Http\Resources\PreviewOffer\PreviewOfferExtendedResource;
 use App\Jobs\SendEmailJob;
 use App\Laravue\Acl;
 use App\Mail\Offer\ReportOffer;
 use App\Managers\CompanyManager;
-use App\Managers\OfferManager;
 use App\Managers\PreviewOfferManager;
 use App\Managers\TransactionManager;
 use App\Managers\UserManager;
@@ -43,13 +42,12 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
-class OfferController
+class PreviewOfferController
 {
     /**
      * @var OfferManager
      */
-    private OfferManager $offerManager;
-    private PreviewOfferManager $previewOfferManager;
+    private PreviewOfferManager $offerManager;
 
     /**
      * @var UserManager
@@ -79,8 +77,7 @@ class OfferController
      * @param ImageService $imageService
      */
     public function __construct(
-        OfferManager $offerManager,
-        PreviewOfferManager $previewOfferManager,
+        PreviewOfferManager $offerManager,
         UserManager $userManager,
         UserProfileManager $userProfileManager,
         Checkout $paypalCheckout,
@@ -90,7 +87,6 @@ class OfferController
     )
     {
         $this->offerManager = $offerManager;
-        $this->previewOfferManager = $previewOfferManager;
         $this->userManager = $userManager;
         $this->userProfileManager = $userProfileManager;
         $this->paypalCheckout = $paypalCheckout;
@@ -104,9 +100,9 @@ class OfferController
         return response()->success(new OfferCollection($offers));
     }
 
-    public function show(Offer $offer): Response
+    public function show(PreviewOffer $offer): Response
     {
-        return response()->success(new OfferExtendedResource($offer));
+        return response()->success(new PreviewOfferExtendedResource($offer));
     }
 
     /**
@@ -118,12 +114,7 @@ class OfferController
         DB::beginTransaction();
 
         try {
-            $user = Auth::user() ?: $this->userManager->createUser(
-                $request->get('email'),
-                $request->get('password'),
-                $request->get('name'),
-                $request->get('type')
-            );
+            $user = Auth::user() ?: null;
 
             $offer = $this->offerManager->store(
                 $request->get('title'),
@@ -136,7 +127,7 @@ class OfferController
                 $request->get('location_name'),
                 $request->get('links', []),
                 $request->get('visible_from_date'),
-                $user->id,
+                $user ? $user->id : null,
                 $request->get('has_raise_one') == 'true' ? true : false,
                 $request->get('has_raise_three') == 'true' ? true : false,
                 $request->get('has_raise_ten') == 'true' ? true : false,
@@ -150,15 +141,15 @@ class OfferController
                 Cache::put('offer-token:' . $offer->id, $offerToken, Carbon::now()->addHour());
             }
 
-            if ($request->has('subscription')) {
-                $subscription = Subscription::findOrFail($request->subscription);
-                $offer->subscriptions()->detach();
-                $offer->subscriptions()
-                    ->attach(
-                        $subscription->id,
-                        ['end_date' => Carbon::now()->addHours($subscription->duration)]
-                    );
-            }
+            // if ($request->has('subscription')) {
+            //     $subscription = Subscription::findOrFail($request->subscription);
+            //     $offer->subscriptions()->detach();
+            //     $offer->subscriptions()
+            //         ->attach(
+            //             $subscription->id,
+            //             ['end_date' => Carbon::now()->addHours($subscription->duration)]
+            //         );
+            // }
 
             if ($request->has('images')) {
                 $position = 1;
@@ -174,42 +165,19 @@ class OfferController
                     $position++;
                 }
             }
-            $userManager = resolve(UserManager::class);
-            if ($request->has('avatar') && $request->avatar !== null && $request->avatar !== 'undefined'){
-                $userManager->storeAvatar($user, $request->file('avatar'));
+            if ($request->has('avatar') && $request->avatar !== null){
+                $this->offerManager->storeAvatar($offer, $request->file('avatar'));
             }
 
             if (
                 in_array($request->type, [CompanyType::DEVELOPER, CompanyType::AGENCY])
                 && $request->has('video_avatar')
                 && $request->video_avatar !== null
-                && $request->video_avatar !== 'undefined'
             ) {
-                $userManager->storeVideoAvatar($user, $request->get('video_avatar'));
+                $this->offerManager->storeVideoAvatar($offer, $request->get('video_avatar'));
             }
-
             DB::commit();
-
-            if (($bill = $offer->calculateBill()['billAmount']) !== 0) {
-                $this->offerManager->changeStatus($offer, OfferStatus::PENDING);
-
-                if (!Auth::user() && !$request->has('preview')) {
-                    event(new UserCreated($user));
-                    event(new PaidOfferCreated($offer));
-                }
-
-                return response()->success(
-                    ['bill_amount' => $bill, 'offer_slug' => $offer->slug]
-                );
-            }
-
-            if (Auth::user()) {
-                event(new OfferCreated($offer, $user));
-            } else {
-                event(new UserCreated($user));
-                event(new OfferCreated($offer, $user));
-            }
-            return response()->success(new OfferExtendedResource($offer, $offerToken), Response::HTTP_CREATED);
+            return response()->success(new PreviewOfferExtendedResource($offer, $offerToken), Response::HTTP_CREATED);
         } catch (UserExists $e) {
             DB::rollBack();
             return response()->errorWithLog(['error' => 'email_already_exist'], Response::HTTP_BAD_REQUEST, ['message' => $e]);
@@ -224,11 +192,8 @@ class OfferController
      * @param Offer $offer
      * @return mixed
      */
-    public function update(Request $request, Offer $offer): Response
+    public function update(Request $request, PreviewOffer $offer): Response
     {
-        if ($offer->user_id !== Auth::id()) {
-            return response()->error('', Response::HTTP_FORBIDDEN);
-        }
 
         DB::beginTransaction();
         try {
@@ -285,137 +250,22 @@ class OfferController
                 $position++;
             }
         }
+        if ($request->has('avatar') && $request->avatar !== null && $request->avatar !== 'undefined'){
+            $this->offerManager->storeAvatar($offer, $request->file('avatar'));
+        }
+
+        if (
+            in_array($request->type, [CompanyType::DEVELOPER, CompanyType::AGENCY])
+            && $request->has('video_avatar')
+            && $request->video_avatar !== null
+            && $request->video_avatar !== 'undefined'
+        ) {
+            $this->offerManager->storeVideoAvatar($offer, $request->get('video_avatar'));
+        }
         DB::commit();
-        $isPreview = $request->get('preview') === true;
-        if (($bill = $offer->calculateBill()['billAmount']) !== 0) {
-            $this->offerManager->changeStatus($offer, OfferStatus::PENDING);
-
-            if ($isPreview) {
-                event(new PaidOfferCreated($offer));
-                Auth::logout();
-            }
-
-            return response()->success(
-                ['bill_amount' => $bill, 'offer_slug' => $offer->slug]
-            );
-        }
-        event(new OfferUpdated($offer));
-        if ($isPreview) {
-            Auth::logout();
-        }
-        return response()->success(new OfferExtendedResource($offer), Response::HTTP_OK);
+        return response()->success(new PreviewOfferExtendedResource($offer), Response::HTTP_OK);
     }
-    public function migrate(OfferStoreRequest $request, $p_offer_slug): Response
-    {
-        $p_offer = PreviewOffer::where('slug',$p_offer_slug)->first();
-        DB::beginTransaction();
 
-        try {
-            $user = $this->userManager->createUser(
-                $request->get('email'),
-                $request->get('password'),
-                $request->get('name'),
-                $request->get('type')
-            );
-
-            $offer = $this->offerManager->store(
-                $request->get('title'),
-                $request->get('description'),
-                (int)$request->get('price'),
-                $request->get('category'),
-                $request->get('attributes'),
-                $request->get('lat'),
-                $request->get('lon'),
-                $request->get('location_name'),
-                $request->get('links', []),
-                $request->get('visible_from_date'),
-                $user->id,
-                $request->get('has_raise_one') == 'true' ? true : false,
-                $request->get('has_raise_three') == 'true' ? true : false,
-                $request->get('has_raise_ten') == 'true' ? true : false,
-                $request->get('is_urgent') == 'true' ? true : false,
-                $request->get('is_bargain') == 'true' ? true : false,
-            );
-
-            $offerToken = null;
-            if ($request->get('preview')) {
-                $offerToken = (string)Str::uuid();
-                Cache::put('offer-token:' . $offer->id, $offerToken, Carbon::now()->addHour());
-            }
-
-            if ($request->has('subscription')) {
-                $subscription = Subscription::findOrFail($request->subscription);
-                $offer->subscriptions()->detach();
-                $offer->subscriptions()
-                    ->attach(
-                        $subscription->id,
-                        ['end_date' => Carbon::now()->addHours($subscription->duration)]
-                    );
-            }
-            $isPhotoExist = false;
-            if ($request->has('images')) {
-                $position = 1;
-                foreach ($request->file('images') as $file) {
-                    $this->offerManager->storeImage($file, $offer, $position,'photo');
-                    $isPhotoExist = true;
-                    $position++;
-                }
-            }
-
-            if ($request->has('projectPlans')) {
-                $position = 1;
-                foreach ($request->file('projectPlans') as $file) {
-                    $this->offerManager->storeImage($file, $offer, $position,'project_plan');
-                    $position++;
-                }
-            }
-
-            $userManager = resolve(UserManager::class);
-            if ($request->has('avatar') && $request->avatar !== null && $request->avatar !== 'undefined'){
-                $userManager->storeAvatar($user, $request->file('avatar'));
-            }
-
-            if (
-                in_array($request->type, [CompanyType::DEVELOPER, CompanyType::AGENCY])
-                && $request->has('video_avatar')
-                && $request->video_avatar !== null
-                && $request->video_avatar !== 'undefined'
-            ) {
-                $userManager->storeVideoAvatar($user, $request->get('video_avatar'));
-            }
-            // $this->offerManager->migrateImages($p_offer, $offer);
-            $userManager->migrateImages($p_offer, $user);
-            $this->previewOfferManager->deletePreviewData($p_offer);
-            DB::commit();
-
-            if (($bill = $offer->calculateBill()['billAmount']) !== 0) {
-                $this->offerManager->changeStatus($offer, OfferStatus::PENDING);
-
-                if ($request->get('email') && !$request->has('preview')) {
-                    event(new UserCreated($user));
-                    event(new PaidOfferCreated($offer));
-                }
-
-                return response()->success(
-                    ['bill_amount' => $bill, 'offer_slug' => $offer->slug]
-                );
-            }
-
-            if (!$request->get('email')) {
-                event(new OfferCreated($offer, $user));
-            } else {
-                event(new UserCreated($user));
-                event(new OfferCreated($offer, $user));
-            }
-            return response()->success(new OfferExtendedResource($offer, $offerToken), Response::HTTP_CREATED);
-        } catch (UserExists $e) {
-            DB::rollBack();
-            return response()->errorWithLog(['error' => 'email_already_exist'], Response::HTTP_BAD_REQUEST, ['message' => $e]);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return response()->errorWithLog($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, ['message' => $e]);
-        }
-    }
     public function changeStatus(Request $request, Offer $offer): Response
     {
         if ($offer->user_id !== Auth::id()) {

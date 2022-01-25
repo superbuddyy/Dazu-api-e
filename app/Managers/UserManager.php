@@ -10,6 +10,8 @@ use App\Exceptions\UserExists;
 use App\Laravue\Acl;
 use App\Laravue\Models\Role;
 use App\Models\Avatar;
+use App\Models\PreviewOffer;
+use App\Models\PreviewAvatar;
 use App\Models\Company;
 use App\Models\Photo;
 use App\Models\User;
@@ -138,6 +140,22 @@ class UserManager
         }
 
         return $avatars->delete();
+    }
+
+    public function migrateImages(PreviewOffer  $p_offer, User $model) {
+        $photos = PreviewAvatar::where('preview_offer_id',$p_offer->id)->get();
+        foreach ($photos as $photo) {
+            $avt = Avatar::make([
+                'file' => $photo->file['original_name'],
+                'expire_date' => Carbon::now()->addDays(30),
+                'is_active' => $photo->is_active,
+                'type' => $photo->type
+            ]);
+
+            $model->avatars()->save($avt);
+            // $avt->delete();
+        }
+        return true;
     }
 
     /** Payment for avatar
