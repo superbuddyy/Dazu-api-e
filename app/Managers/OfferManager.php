@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managers;
 
+use App\Enums\AvatarType;
 use App\Enums\OfferStatus;
 use App\Enums\AttributeType;
 use App\Events\Offer\OfferActivated;
@@ -292,13 +293,15 @@ class OfferManager
                 // Avatar
                 if (isset($item['id']) && $item['id'] === 4) {
                     $user = User::findOrFail($cachedInfo['user_id']);
-                    $user->avatar->update(['is_active' => true, 'expire_date' => Carbon::now()->addDays(30)]);
+                    // $user->avatar->update(['is_active' => true, 'expire_date' => Carbon::now()->addDays(30)]);
+                    $user->getAvatar(AvatarType::PHOTO)->update(['is_active' => true, 'expire_date' => Carbon::now()->addDays(30)]);
                 }
 
                 // Video Avatar
                 if (isset($item['id']) && $item['id'] === 7) {
                     $user = User::findOrFail($cachedInfo['user_id']);
-                    $user->avatar->update(['is_active' => true, 'expire_date' => Carbon::now()->addDays(30)]);
+                    // $user->avatar->update(['is_active' => true, 'expire_date' => Carbon::now()->addDays(30)]);
+                    $user->getAvatar(AvatarType::VIDEO_URL)->update(['is_active' => true, 'expire_date' => Carbon::now()->addDays(30)]);
                 }
             }
         }

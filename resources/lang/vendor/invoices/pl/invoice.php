@@ -28,7 +28,7 @@ return [
     'total_taxes'     => 'Total taxes',
     'tax_rate'        => 'Tax rate',
     'total_amount'    => 'Cena całkowita',
-    'pay_until'       => 'Zapłać do',
+    'pay_until'       => 'Zapłacono',
     'amount_in_words' => 'Amount in words',
     'notes'           => 'Notatki',
     'shipping'        => 'Dostawa',

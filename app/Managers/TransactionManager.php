@@ -43,7 +43,7 @@ class TransactionManager
             'email'         => config('dazu.company_info.email'),
             'custom_fields' => [
                 'Email'         => config('dazu.company_info.email'),
-                'NIP'        => config('dazu.company_info.nip'),
+                // 'NIP'        => config('dazu.company_info.nip'),
             ],
         ]);
 
@@ -91,6 +91,7 @@ class TransactionManager
             ->filename('invoices/' . $transaction->user_id . '/invoice-' . $transaction->id)
             ->addItems($items)
             ->notes($notes)
+            ->logo(public_path('vendor/invoices/logo.svg'))
             // You can additionally save generated invoice to configured disk
             ->save('public');
 

@@ -25,6 +25,10 @@
             body, h1, h2, h3, h4, h5, h6, table, th, tr, td, p, div {
                 line-height: 1.1;
             }
+            h2 {
+            	font-family: sans-serif !important;
+            	color: #ff19b7 !important;
+            }
             .party-header {
                 font-size: 1.5rem;
                 font-weight: 400;
@@ -41,7 +45,12 @@
 
     <body>
         {{-- Header --}}
-        <h2 style="color: #54b67e">DAZU</h2>
+        <!-- <h2 class="font-fmy">DAZU</h2> -->
+        @if($invoice->logo)
+            <h2><img src="{{ $invoice->getLogo() }}" alt="logo" height="40"></h2>
+        @else
+        	<h2 class="font-fmy">DAZU</h2> 
+        @endif
         <table class="table mt-5">
             <tbody>
                 <tr>

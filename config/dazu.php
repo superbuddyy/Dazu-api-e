@@ -11,14 +11,14 @@ return [
         'email' => env('ADMIN_EMAIL', 'admin@dazu.pl')
     ],
     'company_info' => [
-        'name' => 'Dazu sp. z o.o.',
+        'name' => 'Dazu.pl',
         'email' => 'info@dazu.app',
         'nip' => '123123123',
     ],
     'recaptcha' => [
         'secret' => env('CAPTCHA_SECRET', '6LdeEN4UAAAAAFiL15UVm-Kg023wTRgPJBdXVFey'),
     ],
-    'frontend_url' => env('FRONT_URL'),
+    'frontend_url' => env('FRONT_URL','http://localhost:3000'),
     'email' => [
         'from_address' => env('MAIL_FROM_ADDRESS'),
         'from_name' => env('MAIL_FROM_NAME'),
