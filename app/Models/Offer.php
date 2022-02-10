@@ -65,7 +65,8 @@ class Offer extends Model
         'has_raise_three',
         'has_raise_ten',
         'is_bargain',
-        'is_urgent'
+        'is_urgent',
+        'total_raises'
     ];
 
     protected $dates = ['expire_time', 'created_at', 'updated_at'];

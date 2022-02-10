@@ -38,7 +38,7 @@ class SearchService
 
         $query = $this->buildQuery($searchArguments, $query);
 
-        $query->orderBy('raise_at', 'DESC');
+        // $query->orderBy('raise_at', 'DESC');
         $query->orderBy(
             Arr::get($searchArguments, 'order_by', $orderBy),
             Arr::get($searchArguments, 'order', $order)

@@ -25,7 +25,7 @@ class Category extends Model
     protected $fillable = ['is_active', 'name', 'parent_id', 'slug', 'description'];
 
     /** @var string[]  */
-    protected $casts = ['is_active' => 'boolean'];
+    protected $casts = ['is_active' => 'boolean', 'offer_types' => 'array'];
 
     /**
      * @return HasMany

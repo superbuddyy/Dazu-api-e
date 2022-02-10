@@ -43,8 +43,62 @@ class SubscriptionController
     {
         DB::beginTransaction();
         try {
+            $inputData = $request->get('subscriptions') ?? null;
             $ref = 'subscription::' . $subscription->id . 'offer::' . $offer->id;
-            $result = $this->paypalCheckout->createOrder($ref, $subscription->price);
+            $price = $subscription->price;
+            $lineItems = [];
+            $lineItems[] = [
+                'description' => $subscription->name,
+                'unit' => 'szt.',
+                'price' => $subscription->price,
+                'qty' => 1,
+            ];
+            if (isset($inputData['is_bargain']) && !empty($inputData['is_bargain'])) {
+                $price = $price + $subscription->bargain_price;
+                $lineItems[] = [
+                    'description' => 'Okazja',
+                    'unit' => 'szt.',
+                    'price' => $subscription->bargain_price,
+                    'qty' => 1,
+                ];
+            }
+            if (isset($inputData['is_urgent']) && !empty($inputData['is_urgent'])) {
+                $price = $price + $subscription->urgent_price;
+                $lineItems[] = [
+                    'description' => 'Pilne',
+                    'unit' => 'szt.',
+                    'price' => $subscription->urgent_price,
+                    'qty' => 1,
+                ];
+            }
+            if (isset($inputData['has_raise_one']) && !empty($inputData['has_raise_one'])) {
+                $price = $price + $subscription->raise_price;
+                $lineItems[] = [
+                    'description' => 'Podibicie',
+                    'unit' => 'szt.',
+                    'price' => $subscription->raise_price,
+                    'qty' => 1,
+                ];
+            }
+            if (isset($inputData['has_raise_three']) && !empty($inputData['has_raise_three'])) {
+                $price = $price + $subscription->raise_price_three;
+                $lineItems[] = [
+                    'description' => 'Podibicie x3',
+                    'unit' => 'szt.',
+                    'price' => $subscription->raise_price_three,
+                    'qty' => 1,
+                ];
+            }
+            if (isset($inputData['has_raise_ten']) && !empty($inputData['has_raise_ten'])) {
+                $price = $price + $subscription->raise_price_ten;
+                $lineItems[] = [
+                    'description' => 'Podibicie x10',
+                    'unit' => 'szt.',
+                    'price' => $subscription->raise_price_ten,
+                    'qty' => 1,
+                ];
+            }
+            $result = $this->paypalCheckout->createOrder($ref, $price);
             if ($result === false || $result->statusCode !== Response::HTTP_CREATED) {
                 return response()->errorWithLog(
                     'failed to create order',
@@ -53,14 +107,7 @@ class SubscriptionController
             }
 
             $transaction = $this->transactionManager->store(
-                [
-                    [
-                        'description' => $subscription->name,
-                        'unit' => 'szt.',
-                        'price' => $subscription->price,
-                        'qty' => 1,
-                    ]
-                ],
+                $lineItems,
                 $offer->id,
                 $subscription->name
             );
@@ -73,6 +120,7 @@ class SubscriptionController
                     'offer_id' => $offer->id,
                     'subscription_id' => $subscription->id,
                     'transaction_id' => $transaction->id,
+                    'subscriptions' => $inputData
                 ]),
                 'EX',
                 '120'

@@ -20,6 +20,57 @@ class SubscriptionManager
                 $cachedInfo['subscription_id'],
                 ['end_date' => Carbon::now()->addHours($subscription->duration)]
             );
+        $sub_data = $cachedInfo['subscriptions'] ?? null;
+        if ($cachedInfo['subscriptions'] && $sub_data) {
+            // $has_raise_one = $sub_data['has_raise_one'] ?? $offer->has_raise_one;
+            // $has_raise_three = $sub_data['has_raise_three'] ?? $offer->has_raise_three;
+            // $has_raise_ten = $sub_data['has_raise_ten'] ?? $offer->has_raise_ten;
+            // $is_bargain = $sub_data['is_bargain'] ?? $offer->is_bargain;
+            // $is_urgent = $sub_data['is_urgent'] ?? $offer->is_urgent;
+            $total_raises = $offer->total_raises;
+
+            if (isset($sub_data['is_bargain']) && !empty($sub_data['is_bargain'])) {
+                $is_bargain = $sub_data['is_bargain'];
+            } else {
+                $is_bargain = $offer->is_bargain;
+            }
+
+            if (isset($sub_data['is_urgent']) && !empty($sub_data['is_urgent'])) {
+                $is_urgent = $sub_data['is_urgent'];
+            } else {
+                $is_urgent = $offer->is_urgent;
+            }
+
+            if (isset($sub_data['has_raise_one']) && !empty($sub_data['has_raise_one'])) { 
+                $total_raises = $total_raises + 1;
+                $has_raise_one = $sub_data['has_raise_one'];
+            } else {
+                $has_raise_one = $offer->has_raise_one;
+            }
+
+            if (isset($sub_data['has_raise_three']) && !empty($sub_data['has_raise_three'])) {
+                $total_raises = $total_raises + 3;
+                $has_raise_three = $sub_data['has_raise_three'];
+            } else {
+                $has_raise_three = $offer->has_raise_three;
+            }
+
+            if (isset($sub_data['has_raise_ten']) && !empty($sub_data['has_raise_ten'])) {
+                $total_raises = $total_raises + 10;
+                $has_raise_ten = $sub_data['has_raise_ten'];
+            } else {
+                $has_raise_ten = $offer->has_raise_ten;
+            }
+
+            $offer->update([
+                'total_raises' => $total_raises,
+                'has_raise_one' => $has_raise_one,
+                'has_raise_three' => $has_raise_three,
+                'has_raise_ten' => $has_raise_one,
+                'is_bargain' => $is_bargain,
+                'is_urgent' => $is_urgent
+            ]);
+        }
     }
 
     public function update(Subscription $subscription, array $data): Subscription

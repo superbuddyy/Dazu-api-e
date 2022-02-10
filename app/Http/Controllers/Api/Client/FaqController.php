@@ -19,6 +19,6 @@ class FaqController extends Controller
 
     public function index()
     {
-        return $this->faqManager->getList();
+        return $this->faqManager->getAll();
     }
 }

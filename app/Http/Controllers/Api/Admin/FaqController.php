@@ -37,4 +37,11 @@ class FaqController extends Controller
     {
         return $this->faqManager->delete($id);
     }
+    public function uploadFile(Request $request) {
+        $result = "";
+        if ($request->has('file')) {
+            $result = $this->faqManager->uploadFaqFile($request->file('file'));
+        }
+        return response()->success($result);
+    }
 }

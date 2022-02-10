@@ -211,6 +211,17 @@ Route::namespace('Api')->group(function() {
         Route::post('offers', 'OfferController@store')
             ->name('offers.store')
             ->middleware('censor');
+        Route::post('offers-preview', 'PreviewOfferController@store')
+            ->name('offers.preview')
+            ->middleware('censor');
+        Route::post('offers-preview/{offer}', 'PreviewOfferController@update')
+            ->name('offers-preview.update')
+            ->middleware('censor');
+        Route::post('migrate/offers-preview/{offer}', 'OfferController@migrate')
+            ->name('offers-preview.migrate')
+            ->middleware('censor');
+        Route::get('offers-preview/{offer}', 'PreviewOfferController@show')
+            ->name('offers-preview.show');
 
         Route::get('offers/bill/{offer}', 'OfferController@calculateBill')
             ->name('offers.bill');
@@ -262,6 +273,8 @@ Route::namespace('Api')->group(function() {
             // FAQ
             Route::post('faq', 'FaqController@updateOrCreate')
                 ->name('faq.updateOrCreate');
+            Route::post('faq/upload', 'FaqController@uploadFile')
+                ->name('faq.uploadFile');
             Route::get('faq/{id}', 'FaqController@show')
                 ->name('faq.show');
             Route::delete('faq/{id}', 'FaqController@delete')
