@@ -112,9 +112,8 @@ class PreviewOfferManager
     {
         $userId = $userId ?: Auth::id();
         $offer = [
-            'title' => $name,
-            // 'description' => strip_tags($description),
-            'description' => $description,
+            'title' => strip_tags($name,'<b><strong><em><u><br><p><i><ul><li><ol>'),
+            'description' => strip_tags($description,'<b><strong><em><u><br><p><i><ul><li><ol>'),
             'price' => $price,
             'status' => OfferStatus::IN_ACTIVE, // Default
             'category_id' => Category::where('slug', $categorySlug)->firstOrFail()->id,
@@ -236,8 +235,8 @@ class PreviewOfferManager
     ): ?PreviewOffer
     {
         $update = $offer->update([
-            'title' => strip_tags($name,'<b><p><i><ul><li><ol>'),
-            'description' => strip_tags($description,'<b><p><i><ul><li><ol>'),
+            'title' => strip_tags($name,'<b><strong><em><u><br><p><i><ul><li><ol>'),
+            'description' => strip_tags($description,'<b><strong><em><u><br><p><i><ul><li><ol>'),
             'price' => $price,
             'category_id' => Category::where('slug', $categorySlug)->firstOrFail()->id,
             'lat' => $lat,
