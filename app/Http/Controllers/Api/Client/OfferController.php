@@ -569,7 +569,7 @@ class OfferController
             $offer->update([
                 'has_raise_one' => $has_raise_one,
                 'has_raise_three' => $has_raise_three,
-                'has_raise_ten' => $has_raise_one,
+                'has_raise_ten' => $has_raise_ten,
                 'is_bargain' => $is_bargain,
                 'is_urgent' => $is_urgent
             ]);

@@ -66,7 +66,7 @@ class SubscriptionManager
                 'total_raises' => $total_raises,
                 'has_raise_one' => $has_raise_one,
                 'has_raise_three' => $has_raise_three,
-                'has_raise_ten' => $has_raise_one,
+                'has_raise_ten' => $has_raise_ten,
                 'is_bargain' => $is_bargain,
                 'is_urgent' => $is_urgent
             ]);

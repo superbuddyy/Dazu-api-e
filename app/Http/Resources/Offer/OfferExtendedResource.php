@@ -143,6 +143,12 @@ class OfferExtendedResource extends JsonResource
                         return new AttributeValueResource($attribute);
                     }) ?? null,
                 'is_favorite' => $isFavorite ?? false,
+                'is_expired' => $this->isExpired ?? false,
+                'exp_avatar_url' => [
+                    'id' => $this->user->id ?? null,
+                    'avatar' => url('/svg/avatar.svg'),
+                    'default_avatar' => 'photo'
+                ],
                 'allow_notifications' => $allowNotifications ?? false,
                 'subscription' => $this->activeSubscription->id ?? null,
                 'user' => [
