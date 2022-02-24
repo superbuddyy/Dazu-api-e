@@ -140,6 +140,16 @@ Route::namespace('Api')->group(function() {
                 ->name('favorite-filters.update');
             Route::delete('favorite-filters/{favorite_id}', 'FavoriteFilterController@destroy')
                 ->name('favorite-filters.destroy');
+
+            /** Recent search Filters */
+            Route::get('recent-search-filters', 'RecentSearchFilterController@index')
+                ->name('recent-search-filters.index');
+            Route::post('recent-search-filters', 'RecentSearchFilterController@store')
+                ->name('recent-search-filters.store');
+            Route::put('recent-search-filters', 'RecentSearchFilterController@update')
+                ->name('recent-search-filters.update');
+            Route::delete('recent-search-filters/{favorite_id}', 'RecentSearchFilterController@destroy')
+                ->name('recent-search-filters.destroy');
         });
 
         /** Popup */
