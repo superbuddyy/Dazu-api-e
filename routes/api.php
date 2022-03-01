@@ -169,6 +169,11 @@ Route::namespace('Api')->group(function() {
         Route::delete('faq/{id}', 'FaqController@delete')
             ->name('faq.delete');
 
+        /** PAGES */
+        Route::get('pages', 'PagesController@index')
+            ->name('pages.index');
+        Route::get('pages/{key}', 'PagesController@show')
+            ->name('pages.show');
 
         /** User profile */
         Route::get('profile/{user}', 'UserController@showProfile')
@@ -294,6 +299,18 @@ Route::namespace('Api')->group(function() {
                 ->name('faq.show');
             Route::delete('faq/{id}', 'FaqController@delete')
                 ->name('faq.delete');
+
+            // PAGES
+            Route::get('admin/pages', 'PagesController@index')
+                ->name('admin.pages.index');    
+            Route::post('admin/pages', 'PagesController@store')
+                ->name('admin.pages.store');
+            Route::put('admin/pages/{id}', 'PagesController@update')
+                ->name('admin.pages.update');
+            Route::get('admin/pages/{id}', 'PagesController@show')
+                ->name('admin.pages.show');
+            Route::delete('admin/pages/{id}', 'PagesController@destroy')
+                ->name('admin.pages.destroy');
 
             // Api resource routes
             Route::apiResource('roles', 'RoleController')->middleware('permission:' . Acl::PERMISSION_PERMISSION_MANAGE);
