@@ -120,9 +120,14 @@ class OfferController extends Controller
                 $this->offerManager->changeSubscription($offer, $subscription);
             }
             if ($request->has('status')){
+                if ($offer->status === OfferStatus::EXPIRED && $offer->expire_time <= Carbon::now()) {
+                    $offer->expire_time = Carbon::now()->addHours(config('dazu.offer.expire_time'));
+                    $offer->save();
+                }
                 $this->offerManager->changeStatus($offer, $request->get('status'), $request->get('note'));
+                
             }
-            return response()->success('', Response::HTTP_NO_CONTENT);
+            return response()->success('', Response::HTTP_OK);
         } catch (Exception $e) {
             return response()->errorWithLog($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, ['message' => $e]);
         }
@@ -134,5 +139,20 @@ class OfferController extends Controller
         $subscription = Offer::findOrFail($request->subscription_id);
         $this->offerManager->changeSubscription($offer, $subscription);
         return response()->success('', Response::HTTP_NO_CONTENT);
+    }
+
+    public function destroy(Request $request, Offer $offer)
+    {
+        try {
+            $photos = $offer->photos;
+            foreach ($photos as $photo) {
+                $this->offerManager->removeImage($photo->id, $photo->file['path_name']);
+            }
+            echo $offer->id;
+            $del = Offer::findOrFail($offer->id)->delete();
+            return response()->success($del, Response::HTTP_OK);
+        } catch (Exception $e) {
+            return response()->errorWithLog($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY, ['message' => $e]);
+        }
     }
 }

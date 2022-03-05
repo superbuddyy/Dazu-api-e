@@ -353,6 +353,8 @@ Route::namespace('Api')->group(function() {
                 ->name('offers.change-status');
             Route::post('admin/offers/{offer}', 'OfferController@update')
                 ->name('offers.update');
+            Route::delete('admin/offers/{offer}', 'OfferController@destroy')
+                ->name('offers.update');
 
 
             /** Blog (posts) */

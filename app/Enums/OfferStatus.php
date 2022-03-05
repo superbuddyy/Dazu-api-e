@@ -11,4 +11,5 @@ final class OfferStatus extends BaseEnum
     public const IN_ACTIVE_BY_USER = 'in_active_by_user';
     public const PENDING = 'pending';
     public const REJECTED = 'rejected';
+    public const EXPIRED = 'expired';
 }
