@@ -120,6 +120,9 @@ class OfferExtendedResource extends JsonResource
                 'type' => $attributes->filter(function ($attribute) {
                     return $attribute->id === 1;
                 })->first()->result ?? '',
+                'offer_type' => $attributes->filter(function ($attribute) {
+                    return $attribute->id === 1;
+                })->first()->value ?? '',
                 'is_installments' => $attributes->filter(function ($attribute) {
                     return $attribute->id === 2 && $attribute->pivot->value === 'true';
                 })->isNotEmpty(),
