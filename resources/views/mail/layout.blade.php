@@ -1,6 +1,6 @@
 @component('mail::layout')
     @slot('header')
-        <div style="font-size: 40px;color:#5dca8c;font-weight: bold;text-align: center;margin: 10px">
+        <div style="font-size: 40px;color:#ff19b7;font-weight: bold;text-align: center;margin: 10px">
             Dazu
         </div>
     @endslot
