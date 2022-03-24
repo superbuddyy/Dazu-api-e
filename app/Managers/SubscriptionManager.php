@@ -63,7 +63,7 @@ class SubscriptionManager
                 $has_raise_ten = $offer->has_raise_ten;
             }
             $offer_status = $offer->status;
-            if ($offer->status === OfferStatus::IN_ACTIVE_BY_USER || offer->status === OfferStatus::EXPIRED) {
+            if ($offer->status === OfferStatus::IN_ACTIVE_BY_USER || $offer->status === OfferStatus::EXPIRED) {
                 $offer_status = OfferStatus::ACTIVE;
             }
             $offer->update([
