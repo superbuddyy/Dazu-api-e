@@ -7,6 +7,7 @@ namespace App\Managers;
 use App\Models\Offer;
 use App\Models\Subscription;
 use Carbon\Carbon;
+use App\Enums\OfferStatus;
 
 class SubscriptionManager
 {
@@ -61,14 +62,18 @@ class SubscriptionManager
             } else {
                 $has_raise_ten = $offer->has_raise_ten;
             }
-
+            $offer_status = $offer->status;
+            if ($offer->status === OfferStatus::IN_ACTIVE_BY_USER || offer->status === OfferStatus::EXPIRED) {
+                $offer_status = OfferStatus::ACTIVE;
+            }
             $offer->update([
                 'total_raises' => $total_raises,
                 'has_raise_one' => $has_raise_one,
                 'has_raise_three' => $has_raise_three,
                 'has_raise_ten' => $has_raise_ten,
                 'is_bargain' => $is_bargain,
-                'is_urgent' => $is_urgent
+                'is_urgent' => $is_urgent,
+                'status' => $offer_status
             ]);
         }
     }
