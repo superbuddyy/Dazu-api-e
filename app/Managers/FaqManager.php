@@ -37,6 +37,7 @@ class FaqManager
             [
                 'title' => $faqItemData['title'],
                 'content' => $faqItemData['content'],
+                'file' => $faqItemData['file'],
             ]
         );
     }
@@ -48,7 +49,8 @@ class FaqManager
     }
     public function uploadFaqFile($file) {
         $imageService = resolve(ImageService::class);
-        $data = config('app.url') . '/storage/other/' . $imageService->store($file, FaqItem::class);
-        return ["url"=>$data];
+        $filename = $imageService->store($file, FaqItem::class);
+        $data = config('app.url') . '/storage/other/' . $filename;
+        return ["url"=>$data, "filename" => $filename];
     }
 }
