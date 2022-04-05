@@ -161,6 +161,7 @@ class OfferExtendedResource extends JsonResource
                     'avatar' => $avatar,
                     'video_avatar' => $videoAvatar,
                     'email' => $this->user->email ?? null,
+                    'phone' => $this->user->profile->phone ?? null,
                     'default_avatar' => $default_avatar,
                     'avatar_expire_time' => $this->user->avatar['expire_date'] ?? null,
                     'video_avatar_expire_time' => $this->user->videoAvatar['expire_date'] ?? null,

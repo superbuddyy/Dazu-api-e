@@ -66,7 +66,8 @@ class OfferResource extends JsonResource
                 'refresh_price' => $refreshPrice ?? null,
                 'raise_price' => $raisePrice ?? null,
                 'is_promoted' => $this->activeSubscription->id > 1 ?? false,
-                'user_name' => $this->user->profile->name
+                'user_name' => $this->user->profile->name,
+                'phone' => $this->user->profile->phone ?? null,
             ]
         );
     }

@@ -49,6 +49,7 @@ class ProfilePageResource extends JsonResource
             'user' => [
                 'id' => $this->id,
                 'name' => $this->profile->name ?? null,
+                'phone' => $this->profile->phone ?? null,
                 'type' => $this->getRoleName() ?? null,
                 'avatar' => $avatar,
                 'video_avatar' => $videoAvatar,
