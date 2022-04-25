@@ -40,7 +40,7 @@ class TransactionManager
     {
         $seller = new Party([
             'name'          => config('dazu.company_info.name'),
-            'email'         => config('dazu.company_info.email'),
+            // 'email'         => config('dazu.company_info.email'),
             'custom_fields' => [
                 'Email'         => config('dazu.company_info.email'),
                 // 'NIP'        => config('dazu.company_info.nip'),
@@ -76,12 +76,12 @@ class TransactionManager
 
         $invoice = Invoice::make('Opłata za pakiet premium')
             ->series('A'.$transaction->id)
-            ->sequence((int)$transaction->created_at->format('Y'))
+            // ->sequence((int)$transaction->created_at->format('Y'))
             ->serialNumberFormat('{SEQUENCE}/{SERIES}')
             ->seller($seller)
             ->buyer($buyer)
             ->date(now())
-            ->dateFormat('m/d/Y')
+            ->dateFormat('d/m/Y')
             ->payUntilDays(14)
             ->currencySymbol('zł')
             ->currencyCode('PLN')
