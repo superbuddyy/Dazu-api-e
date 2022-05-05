@@ -156,11 +156,8 @@ class UserController
     public function delete()
     {
         $email = Auth::user()->email;
-        // $this->userManager->destroy();
+        $this->userManager->destroy();
         // Auth::user()->offers()->delete();
-        Auth::user()->update([
-            'deleted_at' => Carbon::now()->addDays(60)
-        ]);
         dispatch(new SendEmailJob(new UserDeleted($email)));
         return response()->success('', Response::HTTP_NO_CONTENT);
     }

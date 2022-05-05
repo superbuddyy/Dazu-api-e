@@ -205,7 +205,7 @@ class UserController extends BaseController
 
         try {
             $user->offers()->delete();
-            $user->delete();
+            $user->forceDelete();
         } catch (\Exception $ex) {
             return response()->json(['error' => $ex->getMessage()], 403);
         }
