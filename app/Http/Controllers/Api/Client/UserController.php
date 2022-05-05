@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Arr;
+use Carbon\Carbon;
 
 class UserController
 {
@@ -155,8 +156,11 @@ class UserController
     public function delete()
     {
         $email = Auth::user()->email;
-        $this->userManager->destroy();
-        Auth::user()->offers()->delete();
+        // $this->userManager->destroy();
+        // Auth::user()->offers()->delete();
+        $user->update([
+            'deleted_at' => Carbon::now()->addDays(60)
+        ]);
         dispatch(new SendEmailJob(new UserDeleted($email)));
         return response()->success('', Response::HTTP_NO_CONTENT);
     }
