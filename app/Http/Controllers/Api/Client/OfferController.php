@@ -235,6 +235,7 @@ class OfferController
             $status = $offer->status;
             echo $offer->title;
             echo $offer->description;
+            echo ($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>'));
             if (($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || $request->has('images')) {
                 $status = OfferStatus::IN_ACTIVE;
             }
