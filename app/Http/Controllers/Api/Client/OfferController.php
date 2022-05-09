@@ -233,7 +233,7 @@ class OfferController
         DB::beginTransaction();
         try {
             $status = $offer->status;
-            if (($offer->title != $request->get('title')) || ($offer->description != $request->get('description')) || $request->has('images')) {
+            if (($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || $request->has('images')) {
                 $status = OfferStatus::IN_ACTIVE;
             }
             $offer = $this->offerManager->update(
