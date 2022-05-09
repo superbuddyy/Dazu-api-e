@@ -235,6 +235,8 @@ class OfferController
             $status = $offer->status;
             echo $offer->title;
             echo $offer->description;
+            echo ($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>');
+            echo ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>'));
             echo (($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>')));
             echo "<br>";
             echo "end========================111";
