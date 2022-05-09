@@ -232,6 +232,10 @@ class OfferController
 
         DB::beginTransaction();
         try {
+            $status = $offer->status
+            if (($offer->title != $request->get('title')) || ($offer->description != $request->get('description')) || $request->has('images')) {
+                $status = OfferStatus::IN_ACTIVE
+            }
             $offer = $this->offerManager->update(
                 $offer,
                 $request->get('title'),
@@ -243,7 +247,8 @@ class OfferController
                 $request->get('lon'),
                 $request->get('location_name'),
                 $request->get('links', []),
-                $request->get('visible_from_date', null)
+                $request->get('visible_from_date', null),
+                $status
             );
 
             if ($offer === null) {
