@@ -235,13 +235,27 @@ class OfferController
             $status = $offer->status;
             echo $offer->title;
             echo $offer->description;
-            echo ($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>'));
-            echo ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>'));
-            echo (($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>')));
+            if ($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>')) {
+                echo "title matched";
+            } else {
+                echo "else 111";
+            }
+            if ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>')) {
+                echo "description matched";
+            } else {
+                echo "else 222";
+            }
+            if (($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>'))) {
+                    echo "title and description not matched"
+            } else {
+                echo "else 333";
+            }
             echo "<br>";
             echo "end========================111";
             if (($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || $request->has('images')) {
                 $status = OfferStatus::IN_ACTIVE;
+            } else {
+                echo "else 444";
             }
             $offer = $this->offerManager->update(
                 $offer,
