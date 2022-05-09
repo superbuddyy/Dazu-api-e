@@ -232,7 +232,7 @@ class OfferController
 
         DB::beginTransaction();
         try {
-            $status = $offer->status
+            $status = $offer->status;
             if (($offer->title != $request->get('title')) || ($offer->description != $request->get('description')) || $request->has('images')) {
                 $status = OfferStatus::IN_ACTIVE
             }
