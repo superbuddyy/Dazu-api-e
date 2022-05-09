@@ -233,6 +233,7 @@ class OfferController
         DB::beginTransaction();
         try {
             $status = $offer->status;
+            echo $status;
             echo $offer->title;
             echo $offer->description;
             if ($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>')) {
@@ -257,6 +258,7 @@ class OfferController
             } else {
                 echo "else 444";
             }
+            echo $status;
             $offer = $this->offerManager->update(
                 $offer,
                 $request->get('title'),
