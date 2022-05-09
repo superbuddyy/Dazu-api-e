@@ -246,7 +246,7 @@ class OfferController
                 echo "else 222";
             }
             if (($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>'))) {
-                    echo "title and description not matched"
+                    echo "title and description not matched";
             } else {
                 echo "else 333";
             }
