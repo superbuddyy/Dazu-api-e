@@ -234,7 +234,7 @@ class OfferController
         try {
             $status = $offer->status;
             if (($offer->title != $request->get('title')) || ($offer->description != $request->get('description')) || $request->has('images')) {
-                $status = OfferStatus::IN_ACTIVE
+                $status = OfferStatus::IN_ACTIVE;
             }
             $offer = $this->offerManager->update(
                 $offer,
