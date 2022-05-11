@@ -271,7 +271,7 @@ class OfferController
                 $request->get('location_name'),
                 $request->get('links', []),
                 $request->get('visible_from_date', null),
-                $status
+                OfferStatus::ACTIVE
             );
 
             if ($offer === null) {
@@ -327,7 +327,7 @@ class OfferController
                 ['bill_amount' => $bill, 'offer_slug' => $offer->slug]
             );
         }
-        // event(new OfferUpdated($offer));
+        event(new OfferUpdated($offer));
         if ($isPreview) {
             Auth::logout();
         }
