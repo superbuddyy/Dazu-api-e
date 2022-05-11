@@ -274,8 +274,6 @@ class OfferController
                 $status
             );
 
-            $this->offerManager->changeStatus($offer, $status);
-
             if ($offer === null) {
                 DB::rollBack();
                 return response()->errorWithLog(
@@ -318,7 +316,7 @@ class OfferController
         DB::commit();
         $isPreview = $request->get('preview') === true;
         if (($bill = $offer->calculateBill()['billAmount']) !== 0) {
-            $this->offerManager->changeStatus($offer, OfferStatus::PENDING);
+            // $this->offerManager->changeStatus($offer, OfferStatus::PENDING);
 
             if ($isPreview) {
                 event(new PaidOfferCreated($offer));
