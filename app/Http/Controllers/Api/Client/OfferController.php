@@ -270,7 +270,8 @@ class OfferController
                 $request->get('lon'),
                 $request->get('location_name'),
                 $request->get('links', []),
-                $request->get('visible_from_date', null)
+                $request->get('visible_from_date', null),
+                $status
             );
 
             $this->offerManager->changeStatus($offer, $status);
