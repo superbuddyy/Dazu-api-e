@@ -270,9 +270,10 @@ class OfferController
                 $request->get('lon'),
                 $request->get('location_name'),
                 $request->get('links', []),
-                $request->get('visible_from_date', null),
-                OfferStatus::ACTIVE
+                $request->get('visible_from_date', null)
             );
+
+            $this->offerManager->changeStatus($offer, $status);
 
             if ($offer === null) {
                 DB::rollBack();
