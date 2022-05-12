@@ -229,8 +229,7 @@ class OfferController
         if ($offer->user_id !== Auth::id()) {
             return response()->error('', Response::HTTP_FORBIDDEN);
         }
-        dump($offer->links != $request->get('links', []));
-        // dump($request->get('images'));
+        dump($request->get('images'));
         DB::beginTransaction();
         try {
             $status = $offer->status;
