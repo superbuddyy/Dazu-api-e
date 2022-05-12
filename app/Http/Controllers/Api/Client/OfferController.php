@@ -229,11 +229,13 @@ class OfferController
         if ($offer->user_id !== Auth::id()) {
             return response()->error('', Response::HTTP_FORBIDDEN);
         }
-
+        dump($offer->links != $request->get('links', []));
         DB::beginTransaction();
         try {
             $status = $offer->status;
-            if (($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || $request->has('images') || ($offer->links != $request->get('links', []))) {
+            if (($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || $request->has('images')) {
+                $status = OfferStatus::PENDING;
+            } else if ($offer->links != $request->get('links', [])) {
                 $status = OfferStatus::PENDING;
             }
             $offer = $this->offerManager->update(
