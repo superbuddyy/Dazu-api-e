@@ -230,6 +230,7 @@ class OfferController
             return response()->error('', Response::HTTP_FORBIDDEN);
         }
         dump($request->get('images'));
+        dump($offer->photos);
         DB::beginTransaction();
         try {
             $status = $offer->status;
