@@ -192,8 +192,6 @@ class OfferManager
         string $status = OfferStatus::IN_ACTIVE
     ): ?Offer
     {
-        echo "=========== manager status =========";
-        echo $status;
         $update = $offer->update([
             'title' => strip_tags($name,'<b><strong><em><u><br><p><i><ul><li><ol>'),
             'description' => strip_tags($description,'<b><strong><em><u><br><p><i><ul><li><ol>'),
