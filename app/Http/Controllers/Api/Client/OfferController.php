@@ -230,10 +230,11 @@ class OfferController
             return response()->error('', Response::HTTP_FORBIDDEN);
         }
         dump($offer->links != $request->get('links', []));
+        // dump($request->get('images'));
         DB::beginTransaction();
         try {
             $status = $offer->status;
-            if (($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || $request->has('images')) {
+            if (($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>'))) {
                 dump("========== one");
                 $status = OfferStatus::PENDING;
             } else if (($offer->links != $request->get('links', [])) == true) {
@@ -279,6 +280,14 @@ class OfferController
             foreach ($request->file('images') as $file) {
                 $this->offerManager->storeImage($file, $offer, $position,'photo');
                 $position++;
+            }
+        }
+        if (!$request->has('images')) {
+            $photos = $offer->photos;
+            foreach ($photos as $photo) {
+                if ($photo->img_type == 'photo') {
+                    $this->offerManager->removeImage($photo->id, $photo->file['path_name']);    
+                }
             }
         }
         if ($request->has('projectPlans')) {
