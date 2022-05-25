@@ -232,6 +232,7 @@ class OfferController
         DB::beginTransaction();
         try {
             $status = $offer->status;
+            $photos = $offer->photos;
             if (($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>'))) {
                 dump("========== one");
                 $status = OfferStatus::PENDING;
@@ -252,7 +253,7 @@ class OfferController
                     $localFiles[] = array('name' => $file->getClientOriginalName());
                 }
             }
-            $photos = $offer->photos;
+            
             foreach ($photos as $photo) {
                 $serverFiles[] = array('name' => $photo->file['original_name']);
             }
