@@ -229,13 +229,6 @@ class OfferController
         if ($offer->user_id !== Auth::id()) {
             return response()->error('', Response::HTTP_FORBIDDEN);
         }
-        // dump($request->get('images'));
-        $photos = $offer->photos;
-        dump(count($photos));
-        foreach ($photos as $photo) {
-            dump($photo->file['path_name']);
-            dump($photo->file['original_name']);
-        }
         DB::beginTransaction();
         try {
             $status = $offer->status;
@@ -252,15 +245,23 @@ class OfferController
                 dump("========== three");
                 $status = OfferStatus::PENDING;
             }
-
+            $localFiles = [];
+            $serverFiles = [];
             if ($request->has('images')) {
                 foreach ($request->file('images') as $file) {
-                    dump("testtttttt");
-                    dump($file->getClientOriginalName());
-                    dump($file);
+                    $localFiles[] = array('name' => $file->getClientOriginalName());
                 }
             }
-
+            $photos = $offer->photos;
+            foreach ($photos as $photo) {
+                $serverFiles[] = array('name' => $photo->file['original_name']);
+            }
+            dump($serverFiles);
+            dump($localFiles);
+            if ($serverFiles != $localFiles) {
+                dump("============= four");
+                $status = OfferStatus::PENDING;
+            }
             $offer = $this->offerManager->update(
                 $offer,
                 $request->get('title'),
