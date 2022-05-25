@@ -282,6 +282,8 @@ class OfferController
             }
             $position = 1;
             foreach ($request->file('images') as $file) {
+                dump("testtttttt")
+                dump($file->getClientOriginalName());
                 dump($file);
                 $this->offerManager->storeImage($file, $offer, $position,'photo');
                 $position++;
