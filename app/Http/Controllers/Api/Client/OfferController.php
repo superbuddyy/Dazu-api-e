@@ -231,6 +231,7 @@ class OfferController
         }
         dump($request->get('images'));
         $photos = $offer->photos;
+        dump(count($photos));
         foreach ($photos as $photo) {
             dump($photo->file);
             dump($photo->file['path_name']);
