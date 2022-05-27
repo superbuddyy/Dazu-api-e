@@ -237,6 +237,12 @@ class OfferManager
                 $offer->total_raises = $total_raise;
             }
         }
+        if($offer->status === OfferStatus::PENDING) {
+            if ($offer->remaining_days > 0) {
+                $offer->expire_time = Carbon::parse($offer->expire_time)->addDays($offer->remaining_days);
+                $offer->remaining_days = 0;
+            }
+        }
         if ($note) {
             $offer->note = $note;
         }
