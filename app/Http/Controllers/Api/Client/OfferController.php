@@ -233,18 +233,23 @@ class OfferController
         try {
             $status = $offer->status;
             $photos = $offer->photos;
+            $isPending = false;
             if (($offer->title != strip_tags($request->get('title'),'<b><strong><em><u><br><p><i><ul><li><ol>')) || ($offer->description != strip_tags($request->get('description'),'<b><strong><em><u><br><p><i><ul><li><ol>'))) {
                 dump("========== one");
                 $status = OfferStatus::PENDING;
+                $isPending = true;
             } else if (($offer->links != $request->get('links', [])) == true) {
                 dump("========== two");
                 $status = OfferStatus::PENDING;
+                $isPending = true;
             } else if (!$request->get('images') && count($photos) > 0) {
                 dump("========== three");
                 $status = OfferStatus::PENDING;
+                $isPending = true;
             } else if ($request->get('images') && count($photos) == 0) {
-                dump("========== three");
+                dump("========== four");
                 $status = OfferStatus::PENDING;
+                $isPending = true;
             }
             $localFiles = [];
             $serverFiles = [];
@@ -260,8 +265,9 @@ class OfferController
             dump($serverFiles);
             dump($localFiles);
             if ($serverFiles != $localFiles) {
-                dump("============= four");
+                dump("============= five");
                 $status = OfferStatus::PENDING;
+                $isPending = true;
             }
             $offer = $this->offerManager->update(
                 $offer,
@@ -277,6 +283,13 @@ class OfferController
                 $request->get('visible_from_date', null),
                 $status
             );
+
+            if ($isPending) {
+                $date = Carbon::parse($offer->expire_time);
+                $now = Carbon::now();
+                $diff = $date->diffInDays($now);
+                dump($diff);
+            }
 
             if ($offer === null) {
                 DB::rollBack();

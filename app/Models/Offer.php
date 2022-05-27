@@ -58,6 +58,7 @@ class Offer extends Model
         'user_id',
         'links',
         'refresh_count',
+        'remaining_days',
         'visible_from_date',
         'note',
         'expire_time',
