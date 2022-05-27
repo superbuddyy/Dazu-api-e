@@ -290,7 +290,8 @@ class OfferController
                 $diff = $date->diffInDays($now);
                 if ($diff > 0) {
                     $offer->update([
-                        'remaining_days' => $diff
+                        'remaining_days' => $diff,
+                        'expire_time' => Carbon::parse($offer->expire_time)->subDays($diff) 
                     ]);
                 }
             }
