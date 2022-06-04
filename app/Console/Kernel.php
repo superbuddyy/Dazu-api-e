@@ -26,8 +26,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule-command('ads:status')->hourly();
-        $schedule-command('user:delete')->daily();
+        $schedule->command('ads:status')->hourly();
+        $schedule->command('user:delete')->daily();
     }
 
     /**
