@@ -21,8 +21,8 @@ class SearchService
     public function search(
         array $searchArguments,
         bool $onlyVisible = true,
-        string $orderBy = 'price',
-        string $order = 'ASC'
+        string $orderBy = 'created_at',
+        string $order = 'DESC'
     ): LengthAwarePaginator
     {
         $query = Offer::query();
@@ -38,7 +38,7 @@ class SearchService
 
         $query = $this->buildQuery($searchArguments, $query);
 
-        // $query->orderBy('raise_at', 'DESC');
+        $query->orderBy('raise_at', 'DESC');
         $query->orderBy(
             Arr::get($searchArguments, 'order_by', $orderBy),
             Arr::get($searchArguments, 'order', $order)
