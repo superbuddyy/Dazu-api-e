@@ -100,7 +100,7 @@ class UserController
     {
         // $offers = resolve(OfferManager::class)->getMyList();
         // return response()->success(OfferCollection::make($offers));
-        
+
         $searchParams = $request->all();
         $offerQuery = Offer::query();
         $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
@@ -122,16 +122,21 @@ class UserController
         }
         $user = Auth::user();
         if ($user->getRoleName() === Acl::ROLE_COMPANY && $user->company) {
-            $companyMembers = User::where('company_id', $user->company_id)->pluck('id')->all();
-            $offerQuery->whereIn('user_id', $companyMembers);
+            $companyMembers = User::where('company_id', $user->company_id);
+
+            if ($request->has('agent_id')) {
+                $companyMembers = $companyMembers->where('id', $request->get('agent_id'));
+            }
+
+            $offerQuery->whereIn('user_id', $companyMembers->pluck('id')->all());
         } else {
             $offerQuery->where('user_id',Auth::id());
         }
-        
+
         if (!empty($sort)) {
             if ($sort != 'asc' && $sort != 'desc') {
                 $offerQuery->where('status',$sort);
-                $sort = 'desc';    
+                $sort = 'desc';
             }
         } else {
             $sort = 'desc';
