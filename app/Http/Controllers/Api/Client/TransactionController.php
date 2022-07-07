@@ -28,6 +28,6 @@ class TransactionController
     public function generateInvoice(Transaction $transaction)
     {
         $invoice = $this->transactionManager->getInvoice($transaction);
-        return response()->success(['url' => $invoice->url()], Response::HTTP_OK);
+        return $invoice->stream();
     }
 }
