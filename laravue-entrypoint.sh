@@ -5,7 +5,7 @@
 #MYSQL_HOST=$(cat $ENV_FILE | grep "DB_HOST" | cut -d"=" -f2)
 #MYSQL_PORT=$(cat $ENV_FILE | grep "DB_PORT" | cut -d"=" -f2)
 #
-#composer install
+composer install
 #
 #echo "Wait for MySQL to be ready"
 #while true;
