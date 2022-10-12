@@ -12,7 +12,7 @@ use App\Managers\SubscriptionManager;
 use App\Managers\TransactionManager;
 use App\Managers\UserManager;
 use App\Models\Transaction;
-use App\Payments\PayPal\Checkout;
+use App\Payments\Checkout;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,9 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PaymentController extends Controller
 {
-    /** @var Checkout  */
-    private $paypalCheckout;
-
     /** @var TransactionManager */
     private $transactionManager;
 
@@ -39,13 +36,11 @@ class PaymentController extends Controller
     private $userManager;
 
     public function __construct(
-        Checkout $paypalCheckout,
         TransactionManager $transactionManager,
         OfferManager $offerManager,
         SubscriptionManager $subscriptionManager,
         UserManager $userManager
     ) {
-        $this->paypalCheckout = $paypalCheckout;
         $this->transactionManager = $transactionManager;
         $this->offerManager = $offerManager;
         $this->subscriptionManager = $subscriptionManager;
@@ -54,21 +49,25 @@ class PaymentController extends Controller
 
     public function callback(Request $request)
     {
+        $checkout = new Checkout($request->get('gateway', 'paypal'));
         DB::beginTransaction();
         try {
-            $token = $request->get('token');
-            $result = $this->paypalCheckout->execute($token);
-
-            if ($result === false || $result->statusCode !== Response::HTTP_CREATED) {
-                return response()->errorWithLog(
-                    'failed to execute order',
-                    ['user_id' => Auth::id(), 'request_token' => $token]
-                );
+            $token = $request->get($checkout->getCallbackIdentifierField());
+            Log::info($token);
+            if ($request->get('gateway') === $checkout::PAYPAL_SLUG) {
+                $result = $checkout->callbackAction($token);
+                if ($result === false) {
+                    return response()->errorWithLog(
+                        'failed to execute order',
+                        ['user_id' => Auth::id(), 'request_token' => $token]
+                    );
+                }
             }
 
             $cachedInfo = Redis::get($token);
             if ($cachedInfo === null) {
-                return response()->error('Invalid token', Response::HTTP_BAD_REQUEST);
+                Log::error('Invalid token');
+                return response()->success('Invalid token');
             }
 
             $cachedInfoArray = json_decode($cachedInfo, true);
@@ -93,16 +92,26 @@ class PaymentController extends Controller
                 case 'avatar_' . AvatarType::VIDEO_URL:
                     $avatar = $this->userManager->handlePaymentCallback($cachedInfoArray);
                     DB::commit();
+
+                if ($request->get('gateway') === $checkout::PAYPAL_SLUG) {
                     return redirect()->away(
                         config('dazu.frontend_url')
                         . '/ustawienia-konta/?payment-status=success&'.$cachedInfoArray['context'].'=' . $avatar->file['url']
                     );
+                } else {
+                    return response()->success([]);
+                }
+
                 default:
                     return response()->error('Invalid context', Response::HTTP_BAD_REQUEST);
             }
 
             DB::commit();
-            return redirect()->away(config('dazu.frontend_url') . '?payment-status=success');
+            if ($request->get('gateway') === $checkout::PAYPAL_SLUG) {
+                return redirect()->away(config('dazu.frontend_url') . '?payment-status=success');
+            } else {
+                return response()->success([]);
+            }
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(

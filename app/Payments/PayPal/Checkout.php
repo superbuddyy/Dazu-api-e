@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Payments\PayPal;
 
+use Exception;
 use Illuminate\Support\Facades\Log;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Core\SandboxEnvironment;
@@ -71,7 +72,7 @@ class Checkout
      * @param string $orderId
      * @return false|HttpResponse
      */
-    public function execute(string $orderId)
+    public function callbackAction(string $orderId)
     {
         $request = new OrdersCaptureRequest($orderId);
         $request->prefer('return=representation');
@@ -83,5 +84,23 @@ class Checkout
             Log::error('Fail to execute paypal order', [$ex->getMessage()]);
             return false;
         }
+    }
+
+    public function extractId($result)
+    {
+        if (!isset($result->result->id)) {
+            throw new Exception('Fail to extract id from paypal response');
+        }
+
+        return $result->result->id;
+    }
+
+    public function extractUrl($result)
+    {
+        if (!isset($result->result->links[0]->href)) {
+            throw new Exception('Fail to extract url from paypal response');
+        }
+
+        return $result->result->links[0]->href;
     }
 }

@@ -55,7 +55,7 @@ Route::namespace('Api')->group(function() {
                 ->name('user.profile.update')
                 ->middleware('permission:' . Acl::PERMISSION_UPDATE_OWN_PROFILE);
             Route::put('user/default-avatar', 'UserProfileController@updateDefaultAvatar')
-                ->name('user.profile.update.default_avatar');        
+                ->name('user.profile.update.default_avatar');
             Route::delete('user', 'UserController@delete')->name('user.delete');
             Route::patch('user/profile/newsletter', 'UserProfileController@toggleNewsletter')
                 ->name('user.profile.newsletter');
@@ -130,7 +130,7 @@ Route::namespace('Api')->group(function() {
                 ->name('favorite-users.store');
             Route::delete('favorite-users/{user}', 'FavoriteUserController@destroy')
                 ->name('favorite-users.destroy');
-                
+
             /** Favorite Filters */
             Route::get('favorite-filters', 'FavoriteFilterController@index')
                 ->name('favorite-filters.index');
@@ -157,7 +157,7 @@ Route::namespace('Api')->group(function() {
             ->name('popup.index');
         Route::get('/popups/{popup}', 'PopupController@show')
             ->name('popup.show');
-            
+
         /** Faq */
         Route::get('faq', 'FaqController@index')
             ->name('faq.index');
@@ -179,7 +179,7 @@ Route::namespace('Api')->group(function() {
         Route::get('profile/{user}', 'UserController@showProfile')
             ->name('user.showProfile');
         Route::get('my-profile/{user}', 'UserController@showMyProfile')
-            ->name('user.showMyProfile');    
+            ->name('user.showMyProfile');
         /** Contact */
         Route::post('user/{user}/phone', 'UserController@getPhone')
             ->name('user.getPhone');
@@ -203,6 +203,8 @@ Route::namespace('Api')->group(function() {
 
         /** Payments */
         Route::get('payments/callback', 'PaymentController@callback')
+            ->name('payment.callback');
+        Route::post('payments/callback', 'PaymentController@callback')
             ->name('payment.callback');
 
         /** Blog */
@@ -267,9 +269,9 @@ Route::namespace('Api')->group(function() {
         Route::get('search/filters', 'SearchController@getFilters')
             ->name('search.filters');
 
-        /** Settings */ 
+        /** Settings */
         Route::get('settings', 'SettingController@index')
-            ->name('settings.index');    
+            ->name('settings.index');
     });
 
     /** Admin */
@@ -302,7 +304,7 @@ Route::namespace('Api')->group(function() {
 
             // PAGES
             Route::get('admin/pages', 'PagesController@index')
-                ->name('admin.pages.index');    
+                ->name('admin.pages.index');
             Route::post('admin/pages', 'PagesController@store')
                 ->name('admin.pages.store');
             Route::put('admin/pages/{id}', 'PagesController@update')
@@ -406,7 +408,7 @@ Route::namespace('Api')->group(function() {
 
             Route::post('admin/announcement-newsletter', 'AnnouncementNewsletterMailController@store')
                 ->middleware('permission:' . Acl::PERMISSION_ADD_NEWSLETTER)
-                ->name('announcement-newsletter.store');    
+                ->name('announcement-newsletter.store');
         });
     });
 });

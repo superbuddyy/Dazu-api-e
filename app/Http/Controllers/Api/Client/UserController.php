@@ -27,7 +27,7 @@ use App\Models\Offer;
 use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
-use App\Payments\PayPal\Checkout;
+use App\Payments\Checkout;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -179,8 +179,9 @@ class UserController
             $ref = 'user::' . $user->id . 'avatar';
             $price = Setting::where('name', "avatar_$avatarType.price")->firstOrFail()['value'];
 
-            $result = resolve(Checkout::class)->createOrder($ref, (int)$price);
-            if ($result === false || $result->statusCode !== Response::HTTP_CREATED) {
+            $checkout = new Checkout($request->get('gateway', Checkout::TPAY_SLUG));
+            $result = $checkout->createOrder($ref, (int)$price);
+            if ($result === false) {
                 return response()->errorWithLog(
                     'failed to create order',
                     ['user_id' => $user->id]
@@ -213,7 +214,7 @@ class UserController
             }
 
             Redis::set(
-                $result->result->id,
+                $checkout->extractId($result),
                 json_encode([
                     'context' => "avatar_$avatarType",
                     'user_id' => $user->id,
@@ -223,7 +224,7 @@ class UserController
                 '120'
             );
             DB::commit();
-            return response()->success($result->result);
+            return response()->success($checkout->extractUrl($result));
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(

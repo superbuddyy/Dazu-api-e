@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\Client;
 
-use App\Enums\TransactionStatus;
 use App\Managers\TransactionManager;
 use App\Models\Offer;
 use App\Models\Subscription;
-use App\Models\Transaction;
-use App\Models\User;
-use App\Payments\PayPal\Checkout;
-use Carbon\Carbon;
+use App\Payments\Checkout;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -22,15 +18,11 @@ use Illuminate\Support\Facades\Redis;
 
 class SubscriptionController
 {
-    /** @var Checkout  */
-    private $paypalCheckout;
-
     /** @var TransactionManager */
     private $transactionManager;
 
-    public function __construct(Checkout $paypalCheckout, TransactionManager $transactionManager)
+    public function __construct(TransactionManager $transactionManager)
     {
-        $this->paypalCheckout = $paypalCheckout;
         $this->transactionManager = $transactionManager;
     }
 
@@ -98,8 +90,10 @@ class SubscriptionController
                     'qty' => 1,
                 ];
             }
-            $result = $this->paypalCheckout->createOrder($ref, $price);
-            if ($result === false || $result->statusCode !== Response::HTTP_CREATED) {
+            $checkout = new Checkout($request->get('gateway', Checkout::TPAY_SLUG));
+
+            $result = $checkout->createOrder($ref, $price);
+            if ($result === false) {
                 return response()->errorWithLog(
                     'failed to create order',
                     ['offer_id' => $offer->id, 'subscription_id' => $subscription->id]
@@ -113,7 +107,7 @@ class SubscriptionController
             );
 
             Redis::set(
-                $result->result->id,
+                $checkout->extractId($result),
                 json_encode([
                     'context' => 'subscription',
                     'user_id' => Auth::id(),
@@ -126,7 +120,7 @@ class SubscriptionController
                 '120'
             );
             DB::commit();
-            return response()->success($result->result);
+            return response()->success($checkout->extractUrl($result));
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(

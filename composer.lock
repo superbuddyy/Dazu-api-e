@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dcd5b19c526b8de3321addcb3bdfbdc8",
+    "content-hash": "0ca22f9231e62b3cf2d26657f2cee46b",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5524,6 +5524,52 @@
             "time": "2020-07-13T06:12:54+00:00"
         },
         {
+            "name": "tpay-com/tpay-php",
+            "version": "2.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tpay-com/tpay-php.git",
+                "reference": "5931ac731cd7205cbc45940afb0735a76e6d9e4d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tpay-com/tpay-php/zipball/5931ac731cd7205cbc45940afb0735a76e6d9e4d",
+                "reference": "5931ac731cd7205cbc45940afb0735a76e6d9e4d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.6.0"
+            },
+            "type": "library",
+            "extra": [
+                {
+                    "engine": "PHP SDK"
+                }
+            ],
+            "autoload": {
+                "classmap": [
+                    "tpayLibs/src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "tpay.com",
+                    "homepage": "https://tpay.com"
+                }
+            ],
+            "description": "tpay.com library",
+            "support": {
+                "issues": "https://github.com/tpay-com/tpay-php/issues",
+                "source": "https://github.com/tpay-com/tpay-php/tree/2.3.2"
+            },
+            "time": "2022-06-23T09:38:43+00:00"
+        },
+        {
             "name": "vlucas/phpdotenv",
             "version": "v4.1.8",
             "source": {
@@ -7793,5 +7839,5 @@
     "platform-dev": {
         "ext-json": "*"
     },
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.3.0"
 }

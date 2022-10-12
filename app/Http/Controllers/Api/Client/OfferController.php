@@ -29,7 +29,7 @@ use App\Models\Offer;
 use App\Models\PreviewOffer;
 use App\Models\Subscription;
 use App\Models\User;
-use App\Payments\PayPal\Checkout;
+use App\Payments\Checkout;
 use App\Services\GoogleAnalytics;
 use App\Services\ImageService;
 use Carbon\Carbon;
@@ -61,11 +61,6 @@ class OfferController
      */
     private TransactionManager $transactionManager;
 
-    /**
-     * @var Checkout
-     */
-    private Checkout $paypalCheckout;
-
     /** @var UserProfileManager */
     private UserProfileManager $userProfileManager;
 
@@ -74,7 +69,6 @@ class OfferController
      * @param OfferManager $offerManager
      * @param UserManager $userManager
      * @param UserProfileManager $userProfileManager
-     * @param Checkout $paypalCheckout
      * @param TransactionManager $transactionManager
      * @param ImageService $imageService
      */
@@ -83,7 +77,6 @@ class OfferController
         PreviewOfferManager $previewOfferManager,
         UserManager $userManager,
         UserProfileManager $userProfileManager,
-        Checkout $paypalCheckout,
         TransactionManager $transactionManager,
         ImageService $imageService
 
@@ -93,7 +86,6 @@ class OfferController
         $this->previewOfferManager = $previewOfferManager;
         $this->userManager = $userManager;
         $this->userProfileManager = $userProfileManager;
-        $this->paypalCheckout = $paypalCheckout;
         $this->transactionManager = $transactionManager;
         $this->imageService = $imageService;
     }
@@ -258,7 +250,7 @@ class OfferController
                     $localFiles[] = array('name' => $file->getClientOriginalName());
                 }
             }
-            
+
             foreach ($photos as $photo) {
                 $serverFiles[] = array('name' => $photo->file['original_name']);
             }
@@ -291,7 +283,7 @@ class OfferController
                 if ($diff > 0) {
                     $offer->update([
                         'remaining_days' => $diff,
-                        'expire_time' => Carbon::parse($offer->expire_time)->subDays($diff) 
+                        'expire_time' => Carbon::parse($offer->expire_time)->subDays($diff)
                     ]);
                 }
             }
@@ -313,7 +305,7 @@ class OfferController
             $photos = $offer->photos;
             foreach ($photos as $photo) {
                 if ($photo->img_type == 'photo') {
-                    $this->offerManager->removeImage($photo->id, $photo->file['path_name']);    
+                    $this->offerManager->removeImage($photo->id, $photo->file['path_name']);
                 }
             }
             $position = 1;
@@ -326,7 +318,7 @@ class OfferController
             $photos = $offer->photos;
             foreach ($photos as $photo) {
                 if ($photo->img_type == 'photo') {
-                    $this->offerManager->removeImage($photo->id, $photo->file['path_name']);    
+                    $this->offerManager->removeImage($photo->id, $photo->file['path_name']);
                 }
             }
         }
@@ -334,7 +326,7 @@ class OfferController
             $photos = $offer->photos;
             foreach ($photos as $photo) {
                 if ($photo->img_type == 'project_plan') {
-                    $this->offerManager->removeImage($photo->id, $photo->file['path_name']);    
+                    $this->offerManager->removeImage($photo->id, $photo->file['path_name']);
                 }
             }
             $position = 1;
@@ -512,13 +504,16 @@ class OfferController
         }
     }
 
-    public function refresh(Offer $offer)
+    public function refresh(Offer $offer, Request $request)
     {
         $offerSubscription = $offer->activeSubscription;
         if ($offer->refresh_count >= $offerSubscription->number_of_refreshes) {
             $ref = 'offer::' . $offer->id . 'user::' . Auth::id();
-            $result = $this->paypalCheckout->createOrder($ref, $offerSubscription->refresh_price);
-            if ($result === false || $result->statusCode !== Response::HTTP_CREATED) {
+
+            $checkout = new Checkout($request->get('gateway'));
+
+            $result = $checkout->createOrder($ref, $offerSubscription->refresh_price);
+            if ($result === false) {
                 return response()->errorWithLog(
                     'failed to create order',
                     ['user_id' => Auth::id(), Response::HTTP_UNPROCESSABLE_ENTITY, 'offer_id' => $offer->id]
@@ -539,7 +534,7 @@ class OfferController
             );
 
             Redis::set(
-                $result->result->id,
+                $checkout->extractId($result),
                 json_encode([
                     'context' => 'offer-refresh',
                     'user_id' => Auth::id(),
@@ -550,7 +545,7 @@ class OfferController
                 '120'
             );
 
-            return response()->success($result->result);
+            return response()->success($checkout->extractUrl($result));
         }
 
         $this->offerManager->refresh($offer);
@@ -606,7 +601,7 @@ class OfferController
                 $is_urgent = $offer->is_urgent;
             }
 
-            if (isset($sub_data['has_raise_one'])) { 
+            if (isset($sub_data['has_raise_one'])) {
                 $has_raise_one = $sub_data['has_raise_one'];
             } else {
                 $has_raise_one = $offer->has_raise_one;
@@ -645,8 +640,10 @@ class OfferController
 
             $ref = 'offer::' . $offer->id . 'user::' . $userId;
             $bill = $offer->calculateBill();
-            $result = $this->paypalCheckout->createOrder($ref, $bill['billAmount'] + $additionalAmount);
-            if ($result === false || $result->statusCode !== Response::HTTP_CREATED) {
+
+            $checkout = new Checkout($request->get('gateway'));
+            $result = $checkout->createOrder($ref, $bill['billAmount'] + $additionalAmount);
+            if ($result === false) {
                 return response()->errorWithLog(
                     'failed to create order',
                     ['user_id' => $userId, 'offer_id' => $offer->id]
@@ -674,7 +671,7 @@ class OfferController
 
 
             Redis::set(
-                $result->result->id,
+                $checkout->extractId($result),
                 json_encode([
                     'context' => 'offer',
                     'user_id' => $userId,
@@ -685,7 +682,7 @@ class OfferController
                 '120'
             );
             DB::commit();
-            return response()->success($result->result);
+            return response()->success($checkout->extractUrl($result));
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(
@@ -760,8 +757,11 @@ class OfferController
         $offerSubscription = $offer->activeSubscription;
         if ($offer->raise_count >= $offerSubscription->number_of_raises) {
             $ref = 'offer::' . $offer->id . 'user::' . Auth::id();
-            $result = $this->paypalCheckout->createOrder($ref, $offerSubscription->raise_price);
-            if ($result === false || $result->statusCode !== Response::HTTP_CREATED) {
+
+            $checkout = new Checkout($request->get('gateway'));
+
+            $result = $checkout->createOrder($ref, $offerSubscription->raise_price);
+            if ($result === false) {
                 return response()->errorWithLog(
                     'failed to create order',
                     ['user_id' => Auth::id(), Response::HTTP_UNPROCESSABLE_ENTITY, 'offer_id' => $offer->id]
@@ -783,7 +783,7 @@ class OfferController
 
 
             Redis::set(
-                $result->result->id,
+                $checkout->extractId($result),
                 json_encode([
                     'context' => 'offer-raise',
                     'user_id' => Auth::id(),
@@ -794,7 +794,7 @@ class OfferController
                 '120'
             );
 
-            return response()->success($result->result);
+            return response()->success($checkout->extractUrl($result));
         }
 
         $this->offerManager->raise($offer);
