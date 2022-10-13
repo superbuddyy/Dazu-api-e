@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Payments\Tpay;
 
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use tpayLibs\src\_class_tpay\TransactionApi;
 use tpayLibs\src\_class_tpay\Utilities\TException;
@@ -29,7 +30,7 @@ class Checkout extends TransactionApi
             'result_url' => config('app.url') . '/api/payments/callback?gateway=tpay',
             'result_email' => config('dazu.company_info.email'),
             'return_url' => config('dazu.frontend_url') . '?payment-status=success',
-            'email' => 'artur.jurkiewiczpyl@gmail.com',
+            'email' => Auth::user()->email,
             'name' => 'John Doe',
             'group' => 150,
             'accept_tos' => 1,
