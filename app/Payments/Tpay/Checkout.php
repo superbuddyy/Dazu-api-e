@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Payments\Tpay;
 
 use Exception;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use tpayLibs\src\_class_tpay\TransactionApi;
 use tpayLibs\src\_class_tpay\Utilities\TException;
@@ -14,10 +13,10 @@ class Checkout extends TransactionApi
 {
     public function __construct()
     {
-        $this->merchantSecret = 'demo';
-        $this->merchantId = 1010;
-        $this->trApiKey = '75f86137a6635df826e3efe2e66f7c9a946fdde1';
-        $this->trApiPass = 'p@$$w0rd#@!';
+        $this->merchantSecret = '&=91+tZ$M)P2q56NM60Tg|eSIWUk$';
+        $this->merchantId = 81752;
+        $this->trApiKey = 'caf7d3e00267a028f04a9b859b9d84dd0da1337f';
+        $this->trApiPass = '81752-3522dfb5d6dfd4f2';
         parent::__construct();
     }
 
@@ -27,19 +26,22 @@ class Checkout extends TransactionApi
             'amount' => $amount / 100,  // Divide by 100, because we keep amounts in int.
             'description' => 'Opłata dazu.pl',
             'crc' => $refId,
-            'result_url' => config('app.url') . '/api/payments/callback?gateway=tpay',
+            'result_url' => 'https://dazu.pl/api/payments/callback?gateway=tpay',
             'result_email' => config('dazu.company_info.email'),
             'return_url' => config('dazu.frontend_url') . '?payment-status=success',
-            'email' => Auth::user()->email,
+            'email' => 'artur.jurkiewiczpl@gmail.com',
             'name' => 'John Doe',
             'group' => 150,
             'accept_tos' => 1,
         );
+
+//        dd($config);
+
         try {
             return $this->create($config);
         } catch (TException $e) {
             Log::error('Fail to create paypal order', [$e->getMessage()]);
-            return false;
+            throw $e;
         }
     }
 
