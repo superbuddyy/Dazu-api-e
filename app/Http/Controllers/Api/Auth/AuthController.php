@@ -31,6 +31,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Events\Dispatcher;
+use Mail;
+
 /**
  * Class AuthController
  *
