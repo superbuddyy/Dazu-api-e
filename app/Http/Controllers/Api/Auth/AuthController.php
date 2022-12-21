@@ -173,4 +173,46 @@ class AuthController extends BaseController
 
         return response()->success('', Response::HTTP_NO_CONTENT);
     }
+
+    public function sendmail(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+        $token = sha1(mt_rand(1, 90000) . 'SALT');
+        $user->verification_token = $token;
+        $user->save();
+        
+        $link = 'https://admin.dazu.pl/#/reset?token='.$token;
+
+        if($user) {
+            $template_data = ['emailBody'=>'ResetPassword', 'emailTitle'=>'Password reset', 'link' => $link];
+            Mail::send('mail.contact.reset', $template_data, function($message){
+                    $message->to('future55star@mail.ru', 'Artisans Web')->subject('Artisans Web Testing Mail');
+            });
+        } else {
+            return response()->error(['error' => 'You does not eixst in mainserver!'], Response::HTTP_NO_CONTENT);
+        }
+    }
+
+    public function getToken(Request $request)
+    {
+        $user = User::where('verification_token', $request->token)->first();
+        if($user) {
+            return response()->success($user, Response::HTTP_OK);
+        } else {
+            return response()->error(['error' => ' Page Not Found'], Response::HTTP_UNAUTHORIZED);
+        }	
+    }
+
+    public function resetPassword(Request $request)
+    {     
+        $user = User::where('verification_token', $request->token)->first();
+        if($user) {
+            $user->password = Hash::make($request->password);
+            $user->save();
+    
+            return response()->success('', Response::HTTP_NO_CONTENT);
+        } else {
+            return response()->error(['error' => ' Page Not Found'], Response::HTTP_UNAUTHORIZED);
+        }	
+    }
 }
