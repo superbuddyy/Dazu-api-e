@@ -29,7 +29,7 @@ class Checkout extends TransactionApi
             'result_url' => 'https://dazu.pl/api/payments/callback?gateway=tpay',
             'result_email' => config('dazu.company_info.email'),
             'return_url' => config('dazu.frontend_url') . '?payment-status=success',
-            'email' => 'artur.jurkiewiczpl@gmail.com',
+            'email' => 'dazunieruchomosci@gmail.com',
             'name' => 'John Doe',
             'group' => 150,
             'accept_tos' => 1,
