@@ -62,9 +62,9 @@ class AuthController extends BaseController
         }
 
         $user = $request->user();
-        if ($user->email_verified_at === null) {
+        // if ($user->email_verified_at === null) {
             // return response()->error(['error' => 'Konto nie zostało zweryfikowane!'], Response::HTTP_UNAUTHORIZED);
-        }
+        // }
 
         return response()->success(new UserResource($user), Response::HTTP_OK);
     }
