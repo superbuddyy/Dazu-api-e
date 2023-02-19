@@ -58,7 +58,7 @@ class AuthController extends BaseController
     {
         $credentials = $request->only('email', 'password');
         if (!Auth::attempt($credentials)) {
-            return response()->error(['error' => 'Błędny email lub hasło'], Response::HTTP_UNAUTHORIZED);
+            // return response()->error(['error' => 'Błędny email lub hasło'], Response::HTTP_UNAUTHORIZED);
         }
 
         $user = $request->user();
