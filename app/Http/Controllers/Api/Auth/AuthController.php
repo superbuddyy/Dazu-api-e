@@ -58,13 +58,13 @@ class AuthController extends BaseController
     {
         $credentials = $request->only('email', 'password');
         if (!Auth::attempt($credentials)) {
-            // return response()->error(['error' => 'Błędny email lub hasło'], Response::HTTP_UNAUTHORIZED);
+            return response()->error(['error' => 'Błędny email lub hasło'], Response::HTTP_UNAUTHORIZED);
         }
 
         $user = $request->user();
-        // if ($user->email_verified_at === null) {
-            // return response()->error(['error' => 'Konto nie zostało zweryfikowane!'], Response::HTTP_UNAUTHORIZED);
-        // }
+        if ($user->email_verified_at === null) {
+            return response()->error(['error' => 'Konto nie zostało zweryfikowane!'], Response::HTTP_UNAUTHORIZED);
+        }
 
         return response()->success(new UserResource($user), Response::HTTP_OK);
     }
