@@ -99,7 +99,7 @@ class TransactionManager
         // Then send email to party with link
 
         // And return invoice itself to browser or have a different view
-        return $link;
+        return $invoice;
     }
 
     public function store(
