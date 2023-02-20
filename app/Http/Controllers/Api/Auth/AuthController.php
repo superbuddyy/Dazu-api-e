@@ -176,24 +176,37 @@ class AuthController extends BaseController
         return response()->success('', Response::HTTP_NO_CONTENT);
     }
 
+    // public function sendmail(Request $request)
+    // {
+    //     $user = User::where('email', $request->email)->first();
+    //     $token = sha1(mt_rand(1, 90000) . 'SALT');
+    //     $user->verification_token = $token;
+    //     $user->save();
+        
+    //     $link = 'https://admin.dazu.pl/#/reset?token='.$token;
+
+    //     if($user) {
+    //         $template_data = ['emailBody'=>'ResetPassword', 'emailTitle'=>'Password reset', 'link' => $link];
+    //         Mail::send('mail.contact.reset', $template_data, function($message) use($request){
+    //                 $message->to($request->email)->subject('Reset Password');
+    //         });
+    //     } else {
+    //         return response()->error(['error' => 'You does not eixst in mainserver!'], Response::HTTP_NO_CONTENT);
+    //     }
+    // }
     public function sendmail(Request $request)
     {
-        $user = User::where('email', $request->email)->first();
-        var_dump($user);
-        $token = sha1(mt_rand(1, 90000) . 'SALT');
-        $user->verification_token = $token;
-        $user->save();
-        
-        $link = 'https://admin.dazu.pl/#/reset?token='.$token;
+	$user = User::where('email', $request->email)->first();
+	$token = Hash::make($request->time);
+	$link = 'https://admin.dazu.pl/#/reset?token='.$token;
+	if($user) {
+		$template_data = ['emailBody'=>'ResetPassword', 'emailTitle'=>'Password reset', 'link' => $link];
+		Mail::send('mail.contact.reset', $template_data, function($message){
+    			$message->to('future55star@mail.ru', 'Artisans Web')->subject('Artisans Web Testing Mail');
+		});
+	}	
 
-        if($user) {
-            $template_data = ['emailBody'=>'ResetPassword', 'emailTitle'=>'Password reset', 'link' => $link];
-            Mail::send('mail.contact.reset', $template_data, function($message) use($request){
-                    $message->to($request->email)->subject('Reset Password');
-            });
-        } else {
-            return response()->error(['error' => 'You does not eixst in mainserver!'], Response::HTTP_NO_CONTENT);
-        }
+	
     }
 
     public function getToken(Request $request)
