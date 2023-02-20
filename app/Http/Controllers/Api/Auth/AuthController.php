@@ -179,6 +179,7 @@ class AuthController extends BaseController
     public function sendmail(Request $request)
     {
         $user = User::where('email', $request->email)->first();
+        var_dump($user);
         $token = sha1(mt_rand(1, 90000) . 'SALT');
         $user->verification_token = $token;
         $user->save();
