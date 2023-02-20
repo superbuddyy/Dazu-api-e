@@ -95,11 +95,11 @@ class TransactionManager
             // You can additionally save generated invoice to configured disk
             ->save('public');
 
-//        $link = $invoice->url();
+            $link = $invoice->url();
         // Then send email to party with link
 
         // And return invoice itself to browser or have a different view
-        return $invoice;
+        return $link;
     }
 
     public function store(
