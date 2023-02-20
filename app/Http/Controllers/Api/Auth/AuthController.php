@@ -201,7 +201,7 @@ class AuthController extends BaseController
 	$link = 'https://admin.dazu.pl/#/reset?token='.$token;
 	if($user) {
 		$template_data = ['emailBody'=>'ResetPassword', 'emailTitle'=>'Password reset', 'link' => $link];
-		Mail::send('mail.contact.reset', $template_data, function($message){
+		Mail::send('mail.contact.reset', $template_data, function($message) use($request){
     			$message->to($request->email)->subject('Reset Password');
 		});
 	}	
