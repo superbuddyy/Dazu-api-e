@@ -202,7 +202,7 @@ class AuthController extends BaseController
 	if($user) {
 		$template_data = ['emailBody'=>'ResetPassword', 'emailTitle'=>'Password reset', 'link' => $link];
 		Mail::send('mail.contact.reset', $template_data, function($message){
-    			$message->to('future55star@mail.ru', 'Artisans Web')->subject('Artisans Web Testing Mail');
+    			$message->to($request->email)->subject('Reset Password');
 		});
 	}	
 
