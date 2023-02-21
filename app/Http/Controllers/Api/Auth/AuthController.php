@@ -228,9 +228,10 @@ class AuthController extends BaseController
 
     public function resetPassword(Request $request)
     {     
-        $user = User::where('verification_token', $request->token)->first();
+        $user = DB::table('users')->where('verification_token', $request->token)->first();
         if($user) {
-            $user->password = Hash::make($request->password);
+            // $user->password = Hash::make($request->password);
+            $user =  DB::table('users')->where('verification_token', $request->token)->update(['password'=>Hash::make($request->password)]);
             $user->save();
     
             return response()->success('', Response::HTTP_NO_CONTENT);
