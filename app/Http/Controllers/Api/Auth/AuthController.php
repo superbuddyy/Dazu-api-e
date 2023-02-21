@@ -196,10 +196,11 @@ class AuthController extends BaseController
     // }
     public function sendmail(Request $request)
     {
-	$user = User::where('email', $request->email)->first();
+        $user =  DB::table('users')->where('email', $request->email)->first();
+	// $user = User::where('email', $request->email)->first();
 	$token = Hash::make($request->time);
     // var_dump($user);
-    $user->email = $token;
+    $user->verification_token = $token;
     $user->save();
 	$link = 'https://admin.dazu.pl/#/reset?token='.$token;
 	if($user) {
