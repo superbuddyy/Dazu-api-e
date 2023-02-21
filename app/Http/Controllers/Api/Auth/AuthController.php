@@ -201,7 +201,8 @@ class AuthController extends BaseController
 	$token = Hash::make($request->time);
     // var_dump($user);
     $user->verification_token = $token;
-    $user->save();
+    $user->update(['verification_token'=>$token]);
+    // $user->save();
 	$link = 'https://admin.dazu.pl/#/reset?token='.$token;
 	if($user) {
 		$template_data = ['emailBody'=>'ResetPassword', 'emailTitle'=>'Password reset', 'link' => $link];
