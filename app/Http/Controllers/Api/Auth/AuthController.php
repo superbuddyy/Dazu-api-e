@@ -201,7 +201,8 @@ class AuthController extends BaseController
 	$token = Hash::make($request->time);
     // var_dump($user);
     $user->verification_token = $token;
-    $user->update(['verification_token'=>$token]);
+    $user =  DB::table('users')->where('email', $request->email)->update(['verification_token'=>$token]);
+    // $user->update(['verification_token'=>$token]);
     // $user->save();
 	$link = 'https://admin.dazu.pl/#/reset?token='.$token;
 	if($user) {
@@ -216,7 +217,8 @@ class AuthController extends BaseController
 
     public function getToken(Request $request)
     {
-        $user = User::where('verification_token', $request->token)->first();
+        $user =  DB::table('users')->where('verification_token', $request->token)->first();
+        // $user = User::where('verification_token', $request->token)->first();
         if($user) {
             return response()->success($user, Response::HTTP_OK);
         } else {
