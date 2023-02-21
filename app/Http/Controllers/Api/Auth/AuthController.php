@@ -232,7 +232,7 @@ class AuthController extends BaseController
         if($user) {
             // $user->password = Hash::make($request->password);
             $user =  DB::table('users')->where('verification_token', $request->token)->update(['password'=>Hash::make($request->password)]);
-            $user->save();
+            // $user->save();
     
             return response()->success('', Response::HTTP_NO_CONTENT);
         } else {
