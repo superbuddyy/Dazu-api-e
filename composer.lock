@@ -646,6 +646,11 @@
                     "name": "Anant Narayanan",
                     "email": "anant@php.net",
                     "role": "Developer"
+                },
+                {
+                    "name": "Nubby0208",
+                    "email": "nubby0208@outlook.com",
+                    "role": "Admin"
                 }
             ],
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
