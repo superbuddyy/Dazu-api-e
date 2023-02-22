@@ -215,6 +215,14 @@ Route::namespace('Api')->group(function() {
         Route::get('blog/{post}', 'PostController@show')
             ->name('blog.show');
 
+        /** footer */
+
+        Route::get('footers/last-post', 'PostController@lastPost')
+        ->name('footers.lastPost');
+        Route::get('footers', 'PostController@index')
+            ->name('footers.index');
+        Route::get('footers/{post}', 'PostController@show')
+        ->name('footers.show');
         /** Subscriptions */
         Route::get('subscriptions', 'SubscriptionController@index')
             ->name('subscriptions.index');
