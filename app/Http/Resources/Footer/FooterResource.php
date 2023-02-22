@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
-class PostResource extends JsonResource
+class FooterResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -25,7 +25,7 @@ class PostResource extends JsonResource
             [
                 'id' => $this->id ?? null,
                 'title' => $this->title ?? null,
-                'name' => $this->slug ?? null,
+                'name' => $this->name ?? null,
                 'content' => $this->content ?? null,
             ]
         );
