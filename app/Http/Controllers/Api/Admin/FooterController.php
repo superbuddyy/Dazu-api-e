@@ -25,12 +25,8 @@ class FooterController extends Controller
 
     public function store(Request $request): Response
     {
-        $post = $this->footerManager->store(
-            $request->get('title'),
-            $request->get('content'),
-            $request->get('name')
-        );
-
-        return response()->success($post, Response::HTTP_CREATED);
+        $result = Footer::create(['title' => $request->title, 'content' => $request->get('content'),
+        'name' => $request->get('name')]);
+        return response()->success($result, Response::HTTP_CREATED);
     }
 }
