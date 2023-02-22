@@ -24,16 +24,16 @@ class FooterController extends Controller
 
     public function lastPost(): Response
     {
-        return response()->success(new FooterResource(Post::where('status', FooterStatus::ACTIVE)->latest()->first()));
+        return response()->success(new FooterResource(Footer::where('status', FooterStatus::ACTIVE)->latest()->first()));
     }
 
-    public function index(Post $post): Response
+    public function index(Footer $post): Response
     {
         $footers = $this->footerManager->getList(5, FooterStatus::ACTIVE, true);
         return response()->success(new FooterCollection($footers));
     }
 
-    public function show(Post $post): Response
+    public function show(Footer $post): Response
     {
         return response()->success(new FooterResource($post));
     }

@@ -409,6 +409,14 @@ Route::namespace('Api')->group(function() {
             Route::post('admin/newsletter', 'NewsletterMailController@store')
                 ->middleware('permission:' . Acl::PERMISSION_ADD_NEWSLETTER)
                 ->name('newsletter.store');
+                /** Footer */
+            Route::get('admin/footer', 'FooterController@index')
+            ->middleware('permission:' . Acl::PERMISSION_NEWSLETTER_LIST)
+            ->name('footer.index');
+
+            Route::post('admin/footer', 'FooterController@store')
+            ->middleware('permission:' . Acl::PERMISSION_ADD_NEWSLETTER)
+            ->name('footer.store');
             /** Announcement Newsletter */
             Route::get('admin/announcement-newsletter', 'AnnouncementNewsletterMailController@index')
                 ->middleware('permission:' . Acl::PERMISSION_NEWSLETTER_LIST)

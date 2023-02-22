@@ -15,6 +15,7 @@ use App\Models\Attribute;
 use App\Models\AttributeOption;
 use App\Models\Photo;
 use App\Models\Post;
+use App\Models\Footer;
 use App\Models\User;
 use App\Services\ImageService;
 use Carbon\Carbon;
@@ -34,7 +35,7 @@ class FooterManager
      */
     public function getList(int $perPage, ?string $status = null, bool $randomOrder = false)
     {
-        $query = Post::query();
+        $query = Footer::query();
 
         if ($status != null) {
             $query->where('status', $status);
@@ -63,18 +64,18 @@ class FooterManager
     public function store(
         string $title,
         string $content,
-        File $mainImage,
-        string $status = PostStatus::ACTIVE,
+        string $name,
+        string $status = FooterStatus::ACTIVE,
         string $userId = null
     ) {
-        $imageService = resolve(ImageService::class);
+       
         $userId = $userId ?: Auth::id();
-        return Post::create(
+        return Footer::create(
             [
                 'title' => $title,
                 'content' => $content,
                 'status' => $status, // Default
-                'main_photo' => $imageService->store($mainImage, Post::class),
+                'name' => $name,
                 'user_id' => $userId,
             ]
         );
@@ -89,22 +90,18 @@ class FooterManager
      * @return mixed
      */
     public function update(
-        Post $post,
+        Footer $post,
         string $title,
         string $content,
-        ?File $mainImage,
-        string $status = PostStatus::ACTIVE
+        string $name,
+        string $status = FooterStatus::ACTIVE
     ) {
-        $imageService = resolve(ImageService::class);
         $toUpdate = [
             'title' => $title,
             'content' => $content,
+            'name' => $name,
             'status' => $status, // Default
         ];
-
-        if ($mainImage) {
-            $toUpdate['main_photo'] = $imageService->store($mainImage, Post::class);
-        }
 
         return $post->update($toUpdate);
     }
@@ -114,7 +111,7 @@ class FooterManager
      * @return bool|null
      * @throws \Exception
      */
-    public function delete(Post $post)
+    public function delete(Footer $post)
     {
         return $post->delete();
     }

@@ -11,51 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Footer extends Model
 {
-    use SlugableTrait;
-    use SoftDeletes;
+    protected $table = 'footers';
 
-    /**
-     * Storage images path
-     */
-    public const IMAGES_PATH = 'posts';
+    /** @var array */
+    protected $fillable = [ 'title', 'name', 'content' ];
 
-    /**
-     * The attribute forming the slug.
-     *
-     * @var string
-     */
-    public const SLUG_BASE = 'title';
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'title', 'slug', 'content', 'status', 'main_photo', 'user_id'
-    ];
-
-    /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
-     * @return string
-     */
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
-    }
-
-    /**
-     * @return string
-     */
-    public function getMainPhotoUrlAttribute(): string
-    {
-        return config('app.url') . '/storage/' . self::IMAGES_PATH . '/' . $this->main_photo;
-    }
 }
