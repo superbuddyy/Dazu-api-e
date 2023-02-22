@@ -25,16 +25,8 @@ class PostResource extends JsonResource
             [
                 'id' => $this->id ?? null,
                 'title' => $this->title ?? null,
-                'slug' => $this->slug ?? null,
+                'name' => $this->slug ?? null,
                 'content' => $this->content ?? null,
-                'main_photo' => $this->main_photo ?? null,
-                'main_photo_url' => $this->mainPhotoUrl ?? null,
-                'created_at' => $this->created_at->format('Y-m-d H:II') ?? null,
-                'updated_at' => $this->updated_at->format('Y-m-d H:II') ?? null,
-                'user' => [
-                    'id' => $this->user->id ?? null,
-                    'email' => $this->user->email ?? null,
-                ],
             ]
         );
     }

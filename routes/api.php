@@ -417,6 +417,16 @@ Route::namespace('Api')->group(function() {
             Route::post('admin/footer', 'FooterController@store')
             ->middleware('permission:' . Acl::PERMISSION_ADD_NEWSLETTER)
             ->name('footer.store');
+
+            Route::get('admin/footer/{post}', 'FooterController@show')
+            ->middleware('permission:' . Acl::PERMISSION_SHOW_POST)
+            ->name('footer.show');
+            Route::post('admin/footer/{post}', 'FooterController@update')
+            ->middleware('permission:' . Acl::PERMISSION_UPDATE_POST)
+            ->name('footer.update');
+            Route::delete('admin/footer/{post}', 'FooterController@destroy')
+            ->middleware('permission:' . Acl::PERMISSION_DELETE_POST)
+            ->name('footer.destroy');
             /** Announcement Newsletter */
             Route::get('admin/announcement-newsletter', 'AnnouncementNewsletterMailController@index')
                 ->middleware('permission:' . Acl::PERMISSION_NEWSLETTER_LIST)

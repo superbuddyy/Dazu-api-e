@@ -27,7 +27,7 @@ class FooterCollection extends ResourceCollection
     public function toArray($request): array
     {
         $this->collection->transform(function ($post) {
-            return (new PostResource($post));
+            return (new FooterResource($post));
         });
 
         return parent::toArray($request);
