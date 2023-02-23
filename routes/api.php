@@ -174,7 +174,11 @@ Route::namespace('Api')->group(function() {
             ->name('pages.index');
         Route::get('pages/{key}', 'PagesController@show')
             ->name('pages.show');
-
+        /** Footers */
+        Route::get('footers', 'FootersController@index')
+            ->name('footers.index');
+        Route::get('footers/{key}', 'FootersController@show')
+            ->name('footers.show');
         /** User profile */
         Route::get('profile/{user}', 'UserController@showProfile')
             ->name('user.showProfile');
@@ -217,12 +221,10 @@ Route::namespace('Api')->group(function() {
 
         /** footer */
 
-        Route::get('footers/last-post', 'PostController@lastPost')
-        ->name('footers.lastPost');
-        Route::get('footers', 'PostController@index')
-            ->name('footers.index');
-        Route::get('footers/{post}', 'PostController@show')
-        ->name('footers.show');
+        Route::get('footer', 'FooterController@index')
+            ->name('footer.index');
+        Route::get('footer/{id}', 'FooterController@show')
+            ->name('footer.show');  
         /** Subscriptions */
         Route::get('subscriptions', 'SubscriptionController@index')
             ->name('subscriptions.index');

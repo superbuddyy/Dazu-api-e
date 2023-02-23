@@ -21,20 +21,15 @@ class FooterController extends Controller
     {
         $this->footerManager = $footerManager;
     }
-
-    public function lastPost(): Response
+    public function index()
     {
-        return response()->success(new FooterResource(Footer::where('status', FooterStatus::ACTIVE)->latest()->first()));
+        return $this->footerManager->getAll();
     }
-
-    public function index(Footer $post): Response
+     public function show(int $id)
     {
-        $footers = $this->footerManager->getList(5, FooterStatus::ACTIVE, true);
-        return response()->success(new FooterCollection($footers));
+        return $this->footerManager->getItem($id);
     }
+   
 
-    public function show(Footer $post): Response
-    {
-        return response()->success(new FooterResource($post));
-    }
+   
 }

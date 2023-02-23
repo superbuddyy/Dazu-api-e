@@ -48,9 +48,18 @@ class FooterManager
         return $query->paginate($perPage);
     }
 
-    public function getItem()
+    public function getAll() {
+        $data = Footer::all();
+        foreach ($data as $key) {
+            $key['content'] = html_entity_decode($key['content']);
+        }
+        return $data;
+        // return FaqItem::orderBy('id', 'ASC')->get();
+    }
+
+    public function getItem($id)
     {
-        //
+        return Footer::findOrFail($id);
     }
 
     /**
