@@ -423,7 +423,7 @@ Route::namespace('Api')->group(function() {
             Route::get('admin/footer/{post}', 'FooterController@show')
             ->middleware('permission:' . Acl::PERMISSION_SHOW_POST)
             ->name('footer.show');
-            Route::put('admin/footer/{post}', 'FooterController@update')
+            Route::post('admin/footer/{post}', 'FooterController@update')
             ->middleware('permission:' . Acl::PERMISSION_UPDATE_POST)
             ->name('footer.update');
             Route::delete('admin/footer/{post}', 'FooterController@destroy')
