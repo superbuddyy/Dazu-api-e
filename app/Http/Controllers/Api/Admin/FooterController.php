@@ -37,7 +37,7 @@ class FooterController extends Controller
     {
         $post = $this->footerManager->update(
             $post,
-            $request->title,
+            '$request->title',
             $request->get('content'),
             $request->get('name')
         );
