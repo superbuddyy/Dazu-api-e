@@ -130,32 +130,40 @@ class UserController extends BaseController
             return response()->json(['error' => 'Permission denied'], 403);
         }
 
-        $validator = Validator::make($request->all(), $this->getValidationRules(false));
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 403);
-        } else {
-            $email = $request->get('email');
-            $found = User::where('email', $email)->first();
-            if ($found && $found->id !== $user->id) {
-                return response()->json(['error' => 'Email has been taken'], 403);
-            }
-            $address = $request->get('address');
-            $user->profile->name = $request->get('name');
-            $user->profile->phone = $request->get('phone');
-            $user->profile->nip = $request->get('nip');
-            $user->profile->country = $address['country'];
-            $user->profile->city = $address['city'];
-            $user->profile->street = $address['street'];
-            $user->profile->zip_code = $address['zip_code'];
-            $user->email = $email;
-
-            if ($request->has('email_verified') && $request->get('email_verified') === true) {
-                $user->email_verified_at = Carbon::now();
-            }
-
-            $user->profile->save();
+        if ($request->has('delayedDeletion') && $request->get('delayedDeletion') === true) {
+            $user->deleted_at = Carbon::now();
             $user->save();
             return new UserResource($user);
+        } else {
+            $validator = Validator::make($request->all(), $this->getValidationRules(false));
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 403);
+            } else {
+                $email = $request->get('email');
+                $found = User::where('email', $email)->first();
+                if ($found && $found->id !== $user->id) {
+                    return response()->json(['error' => 'Email has been taken'], 403);
+                }
+                $address = $request->get('address');
+                $user->profile->name = $request->get('name');
+                $user->profile->phone = $request->get('phone');
+                $user->profile->nip = $request->get('nip');
+                $user->profile->country = $address['country'];
+                $user->profile->city = $address['city'];
+                $user->profile->street = $address['street'];
+                $user->profile->zip_code = $address['zip_code'];
+                $user->email = $email;
+    
+                if ($request->has('email_verified') && $request->get('email_verified') === true) {
+                    $user->email_verified_at = Carbon::now();
+                }
+    
+                
+    
+                $user->profile->save();
+                $user->save();
+                return new UserResource($user);
+            }
         }
     }
 
