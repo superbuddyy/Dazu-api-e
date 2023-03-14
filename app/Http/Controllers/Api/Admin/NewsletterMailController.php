@@ -21,7 +21,7 @@ class NewsletterMailController extends Controller
 
     public function store(Request $request): Response
     {
-        $result = NewsletterMail::create(['title' => $request->title, 'content' => $request->get('content')]);
+        $result = NewsletterMail::create(['title' => $request->title, 'content' => $request->get('content'), 'receiver' => $request->receiver]);
         dispatch(new SendNewsletterEmailJob($result));
 
         return response()->success($result, Response::HTTP_CREATED);

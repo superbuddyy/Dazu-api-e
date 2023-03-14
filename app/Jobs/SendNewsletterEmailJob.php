@@ -42,20 +42,34 @@ class SendNewsletterEmailJob implements ShouldQueue
     public function handle(): void
     {
         try {
-            User::whereHas('profile', function ($query) {
-                return $query->where('newsletter', true);
-            })
-                ->chunk(50, function ($users) {
-                    foreach ($users as $user) {
-                        Mail::send(
-                            new Newsletter(
-                                $user->email,
-                                $this->newsletterMail->title,
-                                $this->newsletterMail->content
-                            )
-                        );
-                    }
-                });
+            if($this->newsletterMail->receiver == 'all'){
+                User::chunk(50, function ($users) {
+                        foreach ($users as $user) {
+                            Mail::send(
+                                new Newsletter(
+                                    $user->email,
+                                    $this->newsletterMail->title,
+                                    $this->newsletterMail->content
+                                )
+                            );
+                        }
+                    });
+            }else if($this->newsletterMail->receiver == 'subscribers'){
+                User::whereHas('profile', function ($query) {
+                    return $query->where('newsletter', true);
+                })
+                    ->chunk(50, function ($users) {
+                        foreach ($users as $user) {
+                            Mail::send(
+                                new Newsletter(
+                                    $user->email,
+                                    $this->newsletterMail->title,
+                                    $this->newsletterMail->content
+                                )
+                            );
+                        }
+                    });
+            }
         } catch (Exception $e) {
             Log::error('job.newsletter_mail_failed', ['msg' => $e->getMessage()]);
         }

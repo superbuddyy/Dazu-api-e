@@ -9,5 +9,5 @@ use Illuminate\Database\Eloquent\Model;
 class NewsletterMail extends Model
 {
     /** @var array */
-    protected $fillable = [ 'title', 'content' ];
+    protected $fillable = [ 'title', 'content', 'receiver' ];
 }
