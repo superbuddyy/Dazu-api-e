@@ -23,8 +23,6 @@ class SearchService
         bool $onlyVisible = true,
         string $orderBy = 'created_at',
         string $order = 'DESC',
-        string $orderByUI = 'created_at',
-        string $orderUI = 'DESC',
         string $filterUI = 'all'
     ): LengthAwarePaginator
     {
@@ -58,8 +56,8 @@ class SearchService
 
         $query->orderBy('raise_at', 'DESC');
         $query->orderBy(
-            Arr::get($searchArguments, 'order_by', $orderByUI),
-            Arr::get($searchArguments, 'order', $orderUI)
+            Arr::get($searchArguments, 'order_by', $orderBy),
+            Arr::get($searchArguments, 'order', $order)
         );
 
         return $query->paginate($perPage);
