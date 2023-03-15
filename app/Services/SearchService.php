@@ -23,7 +23,9 @@ class SearchService
         bool $onlyVisible = true,
         string $orderBy = 'created_at',
         string $order = 'DESC',
-        string $filter = 'all'
+        string $orderByUI = 'created_at',
+        string $orderUI = 'DESC',
+        string $filterUI = 'all'
     ): LengthAwarePaginator
     {
         $query = Offer::query();
@@ -37,7 +39,7 @@ class SearchService
                 ->where('status', OfferStatus::ACTIVE);
         }
 
-        switch($filter){
+        switch($filterUI){
             case 'active':
                 $query->where('status', OfferStatus::ACTIVE);
                 break;
@@ -56,8 +58,8 @@ class SearchService
 
         $query->orderBy('raise_at', 'DESC');
         $query->orderBy(
-            Arr::get($searchArguments, 'order_by', $orderBy),
-            Arr::get($searchArguments, 'order', $order)
+            Arr::get($searchArguments, 'order_by', $orderByUI),
+            Arr::get($searchArguments, 'order', $orderUI)
         );
 
         return $query->paginate($perPage);
