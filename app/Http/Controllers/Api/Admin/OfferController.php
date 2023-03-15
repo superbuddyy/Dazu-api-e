@@ -46,8 +46,8 @@ class OfferController extends Controller
         $offers = $this->searchService->search(
             $request->except(['page', 'order_by','order']),
             false
-            // $request->get('order_by') ?? 'price',
-            // $request->get('order') ?? 'DESC'
+            $request->get('order_by') ?? 'price',
+            $request->get('order') ?? 'DESC'
             // $request->get('filter') ?? 'all'
         );
 
