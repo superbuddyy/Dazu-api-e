@@ -22,8 +22,8 @@ class SearchService
         array $searchArguments,
         bool $onlyVisible = true,
         string $orderBy = 'created_at',
-        string $order = 'DESC'
-        // string $filter = 'all'
+        string $order = 'DESC',
+        string $filter = 'all'
     ): LengthAwarePaginator
     {
         $query = Offer::query();
@@ -37,20 +37,20 @@ class SearchService
                 ->where('status', OfferStatus::ACTIVE);
         }
 
-        // switch($filter){
-        //     case 'active':
-        //         $query->where('status', OfferStatus::ACTIVE);
-        //         break;
-        //     case 'deactivated':
-        //         $query->where('status', OfferStatus::IN_ACTIVE_BY_USER);
-        //         break;
-        //     case 'inactive':
-        //         $query->where('status', OfferStatus::IN_ACTIVE);
-        //         break;
-        //     case 'rejected':
-        //         $query->where('status', OfferStatus::REJECTED);
-        //         break;
-        // }
+        switch($filter){
+            case 'active':
+                $query->where('status', OfferStatus::ACTIVE);
+                break;
+            case 'deactivated':
+                $query->where('status', OfferStatus::IN_ACTIVE_BY_USER);
+                break;
+            case 'inactive':
+                $query->where('status', OfferStatus::IN_ACTIVE);
+                break;
+            case 'rejected':
+                $query->where('status', OfferStatus::REJECTED);
+                break;
+        }
 
         $query = $this->buildQuery($searchArguments, $query);
 
