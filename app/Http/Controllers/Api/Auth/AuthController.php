@@ -184,8 +184,7 @@ class AuthController extends BaseController
     // $user->update(['verification_token'=>$token]);
     // $user->save();
 	if($user) {
-		$template_data['verification_token'] = $token;
-		Mail::send('mail.user.remind_password', $template_data, function($message) use($request){
+		Mail::send(new RemindPassword($user), function($message) use($request){
     			$message->to($request->email)->subject('Remind Password');
 		});
 	}	
