@@ -171,7 +171,7 @@ class AuthController extends BaseController
             $user->verification_token = Str::uuid()->toString();
             $user->save();
             // dispatch(new SendEmailJob(new RemindPassword($user)));
-            Mail::send(new RemindPassword($user))->to($request->email)->subject('Remind Password');
+            Mail::send(new RemindPassword($user));
         }
 
         return response()->success('', Response::HTTP_NO_CONTENT);
