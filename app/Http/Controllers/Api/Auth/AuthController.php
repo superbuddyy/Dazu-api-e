@@ -165,15 +165,30 @@ class AuthController extends BaseController
 
     public function remindPassword(Request $request)
     {
-        $user = User::where('email', $request->email)->first();
+        // $user = User::where('email', $request->email)->first();
 
-        if ($user) {
-            $user->verification_token = Str::uuid()->toString();
-            $user->save();
-            dispatch(new SendEmailJob(new RemindPassword($user)));
-        }
+        // if ($user) {
+        //     $user->verification_token = Str::uuid()->toString();
+        //     $user->save();
+        //     dispatch(new SendEmailJob(new RemindPassword($user)));
+        // }
 
-        return response()->success('', Response::HTTP_NO_CONTENT);
+        // return response()->success('', Response::HTTP_NO_CONTENT);
+
+        $user =  DB::table('users')->where('email', $request->email)->first();
+	// $user = User::where('email', $request->email)->first();
+	$token = Hash::make($request->time);
+    // var_dump($user);
+    $user->verification_token = $token;
+    $user =  DB::table('users')->where('email', $request->email)->update(['verification_token'=>$token]);
+    // $user->update(['verification_token'=>$token]);
+    // $user->save();
+	if($user) {
+		$template_data = ['emailBody'=>'RemindPassword', 'emailTitle'=>'Password reminder'];
+		Mail::send('mail.user.remind_password', $template_data, function($message) use($request){
+    			$message->to($request->email)->subject('Remind Password');
+		});
+	}	
     }
 
     // public function sendmail(Request $request)
