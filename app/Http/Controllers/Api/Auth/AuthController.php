@@ -165,16 +165,32 @@ class AuthController extends BaseController
 
     public function remindPassword(Request $request)
     {
-        $user = User::where('email', $request->email)->first();
+        // $user = User::where('email', $request->email)->first();
 
-        if ($user) {
-            $user->verification_token = Str::uuid()->toString();
-            $user->save();
-            // dispatch(new SendEmailJob(new RemindPassword($user)));
-            Mail::send(new RemindPassword($user));
-        }
+        // if ($user) {
+        //     $user->verification_token = Str::uuid()->toString();
+        //     $user->save();
+        //     dispatch(new SendEmailJob(new RemindPassword($user)));
+        // }
 
-        return response()->success('', Response::HTTP_NO_CONTENT);
+        // return response()->success('', Response::HTTP_NO_CONTENT);
+
+
+        $user =  DB::table('users')->where('email', $request->email)->first();
+	// $user = User::where('email', $request->email)->first();
+	$token = Hash::make($request->time);
+    // var_dump($user);
+    $user->verification_token = $token;
+    $user =  DB::table('users')->where('email', $request->email)->update(['verification_token'=>$token]);
+    // $user->update(['verification_token'=>$token]);
+    // $user->save();
+	$link = 'https://admin.dazu.pl/#/reset?token='.$token;
+	if($user) {
+		$template_data = ['emailBody'=>'ResetPassword', 'emailTitle'=>'Password reset', 'verification_token' => $token];
+		Mail::send('mail.user.remind_password', $template_data, function($message) use($request){
+    			$message->to($request->email)->subject('Reset Password');
+		});
+	}	
     }
 
     // public function sendmail(Request $request)
