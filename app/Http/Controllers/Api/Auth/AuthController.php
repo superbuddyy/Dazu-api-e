@@ -185,7 +185,7 @@ class AuthController extends BaseController
     // $user->save();
 	if($user) {
 		$template_data = ['emailBody'=>'RemindPassword', 'emailTitle'=>'Password reminder', 'verification_token'=>$token];
-		Mail::send('mail.user.remind_password', $template_data, function($message) use($request){
+		Mail::send('mail.user.remind_password', [$template_data], function($message) use($request){
     			$message->to($request->email)->subject('Remind Password');
 		});
 	}	
