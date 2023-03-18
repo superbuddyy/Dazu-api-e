@@ -21,10 +21,16 @@ class UserEventSubscriber
      */
     public function onUserCreated(UserCreated $event): void
     {
-        $event->user->verification_token = Str::uuid()->toString();
-        $event->user->save();
+        // $event->user->verification_token = Str::uuid()->toString();
+        // $event->user->save();
 
-        dispatch(new SendEmailJob(new EmailConfirmation($event->user)));
+        // dispatch(new SendEmailJob(new EmailConfirmation($event->user)));
+
+        $link = 'https://dazu.pl/dokoncz-rejestracje?token='.$event->user->verification_token;
+        $template_data = ['emailBody'=>'Activation', 'emailTitle'=>'Activation', 'link' => $link];
+        Mail::send('mail.user.register', $template_data, function($message) use($request){
+                $message->to($request->email)->subject('Email Activation');
+        });
     }
 
     /**
@@ -32,15 +38,26 @@ class UserEventSubscriber
      */
     public function onAgentCreated(AgentCreated $event): void
     {
-        $event->user->verification_token = Str::uuid()->toString();
-        $event->user->save();
+        // $event->user->verification_token = Str::uuid()->toString();
+        // $event->user->save();
 
-        dispatch(new SendEmailJob(new SetPassword($event->user, SetPassword::AGENT)));
+        // dispatch(new SendEmailJob(new SetPassword($event->user, SetPassword::AGENT)));
+
+        $link = 'https://dazu.pl/ustaw-haslo?token='.$event->user->verification_token;
+        $template_data = ['emailBody'=>'Activation', 'emailTitle'=>'Activation', 'link' => $link];
+        Mail::send('mail.user.set_password', $template_data, function($message) use($request){
+                $message->to($request->email)->subject('Email Activation');
+        });
     }
 
     public function onNewsletterActivated(NewsletterActivated $event)
     {
-        dispatch(new SendEmailJob(new NewsletterActivatedMail($event->user)));
+        // dispatch(new SendEmailJob(new NewsletterActivatedMail($event->user)));
+
+        $template_data = ['emailBody'=>'', 'emailTitle'=>'', 'link' => ''];
+        Mail::send('mail.user.newsletter_activated', $template_data, function($message) use($request){
+            $message->to($request->email)->subject('Email Activation');
+        });
     }
 
     public function subscribe(Dispatcher $events): void
