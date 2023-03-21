@@ -13,6 +13,7 @@ use App\Mail\User\NewsletterActivated as NewsletterActivatedMail;
 use App\Mail\Auth\SetPassword;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Str;
+use Mail;
 
 class UserEventSubscriber
 {
