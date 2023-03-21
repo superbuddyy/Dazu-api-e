@@ -89,7 +89,7 @@ class AuthController extends BaseController
         } catch (Exception $e) {
             DB::rollback();
             Log::error('Fail to register user', ['message' => $e->getMessage()]);
-            return response()->error('Fail to register user');
+            return response()->error($e.'Fail to register user');
         }
 
         return response()->success('', Response::HTTP_NO_CONTENT);
