@@ -29,7 +29,7 @@ class UserEventSubscriber
 
         $link = 'https://dazu.pl/dokoncz-rejestracje?token='.$event->user->verification_token;
         $template_data = ['emailBody'=>'Activation', 'emailTitle'=>'Activation', 'link' => $link];
-        Mail::send('mail.user.register', $template_data, function($message) use($request){
+        Mail::send('mail.user.register', $template_data, function($message) use($event){
                 $message->to($event->user->email)->subject('Email Activation');
         });
     }
