@@ -22,15 +22,15 @@ class UserEventSubscriber
      */
     public function onUserCreated(UserCreated $event): void
     {
-        // $event->user->verification_token = Str::uuid()->toString();
-        // $event->user->save();
+        $event->user->verification_token = Str::uuid()->toString();
+        $event->user->save();
 
         // dispatch(new SendEmailJob(new EmailConfirmation($event->user)));
 
         $link = 'https://dazu.pl/dokoncz-rejestracje?token='.$event->user->verification_token;
         $template_data = ['emailBody'=>'Activation', 'emailTitle'=>'Activation', 'link' => $link];
         Mail::send('mail.user.register', $template_data, function($message) use($request){
-                $message->to($request->email)->subject('Email Activation');
+                $message->to($event->user->email)->subject('Email Activation');
         });
     }
 
