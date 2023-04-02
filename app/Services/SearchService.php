@@ -23,7 +23,7 @@ class SearchService
         bool $onlyVisible = true,
         string $orderBy = 'created_at',
         string $order = 'DESC',
-        string $filterUI = 'all'
+        string $filterUI = 'active'
     ): LengthAwarePaginator
     {
         $query = Offer::query();

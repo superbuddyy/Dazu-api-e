@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use App\Models\ContactEmails;
 use Illuminate\Support\Str;
 use App\Mail\Contact\ContactConfirmation;
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -82,19 +83,26 @@ class ContactController extends Controller
 
     public function sendContactForm(ContactRequest $request): Response
     {
-        if (User::where('email', $request->email)->exists()) {
-            dispatch(
-                new SendEmailJob(
-                    new ContactForm(
-                        $request->email,
-                        $request->name,
-                        $request->message,
-                        $request->topic
-                    )
-                )
-            );
-            return response()->success('', Response::HTTP_NO_CONTENT);
-        } else {
+        // if (User::where('email', $request->email)->exists()) {
+        //     dispatch(
+        //         new SendEmailJob(
+        //             new ContactForm(
+        //                 $request->email,
+        //                 $request->name,
+        //                 $request->message,
+        //                 $request->topic
+        //             )
+        //         )
+        //     );
+        //     return response()->success('', Response::HTTP_NO_CONTENT);
+        // }
+        $user =  DB::table('users')->where('email', $request->email)->first();
+        if ($user) {
+            $template_data = ['email'=>$request->email, 'name'=>$request->email, 'message' => $request->email, 'topic'=>$request->topic];
+            Mail::send('mail.contact.contact_form', $template_data, function($message) use($request){
+                    $message->to($request->email)->subject('Contact Form');
+            });
+        }else {
             $json_ary = [
                 'email' => $request->email,
                 'name' => $request->name,
@@ -126,15 +134,19 @@ class ContactController extends Controller
     }
     public function sendConfirmMail($email,$data,$url)
     {
-        dispatch(
-            new SendEmailJob(
-                new ContactConfirmation(
-                    $email,
-                    $data,
-                    $url
-                )
-            )
-        );
+        $template_data = ['email'=>$email, 'data'=>$data, 'url' => $url];
+        Mail::send('mail.contact.contact_confirmation', $template_data, function($message) use($request){
+                $message->to($request->email)->subject('Contact Confirmation');
+        });
+        // dispatch(
+        //     new SendEmailJob(
+        //         new ContactConfirmation(
+        //             $email,
+        //             $data,
+        //             $url
+        //         )
+        //     )
+        // );
         return true;
     }
 
