@@ -27,7 +27,7 @@ class SearchService
     ): LengthAwarePaginator
     {
         $query = Offer::query();
-        $perPage = Arr::pull($searchArguments, 'limit', 1);
+        $perPage = Arr::pull($searchArguments, 'limit', 2);
         if ($onlyVisible) {
             $query->where('expire_time', '>', Carbon::now())
                 ->where(function ($query) {
