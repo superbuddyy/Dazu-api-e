@@ -35,21 +35,21 @@ class SearchService
                         ->orWhere('visible_from_date', null);
                 })
                 ->where('status', OfferStatus::ACTIVE);
-        }
-
-        switch($filterUI){
-            case 'active':
-                $query->where('status', OfferStatus::ACTIVE);
-                break;
-            case 'deactivated':
-                $query->where('status', OfferStatus::IN_ACTIVE_BY_USER);
-                break;
-            case 'inactive':
-                $query->where('status', OfferStatus::IN_ACTIVE);
-                break;
-            case 'rejected':
-                $query->where('status', OfferStatus::REJECTED);
-                break;
+        } else {
+            switch($filterUI){
+                case 'active':
+                    $query->where('status', OfferStatus::ACTIVE);
+                    break;
+                case 'deactivated':
+                    $query->where('status', OfferStatus::IN_ACTIVE_BY_USER);
+                    break;
+                case 'inactive':
+                    $query->where('status', OfferStatus::IN_ACTIVE);
+                    break;
+                case 'rejected':
+                    $query->where('status', OfferStatus::REJECTED);
+                    break;
+            }
         }
 
         $query = $this->buildQuery($searchArguments, $query);
