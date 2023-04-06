@@ -52,8 +52,8 @@ class SearchService
             }
         }
         $query = $this->buildQuery($searchArguments, $query);
-var_dump($query);
-die;
+        
+        return $query;
 
         // $query->orderBy('raise_at', 'DESC');
         $query->orderBy(
