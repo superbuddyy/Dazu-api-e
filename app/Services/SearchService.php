@@ -29,7 +29,10 @@ class SearchService
         $query = Offer::query();
         $perPage = Arr::pull($searchArguments, 'limit', 12);
         if ($onlyVisible) {
-            $query->where('expire_time', '>', Carbon::now())
+
+$date = Carbon::create(2023, 10, 31, 0, 0, 0, 'UTC');
+
+            $query->where('expire_time', '>', $date->toDateTimeString())
                 ->where(function ($query) {
                     $query->where('visible_from_date', '<', Carbon::now())
                         ->orWhere('visible_from_date', null);
