@@ -35,8 +35,6 @@ class SearchService
                         ->orWhere('visible_from_date', null);
                 })
                 ->where('status', OfferStatus::ACTIVE);
-                var_dump($content);
-                die;
         } else {
             switch($filterUI){
                 case 'active':
@@ -53,9 +51,9 @@ class SearchService
                     break;
             }
         }
+        $query = $this->buildQuery($searchArguments, $query);
 var_dump($query);
 die;
-        $query = $this->buildQuery($searchArguments, $query);
 
         // $query->orderBy('raise_at', 'DESC');
         $query->orderBy(
