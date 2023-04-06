@@ -29,14 +29,14 @@ class SearchService
         $query = Offer::query();
         $perPage = Arr::pull($searchArguments, 'limit', 12);
         if ($onlyVisible) {
-            var_dump("die");
-            die;
-            $query->where('expire_time', '>', Carbon::now())
+            $content = $query->where('expire_time', '>', Carbon::now())
                 ->where(function ($query) {
                     $query->where('visible_from_date', '<', Carbon::now())
                         ->orWhere('visible_from_date', null);
                 })
                 ->where('status', OfferStatus::ACTIVE);
+                var_dump($content);
+                die;
         } else {
             switch($filterUI){
                 case 'active':
