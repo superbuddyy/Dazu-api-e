@@ -29,12 +29,12 @@ class SearchService
         $query = Offer::query();
         $perPage = Arr::pull($searchArguments, 'limit', 12);
         if ($onlyVisible) {
-            $content = $query->where('expire_time', '>', Carbon::now())
-                ->where(function ($query) {
-                    $query->where('visible_from_date', '<', Carbon::now())
-                        ->orWhere('visible_from_date', null);
-                })
-                ->where('status', OfferStatus::ACTIVE);
+            $query->where('expire_time', '>', Carbon::now())
+            ->where(function ($query) {
+                $query->where('visible_from_date', '<', Carbon::now())
+                    ->orWhere('visible_from_date', null);
+            })
+            ->where('status', OfferStatus::ACTIVE);
         } else {
             switch($filterUI){
                 case 'active':
@@ -229,21 +229,23 @@ class SearchService
                                 ->where('attribute_value.value', '<=', (int)$paramValue['max']);
                         });
                     } else if (is_array($paramValue)) {
-                        $i = 0;
-                        foreach ($paramValue as $param) {
-                            if ($i === 0) {
-                                $query->whereHas('attributes', function ($query) use ($param, $paramName) {
-                                    $query->where('attributes.slug', $paramName)
-                                        ->where('attribute_value.value', $param);
-                                });
-                                $i++;
-                            } else {
-                                $query->orWhereHas('attributes', function ($query) use ($param, $paramName) {
-                                    $query->where('attributes.slug', $paramName)
-                                        ->where('attribute_value.value', $param);
-                                });
-                            }
-                        }
+                        $query->where(function ($query) use ($paramValue, $paramName) {
+                            $i = 0;
+                            foreach ($paramValue as $param) {
+                                    if ($i === 0) {
+                                        $query->whereHas('attributes', function ($query) use ($param, $paramName) {
+                                            $query->where('attributes.slug', $paramName)
+                                                ->where('attribute_value.value', $param);
+                                        });
+                                        $i++;
+                                    } else {
+                                        $query->orWhereHas('attributes', function ($query) use ($param, $paramName) {
+                                            $query->where('attributes.slug', $paramName)
+                                                ->where('attribute_value.value', $param);
+                                        });
+                                    }
+                                }
+                        })
                     } else {
                         $query->whereHas('attributes', function ($query) use ($paramValue, $paramName) {
                             $query->where('attributes.slug', $paramName)
