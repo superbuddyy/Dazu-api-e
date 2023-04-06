@@ -29,6 +29,8 @@ class SearchService
         $query = Offer::query();
         $perPage = Arr::pull($searchArguments, 'limit', 12);
         if ($onlyVisible) {
+            var_dump("die");
+            die;
             $query->where('expire_time', '>', Carbon::now())
                 ->where(function ($query) {
                     $query->where('visible_from_date', '<', Carbon::now())
