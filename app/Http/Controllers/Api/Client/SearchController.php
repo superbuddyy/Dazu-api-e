@@ -37,7 +37,8 @@ class SearchController
             $request->get('order_by') ?? 'price',
             $request->get('order') ?? 'DESC'
         );
-
+        var_dump($offers);
+        die;
         return response()->success(new OfferCollection($offers));
     }
 
