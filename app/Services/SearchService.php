@@ -51,7 +51,8 @@ class SearchService
                     break;
             }
         }
-
+var_dump($query);
+die;
         $query = $this->buildQuery($searchArguments, $query);
 
         // $query->orderBy('raise_at', 'DESC');
