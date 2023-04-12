@@ -162,6 +162,10 @@ class UserController
     {
         $email = Auth::user()->email;
         $this->userManager->destroy();
+        
+        Auth::user()->deleted_at = Carbon::now();
+        Auth::user()->save();
+        
         // Auth::user()->offers()->delete();
         dispatch(new SendEmailJob(new UserDeleted($email)));
         return response()->success('', Response::HTTP_NO_CONTENT);
