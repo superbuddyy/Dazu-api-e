@@ -136,7 +136,8 @@ class ContactController extends Controller
     }
     public function sendConfirmMail($email,$data,$url)
     {
-        $template_data = ['email'=>$email, 'data'=>$data, 'url' => $url];
+        $template_data = ['email'=>$email, 'url_nav'=>$url, 
+        'verification_token'=>$data['verification_token'], 'data'=>$data, 'url' => $url];
         Mail::send('mail.contact.contact_confirmation', $template_data, function($message) use($request){
                 $message->to($request->email)->subject('Contact Confirmation');
         });
