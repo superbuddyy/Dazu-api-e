@@ -99,7 +99,7 @@ class ContactController extends Controller
         // }
         $user =  DB::table('users')->where('email', $request->email)->first();
         if ($user) {
-            $template_data = ['email'=>$request->email, 'name'=>$request->email, 'message' => $request->email, 'topic'=>$request->topic];
+            $template_data = ['email'=>$request->email, 'name'=>$request->name, 'message' => $request->message, 'topic'=>$request->topic];
             Mail::send('mail.contact.contact_form', $template_data, function($message) use($request){
                     $message->to($request->email)->subject('Contact Form');
             });
