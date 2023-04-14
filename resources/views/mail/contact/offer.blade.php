@@ -1,7 +1,7 @@
 @component('mail.layout')
     @lang('mail.contact_offer_content')
-    {{ $name . ' - ' . $email }}
+    asdfasdfsd
     <br>
-    <p>{{ $message }}</p><br><br>
+    <p>asdfsdfasd</p><br><br>
     @lang('mail.contact_offer_footer')
 @endcomponent
