@@ -56,7 +56,7 @@ class UserEventSubscriber
         // dispatch(new SendEmailJob(new NewsletterActivatedMail($event->user)));
 
         $template_data = ['emailBody'=>'', 'emailTitle'=>'', 'link' => ''];
-        Mail::send('mail.user.newsletter_activated', $template_data, function($message) use($request){
+        Mail::send('mail.user.newsletter_activated', $template_data, function($message) use($event){
             $message->to($event->user->email)->subject('Email Activation');
         });
     }
