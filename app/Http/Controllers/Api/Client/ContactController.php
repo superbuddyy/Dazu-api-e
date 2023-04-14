@@ -18,6 +18,7 @@ use App\Models\ContactEmails;
 use Illuminate\Support\Str;
 use App\Mail\Contact\ContactConfirmation;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 
 class ContactController extends Controller
 {
