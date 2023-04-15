@@ -110,11 +110,13 @@ class ContactController extends Controller
         // }
         $user =  DB::table('users')->where('email', $request->email)->first();
         if ($user) {
-            $template_data = ['email'=>'dazudeweloper1yahoocom', 'name'=>'asd', 'message' => 'message', 'topic'=>'topic'];
-            // $template_data = ['email'=>$request->email, 'name'=>$request->name, 'message' => $request->message, 'topic'=>$request->topic];
+            $template_data = ['email'=>$request->email, 
+            'emailTitle'=>$request->email,
+            'link'=>$request->email,
+            'name'=>$request->name, 'message' => $request->message, 'topic'=>$request->topic];
             // var_dump($template_data);
             // die;
-            Mail::send('mail.contact.contact_form', $template_data, function($message) use($request){
+            Mail::send('mail.user.register', $template_data, function($message) use($request){
                     $message->to($request->email)->subject('Contact Form');
             });
             return response()->success('', Response::HTTP_NO_CONTENT);
