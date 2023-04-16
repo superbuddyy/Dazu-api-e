@@ -27,10 +27,9 @@ class ContactController extends Controller
     {
         $user =  DB::table('users')->where('email', $request->email)->first();
         if ($user) {
-            $template_data = ['email'=>'nubby0208@gmail.com', 'name'=>'name', 'message' => 'message'];
-            // $template_data = ['email'=>$request->email, 'name'=>$request->name, 'message' => $request->message];
+            $template_data = ['email'=>$request->email, 'name'=>$request->name, 'message' => $request->message];
             Mail::send('mail.contact.offer', $template_data, function($message) use($request){
-                    $message->to('nubby0208@gmail.com')->subject('Offer Form');
+                    $message->to($request->email)->subject('Offer Form');
             });
             return response()->success('', Response::HTTP_NO_CONTENT);
         // }
