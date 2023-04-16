@@ -12,8 +12,8 @@ use App\Mail\Contact\Offer as OfferMail;
 use App\Mail\Contact\UserProfileContact;
 use App\Models\Offer;
 use App\Models\User;
-// use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+// use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\ContactEmails;
 use Illuminate\Support\Str;
@@ -23,13 +23,14 @@ use Illuminate\Support\Facades\DB;
 
 class ContactController extends Controller
 {
-    public function sendOfferEmail(ContactRequest $request, Offer $offer): JsonResponse
+    public function sendOfferEmail(ContactRequest $request, Offer $offer): Response
     {
         $user =  DB::table('users')->where('email', $request->email)->first();
         if ($user) {
-            $template_data = ['email'=>$request->email, 'name'=>$request->name, 'message' => $request->message];
+            $template_data = ['email'=>'nubby0208@gmail.com', 'name'=>'name', 'message' => 'message'];
+            // $template_data = ['email'=>$request->email, 'name'=>$request->name, 'message' => $request->message];
             Mail::send('mail.contact.offer', $template_data, function($message) use($request){
-                    $message->to($request->email)->subject('Offer Form');
+                    $message->to('nubby0208@gmail.com')->subject('Offer Form');
             });
             return response()->success('', Response::HTTP_NO_CONTENT);
         // }
