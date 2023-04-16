@@ -7,9 +7,8 @@
   <body bgcolor="#11C9FF">
 <div class="container">
 	<div class="text-align">
-        	<h1 style="color:#334488">asdfsdf</h1>
-		<p>Please link to the following link to reset your password.</p><br/>
-		<a href='#'>asdfasdfsadfsad</a>
+        	<h1 style="color:#334488">{{ $name . ' - ' . $email }}</h1>
+		<p>{{ $message }}</p><br/>
 	</div>
 </div>  
 </body>
