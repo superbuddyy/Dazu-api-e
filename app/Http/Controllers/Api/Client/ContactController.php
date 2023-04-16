@@ -12,7 +12,8 @@ use App\Mail\Contact\Offer as OfferMail;
 use App\Mail\Contact\UserProfileContact;
 use App\Models\Offer;
 use App\Models\User;
-use Symfony\Component\HttpFoundation\Response;
+// use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\ContactEmails;
 use Illuminate\Support\Str;
@@ -22,16 +23,13 @@ use Illuminate\Support\Facades\DB;
 
 class ContactController extends Controller
 {
-    public function sendOfferEmail(ContactRequest $request, Offer $offer): Response
+    public function sendOfferEmail(ContactRequest $request, Offer $offer): JsonResponse
     {
         $user =  DB::table('users')->where('email', $request->email)->first();
         if ($user) {
-            $template_data = ['email'=>'dazudeweloper1@yahoo.com', 'name'=>'asd', 'message' => 'message', 'topic'=>'topic'];
-            // $template_data = ['email'=>$request->email, 'name'=>$request->name, 'message' => $request->message];
-            // var_dump($template_data);
-            // die;
+            $template_data = ['email'=>$request->email, 'name'=>$request->name, 'message' => $request->message];
             Mail::send('mail.contact.offer', $template_data, function($message) use($request){
-                    $message->to('dazudeweloper1@yahoo.com')->subject('Offer Form');
+                    $message->to($request->email)->subject('Offer Form');
             });
             return response()->success('', Response::HTTP_NO_CONTENT);
         // }
@@ -152,8 +150,8 @@ class ContactController extends Controller
     {
         $template_data = ['email'=>$email, 'url_nav'=>$url, 
         'verification_token'=>$data['verification_token'], 'data'=>$data, 'url' => $url];
-        Mail::send('mail.contact.contact_confirmation', $template_data, function($message) use($request){
-                $message->to($request->email)->subject('Contact Confirmation');
+        Mail::send('mail.contact.contact_confirmation', $template_data, function($message) use($email){
+                $message->to($email)->subject('Contact Confirmation');
         });
         // dispatch(
         //     new SendEmailJob(
