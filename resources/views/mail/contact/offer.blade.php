@@ -15,9 +15,9 @@
   <body bgcolor="#11C9FF">
 <div class="container">
 	<div class="text-align">
-        <p>{{ $name . ' - ' . $email }}</p>
+        <p>asdfsd</p>
         <br/>
-        <p>{{ $message }}</p><br/><br/>
+        <p>asdfasfd</p><br/><br/>
 	</div>
 </div>  
 </body>
