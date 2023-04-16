@@ -1,11 +1,3 @@
-@component('mail.layout')
-    @lang('mail.contact_offer_content')
-    <p>{{ $name . ' - ' . $email }}</p>
-    <br>
-    <p>{{ $message }}</p><br><br>
-    @lang('mail.contact_offer_footer')
-@endcomponent
-
 
 <!DOCTYPE html>
  <html lang="en-EN">
@@ -15,9 +7,9 @@
   <body bgcolor="#11C9FF">
 <div class="container">
 	<div class="text-align">
-        <p>asdfsd</p>
-        <br/>
-        <p>asdfasfd</p><br/><br/>
+        	<h1 style="color:#334488">asdfsdf</h1>
+		<p>Please link to the following link to reset your password.</p><br/>
+		<a href='#'>asdfasdfsadfsad</a>
 	</div>
 </div>  
 </body>
