@@ -14,7 +14,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 // use Illuminate\Support\Facades\Mail;
 use Mail;
@@ -45,7 +44,7 @@ class SendNewsletterEmailJob implements ShouldQueue
     {
         try {
             if($this->newsletterMail->receiver == 'all'){
-                DB::table('users')->chunk(50, function ($users) {
+                User::chunk(50, function ($users) {
                         foreach ($users as $user) {
                             $template_data = [
                                 'email'=>$user->email,
