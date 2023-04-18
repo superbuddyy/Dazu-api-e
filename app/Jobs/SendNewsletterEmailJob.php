@@ -65,6 +65,7 @@ class SendNewsletterEmailJob implements ShouldQueue
                                 Mail::send('mail.newsletter.newsletter_mail', $template_data, function($message) use($user){
                                     $message->to($user->email)->subject('Newsletter');
                                 });
+                                var_dump('ok');
                             }
                             catch (Exception $e) {
                                 var_dump('error');
