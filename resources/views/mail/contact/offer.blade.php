@@ -8,7 +8,6 @@
 <div class="container">
 	<div class="text-align">
         	<h1 style="color:#334488">{{$name}}</h1><br/>
-        	<h1 style="color:#334488">{{$email}}</h1>
 		<p>{{$message}}</p><br/>
 	</div>
 </div>  
