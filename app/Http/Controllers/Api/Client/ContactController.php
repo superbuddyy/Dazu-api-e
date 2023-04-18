@@ -113,7 +113,7 @@ class ContactController extends Controller
             // var_dump($template_data);
             // die;
             Mail::send('mail.contact.contact_form', $template_data, function($message) use($request){
-                    $message->to($request->email)->subject('Contact Form');
+                    $message->to('info@dazu.pl')->subject('Contact Form');
             });
             return response()->success('', Response::HTTP_NO_CONTENT);
         }else {
