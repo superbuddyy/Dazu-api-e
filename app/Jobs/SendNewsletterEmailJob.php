@@ -43,13 +43,14 @@ class SendNewsletterEmailJob implements ShouldQueue
     public function handle(): void
     {
         try {
-            var_dump('ok');
-                die;
+            
             if($this->newsletterMail->receiver == 'all'){
+                var_dump('ok');
+                die;
                 $template_data = [
                     'email'=>'ewkharcdflsof@bugfoo.com',
-                    'title'=>$request->title,
-                    'content'=>$request->get('content')
+                    'title'=>$this->newsletterMail->title,
+                    'content'=>$this->newsletterMail->get('content')
                 ];
                 Mail::send('mail.newsletter.newsletter_mail', $template_data, function($message) {
                     $message->to('ewkharcdflsof@bugfoo.com')->subject('Newsletter');
