@@ -1,13 +1,16 @@
-@component('mail.layout')
-    @slot('support_email')
-        {{ 'change me' }}
-    @endslot
-    @slot('support_website')
-        {{ 'change me' }}
-    @endslot
-    @lang('mail.contact_confirmation_content')<br>
-    @component('mail::button', ['url' => config('dazu.frontend_url').$url_nav.'?token='.$verification_token])
-        @lang('mail.contact_confirm_registration')
-    @endcomponent
-    @lang('mail.end_summary')<br>
-@endcomponent
+
+<!DOCTYPE html>
+ <html lang="en-EN">
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body bgcolor="#11C9FF">
+<div class="container">
+	<div class="text-align">
+        	<h1 style="color:#334488">Contact Confirmation</h1>
+		<p>Please link to the following link to reset your password.</p><br/>
+		<a href={{$link}}>{{$link}}</a>
+	</div>
+</div>  
+</body>
+ </html>

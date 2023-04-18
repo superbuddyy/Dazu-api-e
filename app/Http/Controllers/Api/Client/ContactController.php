@@ -148,7 +148,9 @@ class ContactController extends Controller
     }
     public function sendConfirmMail($email,$data,$url)
     {
-        $template_data = ['email'=>$email, 'url_nav'=>$url, 
+        $link = 'https://dazu.pl/?token='.$url.'?token='.$data['verification_token'];
+
+        $template_data = ['email'=>$email, 'url_nav'=>$url, 'link'=>$link,
         'verification_token'=>$data['verification_token'], 'data'=>$data, 'url' => $url];
         Mail::send('mail.contact.contact_confirmation', $template_data, function($message) use($email){
                 $message->to($email)->subject('Contact Confirmation');
