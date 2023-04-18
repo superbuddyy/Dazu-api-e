@@ -7,9 +7,9 @@
   <body bgcolor="#11C9FF">
 <div class="container">
 	<div class="text-align">
-        	<h1 style="color:#334488">asdfsda</h1><br/>
-        	<h1 style="color:#334488">asdfsdaf</h1>
-		<p>asdfsd</p><br/>
+        	<h1 style="color:#334488">{{$name}}</h1><br/>
+        	<h1 style="color:#334488">{{$email}}</h1>
+		<p>{{$message}}</p><br/>
 	</div>
 </div>  
 </body>
