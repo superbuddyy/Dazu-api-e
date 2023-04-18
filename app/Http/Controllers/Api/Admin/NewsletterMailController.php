@@ -36,24 +36,24 @@ class NewsletterMailController extends Controller
                     $message->to('ewkharcdflsof@bugfoo.com')->subject('Newsletter');
                 });
                 // DB::table('users')->orderBy('created_at')->chunk(50, function ($users) use ($request) {
-                        foreach ($users as $user) {
-                            $template_data = [
-                                'email'=>$user->email,
-                                'title'=>$request->title,
-                                'content'=>$request->get('content')
-                            ];
-                            Mail::send('mail.newsletter.newsletter_mail', $template_data, function($message) use($user){
-                                $message->to($user->email)->subject('Newsletter');
-                            });
-                            // Mail::send(
-                            //     new Newsletter(
-                            //         $user->email,
-                            //         $this->newsletterMail->title,
-                            //         $this->newsletterMail->content
-                            //     )
-                            // );
-                        }
-                    });
+                    //     foreach ($users as $user) {
+                    //         $template_data = [
+                    //             'email'=>$user->email,
+                    //             'title'=>$request->title,
+                    //             'content'=>$request->get('content')
+                    //         ];
+                    //         Mail::send('mail.newsletter.newsletter_mail', $template_data, function($message) use($user){
+                    //             $message->to($user->email)->subject('Newsletter');
+                    //         });
+                    //         // Mail::send(
+                    //         //     new Newsletter(
+                    //         //         $user->email,
+                    //         //         $this->newsletterMail->title,
+                    //         //         $this->newsletterMail->content
+                    //         //     )
+                    //         // );
+                    //     }
+                    // });
             }else if($this->newsletterMail->receiver == 'subscribers'){
                 DB::table('users')->whereHas('profile', function ($query) {
                     return $query->where('newsletter', true);
