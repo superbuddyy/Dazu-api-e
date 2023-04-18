@@ -25,7 +25,7 @@ class NewsletterMailController extends Controller
         $result = NewsletterMail::create(['title' => $request->title, 'content' => $request->get('content'), 'receiver' => $request->receiver]);
         
         try {
-            if($this->newsletterMail->receiver == 'all'){
+            if($request->receiver == 'all'){
                 DB::table('users')->chunk(50, function ($users) {
                         foreach ($users as $user) {
                             $template_data = [
