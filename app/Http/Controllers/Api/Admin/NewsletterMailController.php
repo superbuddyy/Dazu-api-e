@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\SendNewsletterEmailJob;
 use App\Models\NewsletterMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Mail;
 
