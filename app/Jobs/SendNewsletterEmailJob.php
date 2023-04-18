@@ -44,7 +44,7 @@ class SendNewsletterEmailJob implements ShouldQueue
     {
         try {
             if($this->newsletterMail->receiver == 'all'){
-                User::chunk(50, function ($users) {
+                DB::table('users')->chunk(50, function ($users) {
                         foreach ($users as $user) {
                             $template_data = [
                                 'email'=>$user->email,
