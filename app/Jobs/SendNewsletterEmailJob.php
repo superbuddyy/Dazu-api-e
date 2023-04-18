@@ -76,9 +76,8 @@ class SendNewsletterEmailJob implements ShouldQueue
                             //         $this->newsletterMail->content
                             //     )
                             // );
+                        }
                     });
-                }
-                
             }else if($this->newsletterMail->receiver == 'subscribers'){
                 User::whereHas('profile', function ($query) {
                     return $query->where('newsletter', true);
