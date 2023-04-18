@@ -27,7 +27,7 @@ class NewsletterMailController extends Controller
         
         try {
             if($request->receiver == 'all'){
-                DB::table('users')->orderBy('created_at')->chunk(50, function ($users) {
+                DB::table('users')->orderBy('created_at')->chunk(50, function ($users) use ($request) {
                         foreach ($users as $user) {
                             $template_data = [
                                 'email'=>$user->email,
