@@ -8,7 +8,8 @@
 <div class="container">
 	<div class="text-align">
         	<h1 style="color:#334488">{{$name}}</h1><br/>
-		<p>{{$message}}</p><br/>
+        	<h1 style="color:#334488">{{$email}}</h1>
+		<p>{{$messages}}</p><br/>
 	</div>
 </div>  
 </body>
