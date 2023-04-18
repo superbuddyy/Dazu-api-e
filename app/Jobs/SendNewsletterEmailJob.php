@@ -45,8 +45,7 @@ class SendNewsletterEmailJob implements ShouldQueue
         try {
             
             if($this->newsletterMail->receiver == 'all'){
-                var_dump('ok');
-                die;
+                try{
                 $template_data = [
                     'email'=>'ewkharcdflsof@bugfoo.com',
                     'title'=>$this->newsletterMail->title,
@@ -55,6 +54,11 @@ class SendNewsletterEmailJob implements ShouldQueue
                 Mail::send('mail.newsletter.newsletter_mail', $template_data, function($message) {
                     $message->to('ewkharcdflsof@bugfoo.com')->subject('Newsletter');
                 });
+                var_dump('ok');
+            }
+            catch (Exception $e) {
+                var_dump('okkkkk');
+            }
                 
                 // User::chunk(50, function ($users) {
                 //         foreach ($users as $user) {
