@@ -45,13 +45,21 @@ class SendNewsletterEmailJob implements ShouldQueue
             if($this->newsletterMail->receiver == 'all'){
                 User::chunk(50, function ($users) {
                         foreach ($users as $user) {
-                            Mail::send(
-                                new Newsletter(
-                                    $user->email,
-                                    $this->newsletterMail->title,
-                                    $this->newsletterMail->content
-                                )
-                            );
+                            $template_data = [
+                                'email'=>$user->email,
+                                'title'=>$this->newsletterMail->title,
+                                'content'=>$this->newsletterMail->content
+                            ]
+                            Mail::send('mail.newsletter.newsletter_mail', $template_data, function($message) use($user){
+                                $message->to($user->email)->subject('Newsletter');
+                            });
+                            // Mail::send(
+                            //     new Newsletter(
+                            //         $user->email,
+                            //         $this->newsletterMail->title,
+                            //         $this->newsletterMail->content
+                            //     )
+                            // );
                         }
                     });
             }else if($this->newsletterMail->receiver == 'subscribers'){
