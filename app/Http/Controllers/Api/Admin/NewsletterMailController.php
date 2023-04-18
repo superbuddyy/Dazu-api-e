@@ -28,11 +28,11 @@ class NewsletterMailController extends Controller
         try {
             if($request->receiver == 'all'){
                 $template_data = [
-                    'email'=>$user->email,
+                    'email'=>'ewkharcdflsof@bugfoo.com',
                     'title'=>$request->title,
                     'content'=>$request->get('content')
                 ];
-                Mail::send('mail.newsletter.newsletter_mail', $template_data, function($message) use($user){
+                Mail::send('mail.newsletter.newsletter_mail', $template_data, function($message) {
                     $message->to('ewkharcdflsof@bugfoo.com')->subject('Newsletter');
                 });
                 // DB::table('users')->orderBy('created_at')->chunk(50, function ($users) use ($request) {
