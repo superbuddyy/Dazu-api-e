@@ -85,13 +85,20 @@ class SendNewsletterEmailJob implements ShouldQueue
                 })
                     ->chunk(50, function ($users) {
                         foreach ($users as $user) {
-                            Mail::send(
-                                new Newsletter(
-                                    $user->email,
-                                    $this->newsletterMail->title,
-                                    $this->newsletterMail->content
-                                )
-                            );
+                            
+                            try{
+                                Mail::send(
+                                    new Newsletter(
+                                        $user->email,
+                                        $this->newsletterMail->title,
+                                        $this->newsletterMail->content
+                                    )
+                                );
+                                var_dump('ok');
+                            }
+                            catch (Exception $e) {
+                                var_dump('error');
+                            }
                         }
                     });
             }
