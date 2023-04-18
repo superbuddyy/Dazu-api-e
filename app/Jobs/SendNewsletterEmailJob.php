@@ -49,7 +49,7 @@ class SendNewsletterEmailJob implements ShouldQueue
                                 'email'=>$user->email,
                                 'title'=>$this->newsletterMail->title,
                                 'content'=>$this->newsletterMail->content
-                            ]
+                            ];
                             Mail::send('mail.newsletter.newsletter_mail', $template_data, function($message) use($user){
                                 $message->to($user->email)->subject('Newsletter');
                             });
