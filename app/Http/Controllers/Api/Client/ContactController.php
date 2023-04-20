@@ -29,7 +29,7 @@ class ContactController extends Controller
         if ($user) {
             $template_data = ['email'=>$request->email, 'name'=>$request->name, 'messages' => $request->message];
             Mail::send('mail.contact.offer', $template_data, function($message) use($request){
-                    $message->to($request->email)->subject('Offer Form');
+                    $message->to($request->targetEmail)->subject('Offer Form');
             });
             return response()->success('', Response::HTTP_NO_CONTENT);
         // }
