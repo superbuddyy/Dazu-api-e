@@ -54,6 +54,8 @@ class OfferManager
 
         if ($randomOrder) {
             $query->inRandomOrder();
+        } else {
+            $query->orderBy('raise_at', 'DESC')
         }
 
         return $query->paginate(config('dazu.pagination.per_page'));
