@@ -25,27 +25,27 @@ class ContactController extends Controller
 {
     public function sendOfferEmail(ContactRequest $request, Offer $offer): Response
     {
-        $user =  DB::table('users')->where('email', $request->email)->first();
-        if ($user) {
-            $template_data = ['email'=>$request->email, 'name'=>$request->name, 'messages' => $request->message];
-            Mail::send('mail.contact.offer', $template_data, function($message) use($request){
-                    $message->to($request->targetEmail)->subject('Offer Form');
-            });
-            return response()->success('', Response::HTTP_NO_CONTENT);
-        // }
-        // if (User::where('email', $request->email)->exists()) {
-        //     dispatch(
-        //         new SendEmailJob(
-        //             new OfferMail(
-        //                 $request->email,
-        //                 $request->name,
-        //                 $request->message,
-        //                 $request->wantToSee,
-        //                 $offer
-        //             )
-        //         )
-        //     );
+        // $user =  DB::table('users')->where('email', $request->email)->first();
+        // if ($user) {
+        //     $template_data = ['email'=>$request->email, 'name'=>$request->name, 'messages' => $request->message];
+        //     Mail::send('mail.contact.offer', $template_data, function($message) use($request){
+        //             $message->to($request->targetEmail)->subject('Offer Form');
+        //     });
         //     return response()->success('', Response::HTTP_NO_CONTENT);
+        // }
+        if (User::where('email', $request->email)->exists()) {
+            dispatch(
+                new SendEmailJob(
+                    new OfferMail(
+                        $request->email,
+                        $request->name,
+                        $request->message,
+                        $request->wantToSee,
+                        $offer
+                    )
+                )
+            );
+            return response()->success('', Response::HTTP_NO_CONTENT);
         } else {
             $json_ary = [
                 'email' => $request->email,
