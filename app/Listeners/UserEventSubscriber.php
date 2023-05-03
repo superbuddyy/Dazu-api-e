@@ -25,13 +25,13 @@ class UserEventSubscriber
         $event->user->verification_token = Str::uuid()->toString();
         $event->user->save();
 
-        // dispatch(new SendEmailJob(new EmailConfirmation($event->user)));
+        dispatch(new SendEmailJob(new EmailConfirmation($event->user)));
 
-        $link = 'https://dazu.pl/dokoncz-rejestracje?token='.$event->user->verification_token;
-        $template_data = ['emailBody'=>'Activation', 'emailTitle'=>'Activation', 'link' => $link];
-        Mail::send('mail.user.register', $template_data, function($message) use($event){
-                $message->to($event->user->email)->subject('Email Activation');
-        });
+        // $link = 'https://dazu.pl/dokoncz-rejestracje?token='.$event->user->verification_token;
+        // $template_data = ['emailBody'=>'Activation', 'emailTitle'=>'Activation', 'link' => $link];
+        // Mail::send('mail.user.register', $template_data, function($message) use($event){
+        //         $message->to($event->user->email)->subject('Email Activation');
+        // });
     }
 
     /**
