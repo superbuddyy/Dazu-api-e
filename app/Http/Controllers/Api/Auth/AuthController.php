@@ -111,43 +111,42 @@ class AuthController extends BaseController
     public function resendEmail(Request $request): JsonResponse
     {
         
-
-        // $user = User::where('email', $request->get('email'))->first();
-        // if ($user) {
-        //     if ($user->email_verified_at == null){
-        //         $user->verification_token = Str::uuid()->toString();
-        //         $user->save();
-        //         dispatch(new SendEmailJob(new EmailConfirmation($user)));
-        //         return response()->success('Mail sent', Response::HTTP_OK);    
-        //     } else {
-        //         return response()->success('Already activated', Response::HTTP_OK);    
-        //     }    
-        // } else {
-        //     return response()->error('Invalid email');
-        // }
-
-        $user =  DB::table('users')->where('email', $request->email)->first();
-        // $user = User::where('email', $request->email)->first();
-        if($user){
-            if($user->email_verified_at == null){
-                $token = Hash::make($request->time);
-                // var_dump($user);
-                $user->verification_token = $token;
-                $update =  DB::table('users')->where('email', $request->email)->update(['verification_token'=>$token]);
-                // $user->update(['verification_token'=>$token]);
-                // $user->save();
-                $link = 'https://dazu.pl/dokoncz-rejestracje?token='.$token;
-                $template_data = ['emailBody'=>'Activation', 'emailTitle'=>'Activation', 'link' => $link];
-                Mail::send('mail.user.register', $template_data, function($message) use($request){
-                        $message->to($request->email)->subject('Email Activation');
-                });
+        $user = User::where('email', $request->get('email'))->first();
+        if ($user) {
+            if ($user->email_verified_at == null){
+                $user->verification_token = Str::uuid()->toString();
+                $user->save();
+                dispatch(new SendEmailJob(new EmailConfirmation($user)));
                 return response()->success('Mail sent', Response::HTTP_OK);    
             } else {
                 return response()->success('Already activated', Response::HTTP_OK);    
-            } 
+            }    
         } else {
             return response()->error('Invalid email');
         }
+
+        // $user =  DB::table('users')->where('email', $request->email)->first();
+        // // $user = User::where('email', $request->email)->first();
+        // if($user){
+        //     if($user->email_verified_at == null){
+        //         $token = Hash::make($request->time);
+        //         // var_dump($user);
+        //         $user->verification_token = $token;
+        //         $update =  DB::table('users')->where('email', $request->email)->update(['verification_token'=>$token]);
+        //         // $user->update(['verification_token'=>$token]);
+        //         // $user->save();
+        //         $link = 'https://dazu.pl/dokoncz-rejestracje?token='.$token;
+        //         $template_data = ['emailBody'=>'Activation', 'emailTitle'=>'Activation', 'link' => $link];
+        //         Mail::send('mail.user.register', $template_data, function($message) use($request){
+        //                 $message->to($request->email)->subject('Email Activation');
+        //         });
+        //         return response()->success('Mail sent', Response::HTTP_OK);    
+        //     } else {
+        //         return response()->success('Already activated', Response::HTTP_OK);    
+        //     } 
+        // } else {
+        //     return response()->error('Invalid email');
+        // }
 
     }
     public function setPassword(SetPasswordRequest $request): JsonResponse
