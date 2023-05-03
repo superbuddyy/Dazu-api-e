@@ -53,12 +53,12 @@ class UserEventSubscriber
 
     public function onNewsletterActivated(NewsletterActivated $event)
     {
-        // dispatch(new SendEmailJob(new NewsletterActivatedMail($event->user)));
+        dispatch(new SendEmailJob(new NewsletterActivatedMail($event->user)));
 
-        $template_data = ['emailBody'=>'', 'emailTitle'=>'', 'link' => ''];
-        Mail::send('mail.user.newsletter_activated', $template_data, function($message) use($event){
-            $message->to($event->user->email)->subject('Email Activation');
-        });
+        // $template_data = ['emailBody'=>'', 'emailTitle'=>'', 'link' => ''];
+        // Mail::send('mail.user.newsletter_activated', $template_data, function($message) use($event){
+        //     $message->to($event->user->email)->subject('Email Activation');
+        // });
     }
 
     public function subscribe(Dispatcher $events): void
