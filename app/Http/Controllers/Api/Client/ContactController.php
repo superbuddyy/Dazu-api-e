@@ -93,30 +93,30 @@ class ContactController extends Controller
 
     public function sendContactForm(ContactRequest $request): Response
     {
-        // if (User::where('email', $request->email)->exists()) {
-        //     dispatch(
-        //         new SendEmailJob(
-        //             new ContactForm(
-        //                 $request->email,
-        //                 $request->name,
-        //                 $request->message,
-        //                 $request->topic
-        //             )
-        //         )
-        //     );
-        //     return response()->success('', Response::HTTP_NO_CONTENT);
-        // }
-        $user =  DB::table('users')->where('email', $request->email)->first();
-        if ($user) {
-            // $template_data = ['email'=>'dazudeweloper1yahoocom', 'name'=>'asd', 'message' => 'message', 'topic'=>'topic'];
-            $template_data = ['email'=>$request->email, 'name'=>$request->name, 'messages' => $request->message, 'topic'=>$request->topic];
-            // var_dump($template_data);
-            // die;
-            Mail::send('mail.contact.contact_form', $template_data, function($message) use($request){
-                    $message->to('info@dazu.pl')->subject('Contact Form');
-            });
+        if (User::where('email', $request->email)->exists()) {
+            dispatch(
+                new SendEmailJob(
+                    new ContactForm(
+                        $request->email,
+                        $request->name,
+                        $request->message,
+                        $request->topic
+                    )
+                )
+            );
             return response()->success('', Response::HTTP_NO_CONTENT);
-        }else {
+        }
+        // $user =  DB::table('users')->where('email', $request->email)->first();
+        // if ($user) {
+        //     // $template_data = ['email'=>'dazudeweloper1yahoocom', 'name'=>'asd', 'message' => 'message', 'topic'=>'topic'];
+        //     $template_data = ['email'=>$request->email, 'name'=>$request->name, 'messages' => $request->message, 'topic'=>$request->topic];
+        //     // var_dump($template_data);
+        //     // die;
+        //     Mail::send('mail.contact.contact_form', $template_data, function($message) use($request){
+        //             $message->to('info@dazu.pl')->subject('Contact Form');
+        //     });
+        //     return response()->success('', Response::HTTP_NO_CONTENT);
+        else {
             $json_ary = [
                 'email' => $request->email,
                 'name' => $request->name,
