@@ -45,38 +45,22 @@ class SendNewsletterEmailJob implements ShouldQueue
         try {
             
             if($this->newsletterMail->receiver == 'all'){
-                    // $template_data = [
-                    //     'email'=>'ewkharcdflsof@bugfoo.com',
-                    //     'title'=>$this->newsletterMail->title,
-                    //     'content'=>$this->newsletterMail->get('content')
-                    // ];
-                    // Mail::send('mail.newsletter.newsletter_mail', $template_data, function($message) {
-                    //     $message->to('ewkharcdflsof@bugfoo.com')->subject('Newsletter');
-                    // });
-                    // var_dump('ok');
                     User::chunk(50, function ($users) {
                         foreach ($users as $user) {
-                            $template_data = [
-                                'email'=>$user->email,
-                                'title'=>$this->newsletterMail->title,
-                                'content'=>$this->newsletterMail->content
-                            ];
                             try{
-                                Mail::send('mail.newsletter.newsletter_mail', $template_data, function($message) use($user){
-                                    $message->to($user->email)->subject('Newsletter');
-                                });
+                                Mail::send(
+                                    new Newsletter(
+                                        $user->email,
+                                        $this->newsletterMail->title,
+                                        $this->newsletterMail->content
+                                    )
+                                );
                                 var_dump('ok');
                             }
                             catch (Exception $e) {
                                 var_dump('error');
                             }
-                            // Mail::send(
-                            //     new Newsletter(
-                            //         $user->email,
-                            //         $this->newsletterMail->title,
-                            //         $this->newsletterMail->content
-                            //     )
-                            // );
+                            
                         }
                     });
             }else if($this->newsletterMail->receiver == 'subscribers'){
