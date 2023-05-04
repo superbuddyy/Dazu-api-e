@@ -42,13 +42,13 @@ class UserEventSubscriber
         $event->user->verification_token = Str::uuid()->toString();
         $event->user->save();
 
-        // dispatch(new SendEmailJob(new SetPassword($event->user, SetPassword::AGENT)));
+        dispatch(new SendEmailJob(new SetPassword($event->user, SetPassword::AGENT)));
 
-        $link = 'https://dazu.pl/ustaw-haslo?token='.$event->user->verification_token;
-        $template_data = ['emailBody'=>'Activation', 'emailTitle'=>'Activation', 'link' => $link];
-        Mail::send('mail.user.set_password', $template_data, function($message) use($event){
-                $message->to($event->user->email)->subject('Email Activation');
-        });
+        // $link = 'https://dazu.pl/ustaw-haslo?token='.$event->user->verification_token;
+        // $template_data = ['emailBody'=>'Activation', 'emailTitle'=>'Activation', 'link' => $link];
+        // Mail::send('mail.user.set_password', $template_data, function($message) use($event){
+        //         $message->to($event->user->email)->subject('Email Activation');
+        // });
     }
 
     public function onNewsletterActivated(NewsletterActivated $event)
