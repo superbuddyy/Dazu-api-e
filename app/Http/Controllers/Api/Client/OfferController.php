@@ -199,7 +199,7 @@ class OfferController
                 event(new OfferCreated($offer, $user));
             } else {
                 event(new UserCreated($user));
-                event(new OfferCreated($offer, $user));
+                // event(new OfferCreated($offer, $user));
             }
             return response()->success(new OfferExtendedResource($offer, $offerToken), Response::HTTP_CREATED);
         } catch (UserExists $e) {
