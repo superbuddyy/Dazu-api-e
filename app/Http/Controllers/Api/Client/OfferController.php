@@ -110,12 +110,18 @@ class OfferController
         DB::beginTransaction();
 
         try {
-            $user = Auth::user() ?: $this->userManager->createUser(
-                $request->get('email'),
-                $request->get('password'),
-                $request->get('name'),
-                $request->get('type')
-            );
+            if(Auth::user()) {
+                $user = Auth::user();
+            }else{
+                $user = $this->userManager->createUser(
+                    $request->get('email'),
+                    $request->get('password'),
+                    $request->get('name'),
+                    $request->get('type')
+                );
+                event(new UserCreated($user));
+            }
+            
 
             $offer = $this->offerManager->store(
                 $request->get('title'),
@@ -195,12 +201,8 @@ class OfferController
                 );
             }
 
-            if (Auth::user()) {
-                event(new OfferCreated($offer, $user));
-            } else {
-                event(new UserCreated($user));
-                // event(new OfferCreated($offer, $user));
-            }
+            event(new OfferCreated($offer, $user));
+
             return response()->success(new OfferExtendedResource($offer, $offerToken), Response::HTTP_CREATED);
         } catch (UserExists $e) {
             DB::rollBack();
