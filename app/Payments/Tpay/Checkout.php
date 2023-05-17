@@ -22,6 +22,7 @@ class Checkout extends TransactionApi
 
     public function createOrder(string $refId, int $amount, string $platform)
     {
+        var_dump($platform);
         $basic_return_url = config('dazu.frontend_url') . '?payment-status=success';
         $return_url = '';
         if($platform === 'mobile'){
