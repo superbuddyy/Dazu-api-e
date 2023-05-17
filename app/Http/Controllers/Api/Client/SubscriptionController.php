@@ -92,7 +92,7 @@ class SubscriptionController
             }
             $checkout = new Checkout($request->get('gateway', Checkout::TPAY_SLUG));
 
-            $platform = $request->get('platform') :: 'desktop';
+            $platform = $request->get('platform') ?? 'desktop';
             $result = $checkout->createOrder($ref, $price, $platform);
             if ($result === false) {
                 return response()->errorWithLog(
