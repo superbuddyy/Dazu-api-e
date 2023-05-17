@@ -91,8 +91,9 @@ class SubscriptionController
                 ];
             }
             $checkout = new Checkout($request->get('gateway', Checkout::TPAY_SLUG));
-
-            $result = $checkout->createOrder($ref, $price);
+            
+            $platform = $request->get('platform');
+            $result = $checkout->createOrder($ref . ':' . $platform, $price);
             if ($result === false) {
                 return response()->errorWithLog(
                     'failed to create order',

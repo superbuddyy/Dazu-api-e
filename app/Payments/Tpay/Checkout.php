@@ -22,13 +22,14 @@ class Checkout extends TransactionApi
 
     public function createOrder(string $refId, int $amount)
     {
+        list($real_refId, $platform) = split('[:]', $refId);
         $config = array(
             'amount' => $amount / 100,  // Divide by 100, because we keep amounts in int.
             'description' => 'Opłata dazu.pl',
-            'crc' => $refId,
+            'crc' => $real_refId,
             'result_url' => 'https://dazu.pl/api/payments/callback?gateway=tpay',
             'result_email' => config('dazu.company_info.email'),
-            'return_url' => config('dazu.frontend_url') . '?payment-status=success',
+            'return_url' => $platform == 'desktop' ? config('dazu.frontend_url') . '?payment-status=success' : 'm' . config('dazu.frontend_url') . '?payment-status=success',
             'email' => 'dazunieruchomosci@gmail.com',
             'name' => 'John Doe',
             'group' => 150,
