@@ -514,7 +514,8 @@ class OfferController
 
             $checkout = new Checkout($request->get('gateway'));
 
-            $result = $checkout->createOrder($ref, $offerSubscription->refresh_price);
+            $platform = $request->get('platform');
+            $result = $checkout->createOrder($ref, $offerSubscription->refresh_price, $platform);
             if ($result === false) {
                 return response()->errorWithLog(
                     'failed to create order',
@@ -644,7 +645,9 @@ class OfferController
             $bill = $offer->calculateBill();
 
             $checkout = new Checkout($request->get('gateway'));
-            $result = $checkout->createOrder($ref, $bill['billAmount'] + $additionalAmount);
+            
+            $platform = $request->get('platform');
+            $result = $checkout->createOrder($ref, $bill['billAmount'] + $additionalAmount, $platform);
             if ($result === false) {
                 return response()->errorWithLog(
                     'failed to create order',
@@ -762,7 +765,8 @@ class OfferController
 
             $checkout = new Checkout($request->get('gateway'));
 
-            $result = $checkout->createOrder($ref, $offerSubscription->raise_price);
+            $platform = $request->get('platform');
+            $result = $checkout->createOrder($ref, $offerSubscription->raise_price, $platform);
             if ($result === false) {
                 return response()->errorWithLog(
                     'failed to create order',

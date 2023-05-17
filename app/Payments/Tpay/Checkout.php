@@ -20,8 +20,14 @@ class Checkout extends TransactionApi
         parent::__construct();
     }
 
-    public function createOrder(string $refId, int $amount)
+    public function createOrder(string $refId, int $amount, string $platform)
     {
+        $basic_return_url = config('dazu.frontend_url') . '?payment-status=success';
+        if($platform == 'mobile')
+            $return_url = 'm' . $basic_return_url;
+        else if($platform == 'desktop')
+            $return_url = $basic_return_url;
+
         $config = array(
             'amount' => $amount / 100,  // Divide by 100, because we keep amounts in int.
             'description' => 'Opłata dazu.pl',

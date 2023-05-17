@@ -184,7 +184,9 @@ class UserController
             $price = Setting::where('name', "avatar_$avatarType.price")->firstOrFail()['value'];
 
             $checkout = new Checkout($request->get('gateway', Checkout::TPAY_SLUG));
-            $result = $checkout->createOrder($ref, (int)$price);
+            
+            $platform = $request->get('platform');
+            $result = $checkout->createOrder($ref, (int)$price, $platform);
             if ($result === false) {
                 return response()->errorWithLog(
                     'failed to create order',
