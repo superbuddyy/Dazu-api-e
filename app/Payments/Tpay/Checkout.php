@@ -20,25 +20,15 @@ class Checkout extends TransactionApi
         parent::__construct();
     }
 
-    public function createOrder(string $refId, int $amount, string $platform)
+    public function createOrder(string $refId, int $amount)
     {
-        var_dump($platform);
-        die;
-        $basic_return_url = config('dazu.frontend_url') . '?payment-status=success';
-        $return_url = '';
-        if($platform === 'mobile'){
-            $return_url = $basic_return_url;
-        }else if($platform === 'desktop'){
-            $return_url = $basic_return_url;
-        }
-
         $config = array(
             'amount' => $amount / 100,  // Divide by 100, because we keep amounts in int.
             'description' => 'Opłata dazu.pl',
             'crc' => $refId,
             'result_url' => 'https://dazu.pl/api/payments/callback?gateway=tpay',
             'result_email' => config('dazu.company_info.email'),
-            'return_url' => $return_url,
+            'return_url' => config('dazu.frontend_url') . '?payment-status=success',
             'email' => 'dazunieruchomosci@gmail.com',
             'name' => 'John Doe',
             'group' => 150,

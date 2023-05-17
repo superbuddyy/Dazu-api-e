@@ -515,7 +515,7 @@ class OfferController
             $checkout = new Checkout($request->get('gateway'));
 
             $platform = $request->get('platform');
-            $result = $checkout->createOrder($ref, $offerSubscription->refresh_price, $platform);
+            $result = $checkout->createOrder($ref, $offerSubscription->refresh_price);
             if ($result === false) {
                 return response()->errorWithLog(
                     'failed to create order',
@@ -548,7 +548,11 @@ class OfferController
                 '120'
             );
 
-            return response()->success($checkout->extractUrl($result));
+            $platform = $request->get('platform');
+            if($platform == 'mobile')
+                return response()->success('m' . $checkout->extractUrl($result));
+            else if($platform == 'desktop')
+                return response()->success($checkout->extractUrl($result));
         }
 
         $this->offerManager->refresh($offer);
@@ -647,7 +651,7 @@ class OfferController
             $checkout = new Checkout($request->get('gateway'));
             
             $platform = $request->get('platform');
-            $result = $checkout->createOrder($ref, $bill['billAmount'] + $additionalAmount, $platform);
+            $result = $checkout->createOrder($ref, $bill['billAmount'] + $additionalAmount);
             if ($result === false) {
                 return response()->errorWithLog(
                     'failed to create order',
@@ -687,7 +691,11 @@ class OfferController
                 '120'
             );
             DB::commit();
-            return response()->success($checkout->extractUrl($result));
+            $platform = $request->get('platform');
+            if($platform == 'mobile')
+                return response()->success('m' . $checkout->extractUrl($result));
+            else if($platform == 'desktop')
+                return response()->success($checkout->extractUrl($result));
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(
@@ -698,6 +706,11 @@ class OfferController
                     'error_msg' => $e->getMessage(),
                 ]
             );
+            $platform = $request->get('platform');
+            if($platform == 'mobile')
+                return response()->success('m' . config('dazu.frontend_url') . '?payment-status=fail');
+            else if($platform == 'desktop')
+                return response()->success(config('dazu.frontend_url') . '?payment-status=fail');
             return response()->success(config('dazu.frontend_url') . '?payment-status=fail');
         }
     }
@@ -765,8 +778,7 @@ class OfferController
 
             $checkout = new Checkout($request->get('gateway'));
 
-            $platform = $request->get('platform');
-            $result = $checkout->createOrder($ref, $offerSubscription->raise_price, $platform);
+            $result = $checkout->createOrder($ref, $offerSubscription->raise_price);
             if ($result === false) {
                 return response()->errorWithLog(
                     'failed to create order',
@@ -800,7 +812,11 @@ class OfferController
                 '120'
             );
 
-            return response()->success($checkout->extractUrl($result));
+            $platform = $request->get('platform');
+            if($platform == 'mobile')
+                return response()->success('m' . $checkout->extractUrl($result));
+            else if($platform == 'desktop')
+                return response()->success($checkout->extractUrl($result));
         }
 
         $this->offerManager->raise($offer);

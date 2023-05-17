@@ -92,8 +92,7 @@ class SubscriptionController
             }
             $checkout = new Checkout($request->get('gateway', Checkout::TPAY_SLUG));
 
-            $platform = $request->get('platform') ?? 'desktop';
-            $result = $checkout->createOrder($ref, $price, $platform);
+            $result = $checkout->createOrder($ref, $price);
             if ($result === false) {
                 return response()->errorWithLog(
                     'failed to create order',
@@ -121,7 +120,12 @@ class SubscriptionController
                 '120'
             );
             DB::commit();
-            return response()->success($checkout->extractUrl($result));
+
+            $platform = $request->get('platform');
+            if($platform == 'mobile')
+                return response()->success('m' . $checkout->extractUrl($result));
+            else if($platform == 'desktop')
+                return response()->success($checkout->extractUrl($result));
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(

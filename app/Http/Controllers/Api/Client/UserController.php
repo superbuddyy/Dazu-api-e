@@ -185,8 +185,7 @@ class UserController
 
             $checkout = new Checkout($request->get('gateway', Checkout::TPAY_SLUG));
             
-            $platform = $request->get('platform');
-            $result = $checkout->createOrder($ref, (int)$price, $platform);
+            $result = $checkout->createOrder($ref, (int)$price);
             if ($result === false) {
                 return response()->errorWithLog(
                     'failed to create order',
@@ -230,7 +229,11 @@ class UserController
                 '120'
             );
             DB::commit();
-            return response()->success($checkout->extractUrl($result));
+            $platform = $request->get('platform');
+            if($platform == 'mobile')
+                return response()->success('m' . $checkout->extractUrl($result));
+            else if($platform == 'desktop')
+                return response()->success($checkout->extractUrl($result));
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(
