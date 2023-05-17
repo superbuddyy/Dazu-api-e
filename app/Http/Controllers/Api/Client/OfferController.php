@@ -548,11 +548,7 @@ class OfferController
                 '120'
             );
 
-            $platform = $request->get('platform');
-            if($platform == 'mobile')
-                return response()->success('m' . $checkout->extractUrl($result));
-            else if($platform == 'desktop')
-                return response()->success($checkout->extractUrl($result));
+            return response()->success($checkout->extractUrl($result));
         }
 
         $this->offerManager->refresh($offer);
@@ -691,11 +687,8 @@ class OfferController
                 '120'
             );
             DB::commit();
-            $platform = $request->get('platform');
-            if($platform == 'mobile')
-                return response()->success('m' . $checkout->extractUrl($result));
-            else if($platform == 'desktop')
-                return response()->success($checkout->extractUrl($result));
+            
+            return response()->success($checkout->extractUrl($result));
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(
@@ -706,11 +699,6 @@ class OfferController
                     'error_msg' => $e->getMessage(),
                 ]
             );
-            $platform = $request->get('platform');
-            if($platform == 'mobile')
-                return response()->success('m' . config('dazu.frontend_url') . '?payment-status=fail');
-            else if($platform == 'desktop')
-                return response()->success(config('dazu.frontend_url') . '?payment-status=fail');
             return response()->success(config('dazu.frontend_url') . '?payment-status=fail');
         }
     }
@@ -812,11 +800,7 @@ class OfferController
                 '120'
             );
 
-            $platform = $request->get('platform');
-            if($platform == 'mobile')
-                return response()->success('m' . $checkout->extractUrl($result));
-            else if($platform == 'desktop')
-                return response()->success($checkout->extractUrl($result));
+            return response()->success($checkout->extractUrl($result));
         }
 
         $this->offerManager->raise($offer);

@@ -121,11 +121,7 @@ class SubscriptionController
             );
             DB::commit();
 
-            $platform = $request->get('platform');
-            if($platform == 'mobile')
-                return response()->success('m' . $checkout->extractUrl($result));
-            else if($platform == 'desktop')
-                return response()->success($checkout->extractUrl($result));
+            return response()->success($checkout->extractUrl($result));
         } catch (Exception $e) {
             DB::rollBack();
             Log::error(
