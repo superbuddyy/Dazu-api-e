@@ -94,6 +94,7 @@ class SubscriptionController
 
             $platform = $request->get('platform') ?? 'desktop';
             var_dump($platform);
+            die;
             $result = $checkout->createOrder($ref, $price, $platform);
             if ($result === false) {
                 return response()->errorWithLog(
