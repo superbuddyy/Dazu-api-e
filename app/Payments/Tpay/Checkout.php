@@ -24,9 +24,9 @@ class Checkout extends TransactionApi
     {
         $basic_return_url = config('dazu.frontend_url') . '?payment-status=success';
         $return_url = '';
-        if($platform == 'mobile'){
+        if($platform === 'mobile'){
             $return_url = 'm' . $basic_return_url;
-        }else if($platform == 'desktop'){
+        }else if($platform === 'desktop'){
             $return_url = $basic_return_url;
         }
 
