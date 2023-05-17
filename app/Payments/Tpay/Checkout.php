@@ -23,10 +23,12 @@ class Checkout extends TransactionApi
     public function createOrder(string $refId, int $amount, string $platform)
     {
         $basic_return_url = config('dazu.frontend_url') . '?payment-status=success';
-        if($platform == 'mobile')
+        $return_url = '';
+        if($platform == 'mobile'){
             $return_url = 'm' . $basic_return_url;
-        else if($platform == 'desktop')
+        }else if($platform == 'desktop'){
             $return_url = $basic_return_url;
+        }
 
         $config = array(
             'amount' => $amount / 100,  // Divide by 100, because we keep amounts in int.
@@ -34,7 +36,7 @@ class Checkout extends TransactionApi
             'crc' => $refId,
             'result_url' => 'https://dazu.pl/api/payments/callback?gateway=tpay',
             'result_email' => config('dazu.company_info.email'),
-            'return_url' => config('dazu.frontend_url') . '?payment-status=success',
+            'return_url' => $return_url,
             'email' => 'dazunieruchomosci@gmail.com',
             'name' => 'John Doe',
             'group' => 150,
