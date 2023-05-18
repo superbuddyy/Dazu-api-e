@@ -26,13 +26,18 @@ class Checkout extends TransactionApi
         $real_refId = $splitRefId[0];
         $platform = $splitRefId[1];
 
+        if($platform === 'desktop')
+            $return_url = config('dazu.frontend_url') . '?payment-status=success';
+        else if($platform === 'mobile')
+            $return_url = config('dazu.mobile_frontend_url') . '?payment-status=success';
+
         $config = array(
             'amount' => $amount / 100,  // Divide by 100, because we keep amounts in int.
             'description' => 'Opłata dazu.pl',
             'crc' => $real_refId,
             'result_url' => 'https://dazu.pl/api/payments/callback?gateway=tpay',
             'result_email' => config('dazu.company_info.email'),
-            'return_url' => $platform == 'desktop' ? config('dazu.frontend_url') . '?payment-status=success' : config('dazu.mobile_frontend_url') . '?payment-status=success',
+            'return_url' => $return_url,
             'email' => 'dazunieruchomosci@gmail.com',
             'name' => 'John Doe',
             'group' => 150,
