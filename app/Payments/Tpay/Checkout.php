@@ -22,7 +22,10 @@ class Checkout extends TransactionApi
 
     public function createOrder(string $refId, int $amount)
     {
-        list($real_refId, $platform) = split('[:]', $refId);
+        $splitRefId = explode(':', $refId); 
+        $real_refId = $splitRefId[0];
+        $platform = $splitRefId[1];
+
         $config = array(
             'amount' => $amount / 100,  // Divide by 100, because we keep amounts in int.
             'description' => 'Opłata dazu.pl',
