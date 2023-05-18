@@ -514,6 +514,10 @@ class OfferController
 
             $checkout = new Checkout($request->get('gateway'));
             $platform = $request->get('platform');
+
+            var_dump($ref . ':' . $platform);
+            die;
+
             $result = $checkout->createOrder($ref . ':' . $platform, $offerSubscription->refresh_price);
             if ($result === false) {
                 return response()->errorWithLog(
@@ -546,8 +550,9 @@ class OfferController
                 'EX',
                 '120'
             );
+            // return response()->success($checkout->extractUrl($result));
 
-            return response()->success($checkout->extractUrl($result));
+            return response()->success('');
         }
 
         $this->offerManager->refresh($offer);

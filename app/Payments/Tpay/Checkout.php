@@ -26,9 +26,6 @@ class Checkout extends TransactionApi
         $real_refId = $splitRefId[0];
         $platform = $splitRefId[1];
 
-        var_dump($platform);
-        die;
-        
         $return_url = '';
         if($platform === 'desktop')
             $return_url = config('dazu.frontend_url') . '?payment-status=success';
