@@ -547,9 +547,9 @@ class OfferController
                 'EX',
                 '120'
             );
-            // return response()->success($checkout->extractUrl($result));
+            return response()->success($checkout->extractUrl($result));
 
-            return response()->success('');
+            // return response()->success('');
         }
 
         $this->offerManager->refresh($offer);
