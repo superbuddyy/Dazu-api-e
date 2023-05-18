@@ -22,7 +22,7 @@ class Checkout extends TransactionApi
 
     public function createOrder(string $refId, int $amount)
     {
-        $splitRefId = explode(':', $refId); 
+        $splitRefId = explode('/', $refId); 
         $real_refId = $splitRefId[0];
         $platform = $splitRefId[1];
 
