@@ -19,6 +19,7 @@ return [
         'secret' => env('CAPTCHA_SECRET', '6LdeEN4UAAAAAFiL15UVm-Kg023wTRgPJBdXVFey'),
     ],
     'frontend_url' => env('FRONT_URL'),
+    'mobile_frontend_url' => env('MOBILE_FRONT_URL'),
     'email' => [
         'from_address' => env('MAIL_FROM_ADDRESS'),
         'from_name' => env('MAIL_FROM_NAME'),

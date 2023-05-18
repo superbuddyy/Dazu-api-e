@@ -32,7 +32,7 @@ class Checkout extends TransactionApi
             'crc' => $real_refId,
             'result_url' => 'https://dazu.pl/api/payments/callback?gateway=tpay',
             'result_email' => config('dazu.company_info.email'),
-            'return_url' => $platform == 'desktop' ? config('dazu.frontend_url') . '?payment-status=success' : 'm' . config('dazu.frontend_url') . '?payment-status=success',
+            'return_url' => $platform == 'desktop' ? config('dazu.frontend_url') . '?payment-status=success' : config('dazu.mobile_frontend_url') . '?payment-status=success',
             'email' => 'dazunieruchomosci@gmail.com',
             'name' => 'John Doe',
             'group' => 150,
