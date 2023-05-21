@@ -364,6 +364,8 @@ class OfferManager
     public function raise(Offer $offer): bool
     {
         $offer->raise_at = Carbon::now();
+        // $offer->expire_time = Carbon::now()->addHours(168);
+        // $offer->status = OfferStatus::ACTIVE;
         $offer->raise_count++;
         return $offer->save();
     }
