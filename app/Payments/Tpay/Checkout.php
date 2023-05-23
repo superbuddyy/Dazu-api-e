@@ -26,11 +26,11 @@ class Checkout extends TransactionApi
         $real_refId = $splitRefId[0];
         $platform = $splitRefId[1];
 
-        $return_url = '';
+        $basic_url = '';
         if($platform === 'desktop')
-            $return_url = config('dazu.frontend_url') . '?payment-status=success';
+            $basic_url = config('dazu.frontend_url');
         else if($platform === 'mobile')
-            $return_url = config('dazu.mobile_frontend_url') . '?payment-status=success';
+            $basic_url = config('dazu.mobile_frontend_url');
 
         $config = array(
             'amount' => $amount / 100,  // Divide by 100, because we keep amounts in int.
@@ -38,7 +38,8 @@ class Checkout extends TransactionApi
             'crc' => $real_refId,
             'result_url' => 'https://dazu.pl/api/payments/callback?gateway=tpay',
             'result_email' => config('dazu.company_info.email'),
-            'return_url' => $return_url,
+            'return_url' => $basic_url . '?payment-status=success',
+            'return_error_url': $basic_url . '?payment-status=fail',
             'email' => 'dazunieruchomosci@gmail.com',
             'name' => 'John Doe',
             'group' => 150,
