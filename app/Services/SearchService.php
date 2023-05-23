@@ -37,7 +37,7 @@ class SearchService
                     ->where('status', OfferStatus::ACTIVE)
                     ->where('visible_from_date', '<', Carbon::now())
                     ->orWhere('visible_from_date', null);
-            })
+            });
 
             $query->orderBy('raise_at', 'DESC');
         } else {
