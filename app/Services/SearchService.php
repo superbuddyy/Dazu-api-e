@@ -28,9 +28,7 @@ class SearchService
     {
         $query = Offer::query();
         $perPage = Arr::pull($searchArguments, 'limit', 12);
-        
-        $query = $this->buildQuery($searchArguments, $query);
-        
+                
         if ($onlyVisible) {
             $query->where(function ($query) {
                 $query->where('expire_time', '>', Carbon::now())
@@ -56,6 +54,8 @@ class SearchService
                     break;
             }
         }
+
+        $query = $this->buildQuery($searchArguments, $query);
 
         $query->orderBy(
             Arr::get($searchArguments, 'order_by', $orderBy),
@@ -163,8 +163,9 @@ class SearchService
         foreach ($params as $paramName => $paramValue) {
             switch ($paramName) {
                 case 'phrase':
-                    $query->where('title', 'like', "%$paramValue%", function($query) use ($paramValue) {
-                        $query->orWhere('location_name', 'like', "%$paramValue%");
+                    $query->where(function ($query) use ($paramValue) {
+                        $query->where('title', 'like', "%$paramValue%")
+                        ->orWhere('location_name', 'like', "%$paramValue%");    
                     });
                     break;
                 case 'category':
