@@ -163,8 +163,9 @@ class SearchService
         foreach ($params as $paramName => $paramValue) {
             switch ($paramName) {
                 case 'phrase':
-                    $query->where('title', 'like', "%$paramValue%")
-                        ->orWhere('location_name', 'like', "%$paramValue%");
+                    $query->where('title', 'like', "%$paramValue%", function($query) use ($paramValue) {
+                        $query->orWhere('location_name', 'like', "%$paramValue%");
+                    });
                     break;
                 case 'category':
                     // $category = Category::where('slug', $paramValue)->firstOrFail();
