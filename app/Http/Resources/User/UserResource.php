@@ -63,7 +63,7 @@ class UserResource extends JsonResource
                 },
                 $this->roles->toArray()
             ),
-            'type' => $this->company['type'],
+            'type' => $this->company['type'] ?? null,
             'permissions' => array_map(
                 function ($permission) {
                     return $permission['name'];
