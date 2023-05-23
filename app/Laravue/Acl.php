@@ -23,6 +23,7 @@ final class Acl
     const ROLE_USER = 'user';
     const ROLE_AGENT = 'agent';
     const ROLE_COMPANY = 'company';
+    const ROLE_DEVELOPER = 'developer';
 
     const PERMISSION_VIEW_OWN_PROFILE = 'view own profile';
     const PERMISSION_UPDATE_OWN_PROFILE = 'update own profile';

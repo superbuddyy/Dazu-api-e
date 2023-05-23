@@ -36,7 +36,7 @@ class UserManager
             'password' => Hash::make($password),
         ]);
 
-        if ($type === CompanyType::AGENCY || $type === CompanyType::DEVELOPER) {
+        if ($type === CompanyType::AGENCY) {
             $company = new Company();
             $company->name = $name;
             $company->type = $type;
@@ -46,6 +46,9 @@ class UserManager
             $user->own_company_id = $company->id;
 
             $role = Role::findByName(Acl::ROLE_COMPANY);
+            $user->syncRoles($role);
+        } else if ($type === CompanyType::DEVELOPER){
+            $role = Role::findByName(Acl::ROLE_DEVELOPER);
             $user->syncRoles($role);
         } else {
             $role = Role::findByName(Acl::ROLE_USER);
