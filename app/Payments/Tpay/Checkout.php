@@ -39,7 +39,7 @@ class Checkout extends TransactionApi
             'result_url' => 'https://dazu.pl/api/payments/callback?gateway=tpay',
             'result_email' => config('dazu.company_info.email'),
             'return_url' => $basic_url . '?payment-status=success',
-            'return_error_url': $basic_url . '?payment-status=fail',
+            'return_error_url' => $basic_url . '?payment-status=fail',
             'email' => 'dazunieruchomosci@gmail.com',
             'name' => 'John Doe',
             'group' => 150,
