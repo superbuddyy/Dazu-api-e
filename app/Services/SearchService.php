@@ -56,9 +56,9 @@ class SearchService
 
         if($onlyVisible)
             $query->orderBy('raise_at', 'DESC');
-        $query->orderBy(
-            Arr::get($searchArguments, 'order_by', $orderBy),
-            Arr::get($searchArguments, 'order', $order)
+            $query->orderBy(
+                Arr::get($searchArguments, 'order_by', $orderBy),
+                Arr::get($searchArguments, 'order', $order)
         );
 
         return $query->paginate($perPage);
@@ -162,8 +162,8 @@ class SearchService
         foreach ($params as $paramName => $paramValue) {
             switch ($paramName) {
                 case 'phrase':
-                    $query->where('title', 'like', "%$paramValue%")
-                        ->orWhere('location_name', 'like', "%$paramValue%");
+                    $query->where('title', 'like', "%$paramValue%");
+                        // ->orWhere('location_name', 'like', "%$paramValue%");
                     break;
                 case 'category':
                     // $category = Category::where('slug', $paramValue)->firstOrFail();
