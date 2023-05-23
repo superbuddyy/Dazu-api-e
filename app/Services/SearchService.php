@@ -34,9 +34,9 @@ class SearchService
         if ($onlyVisible) {
             $query->where(function ($query) {
                 $query->where('expire_time', '>', Carbon::now())
+                    ->where('status', OfferStatus::ACTIVE);
                     ->where('visible_from_date', '<', Carbon::now())
                     ->orWhere('visible_from_date', null);
-                    ->where('status', OfferStatus::ACTIVE);
             })
 
             $query->orderBy('raise_at', 'DESC');
