@@ -63,6 +63,10 @@ class OfferController extends Controller
     {
         DB::beginTransaction();
         try {
+            $deleted_at = null;
+            if ($request->has('delayedDeletion') && $request->get('delayedDeletion') === true) {
+                $deleted_at = Carbon::now();
+            }
             $offer = $this->offerManager->update(
                 $offer,
                 $request->get('title'),
@@ -76,7 +80,7 @@ class OfferController extends Controller
                 $request->get('links', []),
                 $request->get('visible_from_date', null),
                 $request->get('status'),
-                $request->get('delayedDeletion')
+                $deleted_at
             );
 
             if ($offer === null) {

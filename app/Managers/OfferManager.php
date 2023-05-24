@@ -190,7 +190,7 @@ class OfferManager
         array $links = [],
         string $visible_from_date = null,
         string $status = OfferStatus::IN_ACTIVE,
-        bool $delayedDeletion = false
+        string $deleted_at
     ): ?Offer
     {
         $update = $offer->update([
@@ -204,7 +204,7 @@ class OfferManager
             'links' => $links,
             'visible_from_date' => $visible_from_date === 'null' ? null : $visible_from_date,
             'status' => $status,
-            'deleted_at' => $delayedDeletion === true ? Carbon::now() : null
+            'deleted_at' => $deleted_at
         ]);
 
         if (!$update) {
