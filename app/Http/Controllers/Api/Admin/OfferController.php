@@ -66,22 +66,38 @@ class OfferController extends Controller
             $deleted_at = null;
             if ($request->has('delayedDeletion') && $request->get('delayedDeletion') === true) {
                 $deleted_at = Carbon::now();
+                $offer = $this->offerManager->update(
+                    $offer,
+                    $offer->title,
+                    $offer->description,
+                    $offer->price,
+                    $offer->category,
+                    $offer->attributes,
+                    $offer->lat,
+                    $offer->lon,
+                    $offer->location_name,
+                    $offer->links,
+                    $offer->visible_from_date,
+                    $offer->status,
+                    $deleted_at
+                );
+            }else{
+                $offer = $this->offerManager->update(
+                    $offer,
+                    $request->get('title'),
+                    $request->get('description'),
+                    (int)$request->get('price'),
+                    $request->get('category'),
+                    $request->get('attributes'),
+                    $request->get('lat'),
+                    $request->get('lon'),
+                    $request->get('location_name'),
+                    $request->get('links', []),
+                    $request->get('visible_from_date', null),
+                    $request->get('status'),
+                    $deleted_at
+                );
             }
-            $offer = $this->offerManager->update(
-                $offer,
-                $request->get('title'),
-                $request->get('description'),
-                (int)$request->get('price'),
-                $request->get('category'),
-                $request->get('attributes'),
-                $request->get('lat'),
-                $request->get('lon'),
-                $request->get('location_name'),
-                $request->get('links', []),
-                $request->get('visible_from_date', null),
-                $request->get('status'),
-                $deleted_at
-            );
 
             if ($offer === null) {
                 DB::rollBack();
