@@ -189,7 +189,7 @@ class OfferManager
         string $locationName,
         array $links = [],
         string $visible_from_date = null,
-        string $status = OfferStatus::IN_ACTIVE,
+        string $status = OfferStatus::IN_ACTIVE
     ): ?Offer
     {
         $update = $offer->update([
