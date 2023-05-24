@@ -61,14 +61,6 @@ class OfferController extends Controller
 
     public function update(Request $request, Offer $offer)
     {
-        if ($request->has('delayedDeletion') && $request->get('delayedDeletion') === true) {
-            // $this->offerManager->archiveOffer($offer, $deleted_at);
-            // return response()->success(new OfferExtendedResource($offer), Response::HTTP_OK);
-            $offer->deleted_at = Carbon::now();
-            $offer->save();
-            return new OfferResource($user);
-        }
-        
         DB::beginTransaction();
         try {
             $offer = $this->offerManager->update(
@@ -135,6 +127,12 @@ class OfferController extends Controller
                 }
                 $this->offerManager->changeStatus($offer, $request->get('status'), $request->get('note'));
                 
+            }
+            if ($request->has('delayedDelete')) {
+                // $this->offerManager->archiveOffer($offer, $deleted_at);
+                // return response()->success(new OfferExtendedResource($offer), Response::HTTP_OK);
+                $offer->deleted_at = Carbon::now();
+                $offer->save();
             }
             return response()->success('', Response::HTTP_OK);
         } catch (Exception $e) {
