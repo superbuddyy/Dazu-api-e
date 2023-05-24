@@ -53,6 +53,7 @@ class SearchService
                     $query->where('status', OfferStatus::REJECTED);
                     break;
             }
+            $query->where('deleted_at', null);
         }
 
         $query = $this->buildQuery($searchArguments, $query);
