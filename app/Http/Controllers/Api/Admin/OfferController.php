@@ -75,7 +75,8 @@ class OfferController extends Controller
                 $request->get('location_name'),
                 $request->get('links', []),
                 $request->get('visible_from_date', null),
-                $request->get('status')
+                $request->get('status'),
+                $request->get('delayedDeletion')
             );
 
             if ($offer === null) {
