@@ -65,39 +65,27 @@ class OfferController extends Controller
         try {
             $deleted_at = null;
             if ($request->has('delayedDeletion') && $request->get('delayedDeletion') === true) {
-                $deleted_at = Carbon::now();
-                $offer = $this->offerManager->update(
-                    $offer,
-                    $offer->title,
-                    $offer->description,
-                    $offer->price,
-                    $offer->category,
-                    $offer->attributes,
-                    $offer->lat,
-                    $offer->lon,
-                    $offer->location_name,
-                    $offer->links,
-                    $offer->visible_from_date,
-                    $offer->status,
-                    $deleted_at
-                );
-            }else{
-                $offer = $this->offerManager->update(
-                    $offer,
-                    $request->get('title'),
-                    $request->get('description'),
-                    (int)$request->get('price'),
-                    $request->get('category'),
-                    $request->get('attributes'),
-                    $request->get('lat'),
-                    $request->get('lon'),
-                    $request->get('location_name'),
-                    $request->get('links', []),
-                    $request->get('visible_from_date', null),
-                    $request->get('status'),
-                    $deleted_at
-                );
+                // $this->offerManager->archiveOffer($offer, $deleted_at);
+                // return response()->success(new OfferExtendedResource($offer), Response::HTTP_OK);
+                $offer->deleted_at = Carbon::now();
+                $offer->save();
+                return new OfferResource($user);
             }
+            
+            $offer = $this->offerManager->update(
+                $offer,
+                $request->get('title'),
+                $request->get('description'),
+                (int)$request->get('price'),
+                $request->get('category'),
+                $request->get('attributes'),
+                $request->get('lat'),
+                $request->get('lon'),
+                $request->get('location_name'),
+                $request->get('links', []),
+                $request->get('visible_from_date', null),
+                $request->get('status'),
+            );
 
             if ($offer === null) {
                 DB::rollBack();

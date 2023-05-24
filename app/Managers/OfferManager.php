@@ -190,7 +190,6 @@ class OfferManager
         array $links = [],
         string $visible_from_date = null,
         string $status = OfferStatus::IN_ACTIVE,
-        string $deleted_at
     ): ?Offer
     {
         $update = $offer->update([
@@ -204,7 +203,6 @@ class OfferManager
             'links' => $links,
             'visible_from_date' => $visible_from_date === 'null' ? null : $visible_from_date,
             'status' => $status,
-            'deleted_at' => $deleted_at
         ]);
 
         if (!$update) {
@@ -268,6 +266,18 @@ class OfferManager
 
         return $offer;
     }
+
+    // public function archiveOffer(Offer $offer, Carbon $deleted_at): Offer
+    // {
+    //     $offer->subscriptions()->detach();
+    //     $offer->subscriptions()
+    //         ->attach(
+    //             $subscription->id,
+    //             ['end_date' => Carbon::now()->addHours($subscription->duration)]
+    //         );
+
+    //     return $offer;
+    // }
 
     /**
      * @param Offer $offer
