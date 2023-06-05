@@ -90,7 +90,7 @@ class SubscriptionController
                     'qty' => 1,
                 ];
             }
-            $checkout = new Checkout($request->get('gateway', Checkout::TPAY_SLUG));
+            $checkout = new Checkout($request->get('gateway', Checkout::STRIPE_SLUG));
             
             $platform = $request->get('platform');
             $result = $checkout->createOrder($ref . '/' . $platform, $price);

@@ -183,7 +183,7 @@ class UserController
             $ref = 'user::' . $user->id . 'avatar';
             $price = Setting::where('name', "avatar_$avatarType.price")->firstOrFail()['value'];
 
-            $checkout = new Checkout($request->get('gateway', Checkout::TPAY_SLUG));
+            $checkout = new Checkout($request->get('gateway', Checkout::STRIPE_SLUG));
             
             $platform = $request->get('platform');
             $result = $checkout->createOrder($ref . '/' . $platform, (int)$price);

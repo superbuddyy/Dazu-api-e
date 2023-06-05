@@ -9,6 +9,7 @@ class Checkout
 {
     public const PAYPAL_SLUG = 'paypal';
     public const TPAY_SLUG = 'tpay';
+    public const STRIPE_SLUG = 'stripe';
 
     private $gateway;
 
@@ -19,6 +20,8 @@ class Checkout
             $this->gateway = new \App\Payments\Tpay\Checkout();
         } else if ($gateway == self::PAYPAL_SLUG) {
             $this->gateway = new \App\Payments\PayPal\Checkout();
+        } else if ($gateway == self::STRIPE_SLUG) {
+            $this->gateway == new \App\Payments\Stripe\Checkout();
         }
     }
 
