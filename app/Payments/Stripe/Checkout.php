@@ -10,11 +10,10 @@ use Stripe\Stripe;
 use Stripe\Charge;
 use Stripe\Customer;
 
-class Checkout extends Order
+class Checkout
 {
     public function __construct()
     {
-        parent::__construct();
         $this->stripeApikey = 'sk_test_51NBJfMEspc22iNrVHc413A46yj1WIclmmdsFYgAOLp7kvIMJuKRJxVDZMUQNNwl1ZbTaRz03EtRCdF54TzUEv3J100q6KW2rbP';
         Stripe::setApiKey($this->stripeApikey);
     }
