@@ -655,7 +655,8 @@ class OfferController
                     ['user_id' => $userId, 'offer_id' => $offer->id]
                 );
             }
-
+            var_dump($result);
+            exit(0);
             $lineItems = [];
             foreach ($bill['details'] as $item) {
                 $lineItems[] = [
