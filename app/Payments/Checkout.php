@@ -21,7 +21,7 @@ class Checkout
         } else if ($gateway == self::PAYPAL_SLUG) {
             $this->gateway = new \App\Payments\PayPal\Checkout();
         } else if ($gateway == self::STRIPE_SLUG) {
-            $this->gateway == new \App\Payments\Stripe\Checkout();
+            $this->gateway = new \App\Payments\Stripe\Checkout();
         }
     }
 
