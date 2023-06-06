@@ -14,12 +14,14 @@ class Checkout
 {
     public function __construct()
     {
-        $this->stripeApikey = 'sk_test_51NBJfMEspc22iNrVHc413A46yj1WIclmmdsFYgAOLp7kvIMJuKRJxVDZMUQNNwl1ZbTaRz03EtRCdF54TzUEv3J100q6KW2rbP';
-        Stripe::setApiKey($this->stripeApikey);
+        
     }
 
     public function createOrder(string $refId, int $amount)
     {
+        $this->stripeApikey = 'sk_test_51NBJfMEspc22iNrVHc413A46yj1WIclmmdsFYgAOLp7kvIMJuKRJxVDZMUQNNwl1ZbTaRz03EtRCdF54TzUEv3J100q6KW2rbP';
+        Stripe::setApiKey($this->stripeApikey);
+        
         $splitRefId = explode('/', $refId); 
         $real_refId = $splitRefId[0];
         $platform = $splitRefId[1];
